@@ -130,7 +130,7 @@ export default function Home() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'tomato',
+    backgroundColor: 'skyblue',
   },
   city: {
     flex: 1.2,
