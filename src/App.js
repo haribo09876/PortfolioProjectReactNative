@@ -1,26 +1,31 @@
-import * as React from 'react';
-import {View, Text, Image} from 'react-native';
-import {NavigationContainer} from '@react-navigation/native';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import React from 'react';
+import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
+import AppNavigator from './navigation/navigator';
 
-function FirstPage() {
+export default function App() {
   return (
-    <View style={{flex: 1, alignItems: 'center', justifyContent: 'center'}}>
-      <Text>First Page Contents Area</Text>
-    </View>
+    <>
+      <View style={styles.container}>
+        <Text style={styles.text}>PPRN</Text>
+      </View>
+      <SafeAreaView />
+      <AppNavigator />
+    </>
   );
 }
 
-const Stack = createNativeStackNavigator();
-
-function App() {
-  return (
-    <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="First Page" component={FirstPage} />
-      </Stack.Navigator>
-    </NavigationContainer>
-  );
-}
-
-export default App;
+const styles = StyleSheet.create({
+  container: {
+    flex: 0.15,
+    backgroundColor: 'white',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  text: {
+    backgroundColor: 'white',
+    color: 'black',
+    fontSize: 30,
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+});
