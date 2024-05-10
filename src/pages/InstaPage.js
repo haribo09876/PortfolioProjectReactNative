@@ -4,6 +4,7 @@ function InstaPage() {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Insta</Text>
+      <Text style={styles.text}>InstaModal</Text>
     </View>
   );
 }

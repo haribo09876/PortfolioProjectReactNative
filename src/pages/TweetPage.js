@@ -4,6 +4,7 @@ function TweetPage() {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Tweet</Text>
+      <Text style={styles.text}>TweetModal</Text>
     </View>
   );
 }
