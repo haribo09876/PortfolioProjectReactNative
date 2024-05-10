@@ -1,6 +1,6 @@
 import React from 'react';
 import {SafeAreaView, StyleSheet, Text, View} from 'react-native';
-import AppNavigator from './navigation/navigator';
+import AppNavigator from './components/navigator';
 
 export default function App() {
   return (

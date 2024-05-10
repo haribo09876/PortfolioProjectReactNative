@@ -1,9 +1,10 @@
 import {View, Text, StyleSheet} from 'react-native';
 
-function ShoppingPage() {
+function ShopPage() {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Shop</Text>
+      <Text style={styles.text}>ShopDetail</Text>
     </View>
   );
 }
@@ -22,4 +23,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default ShoppingPage;
+export default ShopPage;
