@@ -1,6 +1,6 @@
 import {View, Text, StyleSheet} from 'react-native';
 
-function FirstPage() {
+function LoginPage() {
   return (
     <View style={styles.container}>
       <Text style={styles.text}>Login</Text>
@@ -24,4 +24,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default FirstPage;
+export default LoginPage;
