@@ -5,12 +5,16 @@ import HomePage from '../pages/HomePage';
 import TweetPage from '../pages/TweetPage';
 import InstaPage from '../pages/InstaPage';
 import ShopPage from '../pages/ShopPage';
+import {StyleSheet, Text, View} from 'react-native';
 
 const Tab = createMaterialTopTabNavigator();
 
 export default function () {
   return (
     <NavigationContainer>
+      <View style={styles.container}>
+        <Text style={styles.text}>PPRN</Text>
+      </View>
       <Tab.Navigator>
         <Tab.Screen name="Home" component={HomePage} />
         <Tab.Screen name="Tweet" component={TweetPage} />
@@ -20,3 +24,19 @@ export default function () {
     </NavigationContainer>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 0.15,
+    backgroundColor: 'white',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  text: {
+    backgroundColor: 'white',
+    color: 'black',
+    fontSize: 30,
+    textAlign: 'center',
+    fontWeight: 'bold',
+  },
+});
