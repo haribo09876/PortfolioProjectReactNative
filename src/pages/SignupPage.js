@@ -7,11 +7,11 @@ import {
   TouchableOpacity,
 } from 'react-native';
 
-function LoginPage() {
+function SignupPage() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>PPRN</Text>
-      <TextInput
+      <Text style={styles.text}>SignupPage</Text>
+      {/* <TextInput
         style={styles.inputBox}
         placeholder="아이디를 입력하세요"
         textAlign="center"
@@ -33,7 +33,7 @@ function LoginPage() {
       </TouchableOpacity>
       <TouchableOpacity style={[styles.button, styles.signupButton]}>
         <Text style={styles.buttonText}>회원가입</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
     </View>
   );
 }
@@ -79,4 +79,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LoginPage;
+export default SignupPage;
