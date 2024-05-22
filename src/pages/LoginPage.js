@@ -1,3 +1,4 @@
+import {useNavigation} from '@react-navigation/native';
 import React from 'react';
 import {
   View,
@@ -8,6 +9,8 @@ import {
 } from 'react-native';
 
 function LoginPage() {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>PPRN</Text>
@@ -18,7 +21,11 @@ function LoginPage() {
         placeholder="  비밀번호를 입력하세요"
       />
       <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>로그인</Text>
+        <Text
+          style={styles.buttonText}
+          onPress={() => navigation.navigate('HomePage')}>
+          로그인
+        </Text>
       </TouchableOpacity>
       <TouchableOpacity style={[styles.button, styles.altButton]}>
         <Text style={styles.buttonText}>Google로 로그인</Text>
@@ -26,7 +33,9 @@ function LoginPage() {
       <TouchableOpacity style={[styles.button, styles.altButton]}>
         <Text style={styles.buttonText}>Github로 로그인</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={[styles.button, styles.signupButton]}>
+      <TouchableOpacity
+        style={[styles.button, styles.signupButton]}
+        onPress={() => navigation.navigate('SignupPage')}>
         <Text style={styles.buttonText}>회원가입</Text>
       </TouchableOpacity>
     </View>
