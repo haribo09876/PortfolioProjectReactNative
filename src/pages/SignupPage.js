@@ -42,7 +42,6 @@ function SignUpPage() {
         password,
       );
       await updateProfile(credentials.user, {displayName: name});
-      console.log(credentials.user);
       Alert.alert('회원가입에 성공했습니다');
       navigation.navigate('LoginPage');
     } catch (error) {
