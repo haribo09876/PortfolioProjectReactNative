@@ -1,31 +1,49 @@
 import {useNavigation} from '@react-navigation/native';
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
+import auth from '@react-native-firebase/auth';
 
 function LoginPage() {
   const navigation = useNavigation();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleLogin = () => {
+    auth()
+      .signInWithEmailAndPassword(email, password)
+      .then(() => {
+        navigation.navigate('HomePage');
+      })
+      .catch(error => {
+        Alert.alert('로그인 실패', error.message);
+      });
+  };
 
   return (
     <View style={styles.container}>
       <Text style={styles.title}>PPRN</Text>
-      <TextInput style={styles.inputBox} placeholder="  아이디를 입력하세요" />
+      <TextInput
+        style={styles.inputBox}
+        placeholder="  이메일을 입력하세요"
+        value={email}
+        onChangeText={setEmail}
+      />
       <TextInput
         secureTextEntry={true}
         style={styles.inputBox}
         placeholder="  비밀번호를 입력하세요"
+        value={password}
+        onChangeText={setPassword}
       />
-      <TouchableOpacity style={styles.button}>
-        <Text
-          style={styles.buttonText}
-          onPress={() => navigation.navigate('HomePage')}>
-          로그인
-        </Text>
+      <TouchableOpacity style={styles.button} onPress={handleLogin}>
+        <Text style={styles.buttonText}>로그인</Text>
       </TouchableOpacity>
       <TouchableOpacity style={[styles.button, styles.altButton]}>
         <Text style={styles.buttonText}>Google로 로그인</Text>
