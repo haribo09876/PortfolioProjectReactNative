@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "204317415777",
+    "project_id": "pprn-c7335",
+    "storage_bucket": "pprn-c7335.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:204317415777:android:bae66d86d5809f5e030d20",
+        "android_client_info": {
+          "package_name": "com.portfolioprojectreactnative"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD6zxgUblEAuK9eXAPRENCvCjLdgsNhVJY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
