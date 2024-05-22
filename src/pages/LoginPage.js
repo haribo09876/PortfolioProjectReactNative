@@ -10,17 +10,12 @@ import {
 function LoginPage() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>PPRN</Text>
-      <TextInput
-        style={styles.inputBox}
-        placeholder="아이디를 입력하세요"
-        textAlign="center"
-      />
+      <Text style={styles.title}>PPRN</Text>
+      <TextInput style={styles.inputBox} placeholder="  아이디를 입력하세요" />
       <TextInput
         secureTextEntry={true}
         style={styles.inputBox}
-        placeholder="비밀번호를 입력하세요"
-        textAlign="center"
+        placeholder="  비밀번호를 입력하세요"
       />
       <TouchableOpacity style={styles.button}>
         <Text style={styles.buttonText}>로그인</Text>
@@ -41,41 +36,46 @@ function LoginPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'lavender',
+    backgroundColor: '#f5f5f5',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  text: {
-    fontSize: 70,
-    color: 'black',
-    textAlign: 'center',
+  title: {
+    fontSize: 40,
     fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 40,
   },
   inputBox: {
     width: 300,
     backgroundColor: 'white',
-    borderRadius: 10,
-    fontSize: 20,
-    marginTop: 10,
+    borderRadius: 25,
+    fontSize: 18,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
+    marginVertical: 10,
+    borderWidth: 1,
+    borderColor: '#ddd',
   },
   button: {
-    backgroundColor: 'skyblue',
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 10,
-    width: 300,
+    backgroundColor: '#3498db',
+    width: 250,
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 25,
+    marginTop: 20,
     alignItems: 'center',
   },
   buttonText: {
     color: 'white',
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: 'bold',
   },
   altButton: {
-    backgroundColor: 'lightblue',
+    backgroundColor: '#74b9ff',
   },
   signupButton: {
-    backgroundColor: 'orange',
+    backgroundColor: '#2ecc71',
   },
 });
 

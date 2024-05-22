@@ -1,11 +1,16 @@
 import React from 'react';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {useNavigation} from '@react-navigation/native';
 
 function IntroPage() {
+  const navigation = useNavigation();
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>PPRN에 오신 것을 환영합니다</Text>
-      <TouchableOpacity style={styles.button}>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => navigation.navigate('LoginPage')}>
         <Text style={styles.buttonText}>시작하기</Text>
       </TouchableOpacity>
     </View>
