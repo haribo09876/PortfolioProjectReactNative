@@ -10,7 +10,7 @@ function IntroPage() {
       <Text style={styles.title}>PPRN에 오신 것을 환영합니다</Text>
       <TouchableOpacity
         style={styles.button}
-        onPress={() => navigation.navigate('LoginPage')}>
+        onPress={() => navigation.navigate('Login')}>
         <Text style={styles.buttonText}>시작하기</Text>
       </TouchableOpacity>
     </View>
