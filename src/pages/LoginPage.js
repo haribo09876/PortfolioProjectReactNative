@@ -19,7 +19,7 @@ function LoginPage() {
     auth()
       .signInWithEmailAndPassword(email, password)
       .then(() => {
-        navigation.navigate('Home');
+        navigation.navigate('MainTabs');
       })
       .catch(error => {
         Alert.alert('로그인 실패', error.message);
@@ -53,7 +53,7 @@ function LoginPage() {
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.button, styles.signupButton]}
-        onPress={() => navigation.navigate('Signup')}>
+        onPress={() => navigation.navigate('SignupPage')}>
         <Text style={styles.buttonText}>회원가입</Text>
       </TouchableOpacity>
     </View>

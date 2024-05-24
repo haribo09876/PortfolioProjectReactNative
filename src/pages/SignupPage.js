@@ -43,7 +43,7 @@ function SignUpPage() {
       );
       await updateProfile(credentials.user, {displayName: name});
       Alert.alert('회원가입에 성공했습니다');
-      navigation.navigate('Home');
+      navigation.navigate('LoginPage');
     } catch (error) {
       console.error('Firebase 에러:', error);
       Alert.alert('회원가입에 실패했습니다. 다시 시도해주세요');
