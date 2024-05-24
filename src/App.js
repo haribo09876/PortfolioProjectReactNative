@@ -1,12 +1,12 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {SafeAreaView} from 'react-native';
-import StackNavigator from './navigation/stackNavigator';
+import Navigator from './navigation/navigator';
 
 export default function App() {
   return (
     <NavigationContainer>
-      <StackNavigator />
+      <Navigator />
       <SafeAreaView />
     </NavigationContainer>
   );
