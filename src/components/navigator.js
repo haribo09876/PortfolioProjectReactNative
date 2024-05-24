@@ -41,7 +41,7 @@ const Navigator = () => {
         setInitializing(false);
       }
     });
-    return subscriber; // unsubscribe on unmount
+    return subscriber;
   }, []);
 
   if (initializing) {
@@ -50,28 +50,43 @@ const Navigator = () => {
 
   return (
     <Stack.Navigator>
-      <Stack.Screen
-        name="IntroPage"
-        component={IntroPage}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="LoginPage"
-        component={LoginPage}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="SignupPage"
-        component={SignupPage}
-        options={{headerShown: false}}
-      />
       {isLoggedIn ? (
-        <Stack.Screen
-          name="MainTabs"
-          component={MainTabs}
-          options={{headerTitle: 'PPRN'}}
-        />
-      ) : null}
+        <>
+          <Stack.Screen
+            name="MainTabs"
+            component={MainTabs}
+            options={{headerTitle: 'PPRN'}}
+          />
+          <Stack.Screen
+            name="LoginPage"
+            component={LoginPage}
+            options={{headerShown: false}}
+          />
+        </>
+      ) : (
+        <>
+          <Stack.Screen
+            name="IntroPage"
+            component={IntroPage}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="LoginPage"
+            component={LoginPage}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="SignupPage"
+            component={SignupPage}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="MainTabs"
+            component={MainTabs}
+            options={{headerShown: false}}
+          />
+        </>
+      )}
     </Stack.Navigator>
   );
 };
