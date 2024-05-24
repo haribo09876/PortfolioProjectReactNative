@@ -15,53 +15,63 @@ import ShopPage from '../pages/ShopPage';
 const Stack = createStackNavigator();
 const Tab = createMaterialTopTabNavigator();
 
+const LoadingScreen = () => (
+  <View style={styles.loadingContainer}>
+    <ActivityIndicator size="large" color="#0000ff" />
+  </View>
+);
+
+const MainTabs = () => (
+  <Tab.Navigator>
+    <Tab.Screen name="HomePage" component={HomePage} />
+    <Tab.Screen name="TweetPage" component={TweetPage} />
+    <Tab.Screen name="InstaPage" component={InstaPage} />
+    <Tab.Screen name="ShopPage" component={ShopPage} />
+  </Tab.Navigator>
+);
+
 const Navigator = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [initializing, setInitializing] = useState(true);
 
-  // Handle user state changes
-  const handleAuthStateChanged = user => {
-    setIsLoggedIn(!!user);
-    if (initializing) {
-      setInitializing(false);
-    }
-  };
-
   useEffect(() => {
-    const subscriber = onAuthStateChanged(auth, handleAuthStateChanged);
+    const subscriber = onAuthStateChanged(auth, user => {
+      setIsLoggedIn(!!user);
+      if (initializing) {
+        setInitializing(false);
+      }
+    });
     return subscriber; // unsubscribe on unmount
   }, []);
 
   if (initializing) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color="#0000ff" />
-      </View>
-    );
+    return <LoadingScreen />;
   }
 
   return (
     <Stack.Navigator>
+      <Stack.Screen
+        name="IntroPage"
+        component={IntroPage}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="LoginPage"
+        component={LoginPage}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="SignupPage"
+        component={SignupPage}
+        options={{headerShown: false}}
+      />
       {isLoggedIn ? (
-        <Stack.Screen name="MainTabs" options={{headerTitle: 'PPRN'}}>
-          {() => (
-            <>
-              <Tab.Navigator>
-                <Tab.Screen name="Home" component={HomePage} />
-                <Tab.Screen name="Tweet" component={TweetPage} />
-                <Tab.Screen name="Insta" component={InstaPage} />
-                <Tab.Screen name="Shop" component={ShopPage} />
-              </Tab.Navigator>
-            </>
-          )}
-        </Stack.Screen>
-      ) : (
-        <>
-          <Stack.Screen name="Intro" component={IntroPage} />
-          <Stack.Screen name="Login" component={LoginPage} />
-          <Stack.Screen name="Signup" component={SignupPage} />
-        </>
-      )}
+        <Stack.Screen
+          name="MainTabs"
+          component={MainTabs}
+          options={{headerTitle: 'PPRN'}}
+        />
+      ) : null}
     </Stack.Navigator>
   );
 };
@@ -71,19 +81,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  container: {
-    flex: 0.15,
-    backgroundColor: 'white',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  text: {
-    backgroundColor: 'white',
-    color: 'black',
-    fontSize: 30,
-    textAlign: 'center',
-    fontWeight: 'bold',
   },
 });
 
