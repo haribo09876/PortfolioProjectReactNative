@@ -7,7 +7,7 @@ export default function Layout() {
   const navigation = useNavigation();
 
   const onLogOut = async () => {
-    Alert.alert('Log Out', 'Are you sure you want to log out?', [
+    Alert.alert('Log Out', '정말 로그아웃 하시겠습니까?', [
       {
         text: 'Cancel',
         style: 'cancel',
