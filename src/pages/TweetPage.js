@@ -1,92 +1,26 @@
-import React from 'react';
-import {View, Text, TouchableOpacity, Alert, StyleSheet} from 'react-native';
-import {useNavigation} from '@react-navigation/native';
-import {auth} from '../firebase';
+import {View, Text, StyleSheet} from 'react-native';
 
-export default function Layout() {
-  const navigation = useNavigation();
-
-  const onLogOut = async () => {
-    Alert.alert('Log Out', '정말 로그아웃 하시겠습니까?', [
-      {
-        text: 'Cancel',
-        style: 'cancel',
-      },
-      {
-        text: 'OK',
-        onPress: async () => {
-          await auth.signOut();
-          navigation.navigate('LoginPage');
-        },
-      },
-    ]);
-  };
-
+function TweetPage() {
   return (
-    <View style={styles.wrapper}>
-      <View style={styles.menu}>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('HomePage')}
-          style={styles.menuItem}>
-          <View style={styles.iconWrapper}>
-            <Text style={styles.icon}>🏠</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => navigation.navigate('InstaPage')}
-          style={styles.menuItem}>
-          <View style={styles.iconWrapper}>
-            <Text style={styles.icon}>👤</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={onLogOut}
-          style={[styles.menuItem, styles.logOut]}>
-          <View style={styles.iconWrapper}>
-            <Text style={[styles.icon, styles.logOutIcon]}>🚪</Text>
-          </View>
-        </TouchableOpacity>
-      </View>
+    <View style={styles.container}>
+      <Text style={styles.text}>Tweet</Text>
+      <Text style={styles.text}>TweetModal</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  wrapper: {
+  container: {
     flex: 1,
-    paddingVertical: 50,
-    maxWidth: 860,
-    alignSelf: 'center',
-  },
-  menu: {
-    flexDirection: 'row',
-    justifyContent: 'center',
-    gap: 20,
-    marginBottom: 20,
-  },
-  menuItem: {
+    backgroundColor: 'honeydew',
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 2,
-    borderColor: 'white',
-    height: 50,
-    width: 50,
-    borderRadius: 25,
   },
-  logOut: {
-    borderColor: 'tomato',
-  },
-  iconWrapper: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100%',
-    width: '100%',
-  },
-  icon: {
-    fontSize: 24,
-    color: 'white',
-  },
-  logOutIcon: {
-    color: 'tomato',
+  text: {
+    fontSize: 30,
+    textAlign: 'center',
+    fontWeight: 'bold',
   },
 });
+
+export default TweetPage;
