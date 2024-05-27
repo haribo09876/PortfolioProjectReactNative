@@ -24,8 +24,8 @@ export default function Weather() {
   const icons = {
     Clouds: 'weather-cloudy',
     Clear: 'weather-sunny',
-    Atmosphere: 'foggy',
-    Snow: 'weather-snowy-heavy',
+    Atmosphere: 'weather-fog',
+    Snow: 'snowflake',
     Rain: 'weather-pouring',
     Drizzle: 'weather-fog',
     Thunderstorm: 'weather-lightning',
@@ -99,25 +99,24 @@ export default function Weather() {
             <View key={index} style={styles.day}>
               <View
                 style={{
-                  flexDirection: 'row',
-                  alignItems: 'flex-end',
+                  flexDirection: 'column',
+                  alignItems: 'center',
                   width: '100%',
-                  justifyContent: 'space-between',
+                  justifyContent: 'center',
                 }}>
+                <Icon
+                  name={icons[day.weather[0].main]}
+                  size={200}
+                  color="white"
+                />
                 <Text style={styles.temp}>
                   {parseFloat(day.main.temp - 273).toFixed(1)}&#8451;
                 </Text>
-                <Icon
-                  name={icons[day.weather[0].main]}
-                  size={68}
-                  color="white"
-                />
               </View>
               <Text style={styles.description}>
                 {day.dt_txt.substring(5, 7)}월 {day.dt_txt.substring(8, 10)}일
                 {day.dt_txt.substring(11, 13)}시
               </Text>
-
               <Text style={styles.tinyText}>{day.weather[0].main}</Text>
             </View>
           ))
@@ -149,9 +148,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   temp: {
-    marginTop: 50,
+    marginTop: 10,
     fontWeight: '600',
-    fontSize: 100,
+    fontSize: 70,
     color: 'white',
   },
   description: {
