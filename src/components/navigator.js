@@ -2,7 +2,8 @@ import React, {useState, useEffect} from 'react';
 import {View, StyleSheet, TouchableOpacity, Text, Alert} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {onAuthStateChanged} from 'firebase/auth';
-import {auth} from '../firebase'; // Firebase 설정을 임포트해야 합니다.
+import {auth} from '../firebase';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import IntroPage from '../pages/IntroPage';
 import LoginPage from '../pages/LoginPage';
 import SignupPage from '../pages/SignupPage';
@@ -42,7 +43,49 @@ const Navigator = () => {
     <Stack.Navigator>
       {isLoggedIn ? (
         <>
-          <Stack.Screen name="MainTabs" component={MainTabs} />
+          <Stack.Screen
+            name="LoginPage"
+            component={LoginPage}
+            options={{headerShown: false}}
+          />
+          <Stack.Screen
+            name="MainTabs"
+            component={MainTabs}
+            options={({navigation}) => ({
+              headerTitle: 'PPRN',
+              headerTitleAlign: 'center',
+              headerTitleStyle: {
+                fontSize: 30,
+                fontWeight: 'semi-bold',
+              },
+              headerLeft: null,
+              headerRight: () => (
+                <View style={styles.headerButtonsContainer}>
+                  <TouchableOpacity
+                    onPress={() =>
+                      Alert.alert('로그아웃', '정말 로그아웃 하시겠습니까?', [
+                        {
+                          text: 'Cancel',
+                          style: 'cancel',
+                        },
+                        {
+                          text: 'OK',
+                          onPress: () => handleLogout(navigation),
+                        },
+                      ])
+                    }
+                    style={styles.buttonContainer}>
+                    <Icon name="logout" size={30} color="black" />
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => alert('To User Page')}
+                    style={[styles.buttonContainer, styles.iconButton]}>
+                    <Icon name="account-circle" size={40} color="black" />
+                  </TouchableOpacity>
+                </View>
+              ),
+            })}
+          />
         </>
       ) : (
         <>
@@ -66,6 +109,12 @@ const Navigator = () => {
             component={MainTabs}
             options={({navigation}) => ({
               headerTitle: 'PPRN',
+              headerTitleAlign: 'center',
+              headerTitleStyle: {
+                fontSize: 30,
+                fontWeight: 'semi-bold',
+              },
+              headerLeft: null,
               headerRight: () => (
                 <View style={styles.headerButtonsContainer}>
                   <TouchableOpacity
@@ -82,12 +131,12 @@ const Navigator = () => {
                       ])
                     }
                     style={styles.buttonContainer}>
-                    <Text style={styles.buttonText}>Log Out</Text>
+                    <Icon name="logout" size={30} color="black" />
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => alert('To User Page')}
-                    style={styles.buttonContainer}>
-                    <Text style={styles.buttonText}>User Page</Text>
+                    style={[styles.buttonContainer, styles.iconButton]}>
+                    <Icon name="account-circle" size={40} color="black" />
                   </TouchableOpacity>
                 </View>
               ),
@@ -102,14 +151,12 @@ const Navigator = () => {
 const styles = StyleSheet.create({
   buttonContainer: {
     marginRight: 10,
-  },
-  buttonText: {
-    color: 'orange',
-    fontSize: 16,
+    justifyContent: 'center',
   },
   headerButtonsContainer: {
     flexDirection: 'row',
-    marginRight: 10,
+    alignItems: 'center',
+    marginRight: 5,
   },
 });
 
