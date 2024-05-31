@@ -1,18 +1,18 @@
 import React, {useState} from 'react';
 import {
   View,
-  TextInput,
   Text,
+  TextInput,
+  Button,
   TouchableOpacity,
   StyleSheet,
-  ActivityIndicator,
-  Alert,
 } from 'react-native';
-import {launchImageLibrary, launchCamera} from 'react-native-image-picker';
-import {addDoc, collection} from 'firebase/firestore';
-import {auth, firestore} from '../firebase';
+import {launchImageLibrary} from 'react-native-image-picker';
+import firestore from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
+import auth from '@react-native-firebase/auth';
 
-export default function PostTweetForm() {
+const TweetPage = () => {
   const [isLoading, setLoading] = useState(false);
   const [tweet, setTweet] = useState('');
   const [file, setFile] = useState(null);
@@ -21,39 +21,12 @@ export default function PostTweetForm() {
     setTweet(text);
   };
 
-  const onFileChange = async () => {
-    Alert.alert(
-      'Select Image Source',
-      'Choose an option',
-      [
-        {
-          text: 'Take Photo',
-          onPress: async () => {
-            const result = await launchCamera({
-              mediaType: 'photo',
-              cameraType: 'back',
-            });
-            handleImageResult(result);
-          },
-        },
-        {
-          text: 'Choose from Library',
-          onPress: async () => {
-            const result = await launchImageLibrary({mediaType: 'photo'});
-            handleImageResult(result);
-          },
-        },
-      ],
-      {cancelable: true},
-    );
-  };
-
-  const handleImageResult = result => {
-    if (result.errorCode) {
-      console.error('Image Picker Error: ', result.errorMessage);
-    } else if (!result.didCancel && result.assets && result.assets.length > 0) {
-      setFile(result.assets[0]);
-    }
+  const openImagePicker = () => {
+    launchImageLibrary({}, response => {
+      if (!response.didCancel) {
+        setFile(response);
+      }
+    });
   };
 
   const clearFile = () => {
@@ -61,24 +34,33 @@ export default function PostTweetForm() {
   };
 
   const onSubmit = async () => {
-    const user = auth.currentUser;
-    if (!user || isLoading || tweet === '' || tweet.length > 180) {
-      return;
-    }
+    const user = auth().currentUser;
+    if (!user || isLoading || tweet === '' || tweet.length > 180) return;
+
     try {
       setLoading(true);
-      await addDoc(collection(firestore, 'tweets'), {
+      const tweetRef = firestore().collection('tweets').doc();
+      const tweetData = {
         tweet,
-        createdAt: Date.now(),
+        createdAt: firestore.FieldValue.serverTimestamp(),
         username: user.displayName || 'Anonymous',
         userId: user.uid,
-      });
-      Alert.alert('Success', 'Tweet has been posted.');
+      };
+      await tweetRef.set(tweetData);
+
+      if (file) {
+        const storageRef = storage().ref(
+          `tweets/${user.uid}-${user.displayName}/${tweetRef.id}`,
+        );
+        await storageRef.putFile(file.uri);
+        const url = await storageRef.getDownloadURL();
+        await tweetRef.update({photo: url});
+      }
+
       setTweet('');
       setFile(null);
     } catch (error) {
-      console.error('Error posting tweet:', error);
-      Alert.alert('Error', 'Failed to post tweet.');
+      console.error(error);
     } finally {
       setLoading(false);
     }
@@ -87,25 +69,17 @@ export default function PostTweetForm() {
   return (
     <View style={styles.container}>
       <TextInput
-        style={styles.textArea}
-        multiline
-        numberOfLines={5}
-        maxLength={180}
+        style={styles.textInput}
         onChangeText={onChange}
         value={tweet}
-        placeholder="Tweet Here!"
-        placeholderTextColor="#888"
+        placeholder="What is happening?!"
+        maxLength={180}
+        multiline
       />
-      <TouchableOpacity
-        style={styles.attachFileButton}
-        onPress={onFileChange}
-        disabled={!!file}
-        accessibilityLabel="Add Image Button"
-        accessibilityHint="Open image picker to add an image to your tweet">
-        <Text style={styles.attachFileButtonText}>
-          {file ? 'Image Added ✅' : 'Add Image'}
-        </Text>
-      </TouchableOpacity>
+      <Button
+        title={file ? 'Photo added ✅' : 'Add photo'}
+        onPress={openImagePicker}
+      />
       {file && (
         <TouchableOpacity
           style={styles.clearFileButton}
@@ -115,102 +89,39 @@ export default function PostTweetForm() {
           <Text style={styles.clearFileButtonText}>Remove Image ❌</Text>
         </TouchableOpacity>
       )}
-      <TouchableOpacity
-        style={styles.submitBtn}
+      <Button
+        title={isLoading ? 'Posting...' : 'Post Tweet'}
         onPress={onSubmit}
-        disabled={isLoading}
-        accessibilityLabel="Post Tweet Button"
-        accessibilityHint="Submit your tweet">
-        {isLoading ? (
-          <ActivityIndicator color="#fff" />
-        ) : (
-          <Text style={styles.submitBtnText}>Post Tweet</Text>
-        )}
-      </TouchableOpacity>
+        disabled={!tweet || isLoading}
+      />
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'honeydew',
-    alignItems: 'center',
-    justifyContent: 'center',
     padding: 20,
+    justifyContent: 'center',
   },
-  textArea: {
-    borderColor: '#1d9bf0',
-    borderWidth: 1,
-    padding: 15,
-    borderRadius: 8,
-    fontSize: 16,
-    color: '#333',
-    backgroundColor: '#fff',
-    width: '100%',
+  textInput: {
     marginBottom: 10,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 1},
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  attachFileButton: {
-    paddingVertical: 10,
-    borderRadius: 8,
-    borderColor: '#1d9bf0',
+    padding: 10,
+    borderColor: 'gray',
     borderWidth: 1,
-    alignItems: 'center',
-    backgroundColor: '#fff',
-    width: '100%',
-    marginBottom: 10,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 1},
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  attachFileButtonText: {
-    color: '#1d9bf0',
-    fontSize: 16,
-    fontWeight: '600',
+    borderRadius: 5,
   },
   clearFileButton: {
-    paddingVertical: 10,
-    borderRadius: 8,
-    borderColor: 'red',
-    borderWidth: 1,
+    marginVertical: 10,
+    padding: 10,
+    backgroundColor: 'red',
+    borderRadius: 5,
     alignItems: 'center',
-    marginTop: 10,
-    backgroundColor: '#fff',
-    width: '100%',
-    marginBottom: 10,
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 1},
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    elevation: 2,
   },
   clearFileButtonText: {
-    color: 'red',
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  submitBtn: {
-    backgroundColor: '#1d9bf0',
-    paddingVertical: 12,
-    borderRadius: 8,
-    alignItems: 'center',
-    width: '100%',
-    shadowColor: '#000',
-    shadowOffset: {width: 0, height: 1},
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-    elevation: 2,
-  },
-  submitBtnText: {
     color: 'white',
-    fontSize: 16,
-    fontWeight: '600',
+    fontWeight: 'bold',
   },
 });
+
+export default TweetPage;
