@@ -6,8 +6,9 @@ import {
   Button,
   TouchableOpacity,
   StyleSheet,
+  Alert,
 } from 'react-native';
-import {launchImageLibrary} from 'react-native-image-picker';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import auth from '@react-native-firebase/auth';
@@ -21,12 +22,52 @@ const TweetPage = () => {
     setTweet(text);
   };
 
-  const openImagePicker = () => {
-    launchImageLibrary({}, response => {
-      if (!response.didCancel) {
-        setFile(response);
+  const handleImageResult = response => {
+    if (response.didCancel) {
+      console.log('User cancelled image picker');
+    } else if (response.errorCode) {
+      Alert.alert('ImagePicker Error', response.errorMessage);
+    } else {
+      const selectedAsset = response.assets[0];
+      if (selectedAsset.uri) {
+        const fileSizeInMB = selectedAsset.fileSize / (1024 * 1024);
+        if (fileSizeInMB > 3) {
+          Alert.alert(
+            'File size error',
+            'The selected image exceeds the 3MB size limit.',
+          );
+        } else {
+          setFile(selectedAsset);
+        }
       }
-    });
+    }
+  };
+
+  const onFileChange = () => {
+    Alert.alert(
+      'Select Image Source',
+      'Choose an option',
+      [
+        {
+          text: 'Take Photo',
+          onPress: async () => {
+            const result = await launchCamera({
+              mediaType: 'photo',
+              cameraType: 'back',
+            });
+            handleImageResult(result);
+          },
+        },
+        {
+          text: 'Choose from Library',
+          onPress: async () => {
+            const result = await launchImageLibrary({mediaType: 'photo'});
+            handleImageResult(result);
+          },
+        },
+      ],
+      {cancelable: true},
+    );
   };
 
   const clearFile = () => {
@@ -52,15 +93,34 @@ const TweetPage = () => {
         const storageRef = storage().ref(
           `tweets/${user.uid}-${user.displayName}/${tweetRef.id}`,
         );
-        await storageRef.putFile(file.uri);
-        const url = await storageRef.getDownloadURL();
-        await tweetRef.update({photo: url});
+        const uploadTask = storageRef.putFile(file.uri);
+        uploadTask.on(
+          'state_changed',
+          snapshot => {
+            // Progress feedback can be added here if desired
+          },
+          error => {
+            console.error('Image upload error: ', error);
+            Alert.alert(
+              'Upload Error',
+              'There was an error uploading the image.',
+            );
+          },
+          async () => {
+            const url = await storageRef.getDownloadURL();
+            await tweetRef.update({photo: url});
+            setFile(null);
+          },
+        );
       }
 
       setTweet('');
-      setFile(null);
     } catch (error) {
-      console.error(error);
+      console.error('Tweet submission error: ', error);
+      Alert.alert(
+        'Submission Error',
+        'There was an error submitting your tweet.',
+      );
     } finally {
       setLoading(false);
     }
@@ -78,7 +138,7 @@ const TweetPage = () => {
       />
       <Button
         title={file ? 'Photo added ✅' : 'Add photo'}
-        onPress={openImagePicker}
+        onPress={onFileChange}
       />
       {file && (
         <TouchableOpacity
