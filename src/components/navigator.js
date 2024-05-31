@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, TouchableOpacity, Text, Alert} from 'react-native';
+import {View, StyleSheet, TouchableOpacity, Alert} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {onAuthStateChanged} from 'firebase/auth';
 import {auth} from '../firebase';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -8,9 +9,27 @@ import IntroPage from '../pages/IntroPage';
 import LoginPage from '../pages/LoginPage';
 import SignupPage from '../pages/SignupPage';
 import LoadingScreen from './loadingScreen';
-import MainTabs from './mainTabs';
+import HomePage from '../pages/HomePage';
+import TweetPage from '../pages/TweetPage';
+import InstaPage from '../pages/InstaPage';
+import ShopPage from '../pages/ShopPage';
 
 const Stack = createStackNavigator();
+const Tab = createMaterialTopTabNavigator();
+
+const MainTabs = () => (
+  <Tab.Navigator
+    screenOptions={{
+      tabBarIndicatorStyle: {backgroundColor: 'black'},
+      tabBarLabelStyle: {fontSize: 12},
+      tabBarStyle: {backgroundColor: '#fff'},
+    }}>
+    <Tab.Screen name="HomePage" component={HomePage} />
+    <Tab.Screen name="TweetPage" component={TweetPage} />
+    <Tab.Screen name="InstaPage" component={InstaPage} />
+    <Tab.Screen name="ShopPage" component={ShopPage} />
+  </Tab.Navigator>
+);
 
 const Navigator = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -33,117 +52,67 @@ const Navigator = () => {
   const handleLogout = async navigation => {
     try {
       await auth.signOut();
-      navigation.navigate('LoginPage');
+      navigation.replace('LoginPage');
     } catch (error) {
       Alert.alert('로그아웃 에러', '로그아웃 중 문제가 발생했습니다.');
     }
   };
 
   return (
-    <Stack.Navigator>
-      {isLoggedIn ? (
-        <>
-          <Stack.Screen
-            name="LoginPage"
-            component={LoginPage}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="MainTabs"
-            component={MainTabs}
-            options={({navigation}) => ({
-              headerTitle: 'PPRN',
-              headerTitleAlign: 'center',
-              headerTitleStyle: {
-                fontSize: 30,
-                fontWeight: 'semi-bold',
-              },
-              headerLeft: null,
-              headerRight: () => (
-                <View style={styles.headerButtonsContainer}>
-                  <TouchableOpacity
-                    onPress={() =>
-                      Alert.alert('로그아웃', '정말 로그아웃 하시겠습니까?', [
-                        {
-                          text: 'Cancel',
-                          style: 'cancel',
-                        },
-                        {
-                          text: 'OK',
-                          onPress: () => handleLogout(navigation),
-                        },
-                      ])
-                    }
-                    style={styles.buttonContainer}>
-                    <Icon name="logout" size={30} color="black" />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => alert('To User Page')}
-                    style={[styles.buttonContainer, styles.iconButton]}>
-                    <Icon name="account-circle" size={40} color="black" />
-                  </TouchableOpacity>
-                </View>
-              ),
-            })}
-          />
-        </>
-      ) : (
-        <>
-          <Stack.Screen
-            name="IntroPage"
-            component={IntroPage}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="LoginPage"
-            component={LoginPage}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="SignupPage"
-            component={SignupPage}
-            options={{headerShown: false}}
-          />
-          <Stack.Screen
-            name="MainTabs"
-            component={MainTabs}
-            options={({navigation}) => ({
-              headerTitle: 'PPRN',
-              headerTitleAlign: 'center',
-              headerTitleStyle: {
-                fontSize: 30,
-                fontWeight: 'semi-bold',
-              },
-              headerLeft: null,
-              headerRight: () => (
-                <View style={styles.headerButtonsContainer}>
-                  <TouchableOpacity
-                    onPress={() =>
-                      Alert.alert('로그아웃', '정말 로그아웃 하시겠습니까?', [
-                        {
-                          text: 'Cancel',
-                          style: 'cancel',
-                        },
-                        {
-                          text: 'OK',
-                          onPress: () => handleLogout(navigation),
-                        },
-                      ])
-                    }
-                    style={styles.buttonContainer}>
-                    <Icon name="logout" size={30} color="black" />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => alert('To User Page')}
-                    style={[styles.buttonContainer, styles.iconButton]}>
-                    <Icon name="account-circle" size={40} color="black" />
-                  </TouchableOpacity>
-                </View>
-              ),
-            })}
-          />
-        </>
-      )}
+    <Stack.Navigator initialRouteName={isLoggedIn ? 'MainTabs' : 'IntroPage'}>
+      <Stack.Screen
+        name="IntroPage"
+        component={IntroPage}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="LoginPage"
+        component={LoginPage}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="SignupPage"
+        component={SignupPage}
+        options={{headerShown: false}}
+      />
+      <Stack.Screen
+        name="MainTabs"
+        component={MainTabs}
+        options={({navigation}) => ({
+          headerTitle: 'PPRN',
+          headerTitleAlign: 'center',
+          headerTitleStyle: {
+            fontSize: 30,
+            fontWeight: 'semi-bold',
+          },
+          headerLeft: null,
+          headerRight: () => (
+            <View style={styles.headerButtonsContainer}>
+              <TouchableOpacity
+                onPress={() =>
+                  Alert.alert('로그아웃', '정말 로그아웃 하시겠습니까?', [
+                    {
+                      text: 'Cancel',
+                      style: 'cancel',
+                    },
+                    {
+                      text: 'OK',
+                      onPress: () => handleLogout(navigation),
+                    },
+                  ])
+                }
+                style={styles.buttonContainer}>
+                <Icon name="logout" size={30} color="black" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => alert('To User Page')}
+                style={[styles.buttonContainer, styles.iconButton]}>
+                <Icon name="account-circle" size={40} color="black" />
+              </TouchableOpacity>
+            </View>
+          ),
+        })}
+      />
     </Stack.Navigator>
   );
 };

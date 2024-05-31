@@ -6,8 +6,9 @@ import Navigator from './components/navigator';
 export default function App() {
   return (
     <NavigationContainer>
-      <Navigator />
-      <SafeAreaView />
+      <SafeAreaView style={{flex: 1}}>
+        <Navigator />
+      </SafeAreaView>
     </NavigationContainer>
   );
 }
