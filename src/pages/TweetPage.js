@@ -7,11 +7,14 @@ import {
   TouchableOpacity,
   StyleSheet,
   Alert,
+  Image,
+  ActivityIndicator,
 } from 'react-native';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import auth from '@react-native-firebase/auth';
+import Timeline from '../components/timeline';
 
 const TweetPage = () => {
   const [isLoading, setLoading] = useState(false);
@@ -96,9 +99,7 @@ const TweetPage = () => {
         const uploadTask = storageRef.putFile(file.uri);
         uploadTask.on(
           'state_changed',
-          snapshot => {
-            // Progress feedback can be added here if desired
-          },
+          snapshot => {},
           error => {
             console.error('Image upload error: ', error);
             Alert.alert(
@@ -128,32 +129,38 @@ const TweetPage = () => {
 
   return (
     <View style={styles.container}>
-      <TextInput
-        style={styles.textInput}
-        onChangeText={onChange}
-        value={tweet}
-        placeholder="What is happening?!"
-        maxLength={180}
-        multiline
-      />
-      <Button
-        title={file ? 'Photo added ✅' : 'Add photo'}
-        onPress={onFileChange}
-      />
-      {file && (
-        <TouchableOpacity
-          style={styles.clearFileButton}
-          onPress={clearFile}
-          accessibilityLabel="Remove Image Button"
-          accessibilityHint="Remove selected image">
-          <Text style={styles.clearFileButtonText}>Remove Image ❌</Text>
-        </TouchableOpacity>
-      )}
-      <Button
-        title={isLoading ? 'Posting...' : 'Post Tweet'}
-        onPress={onSubmit}
-        disabled={!tweet || isLoading}
-      />
+      <View style={styles.inputContainer}>
+        <TextInput
+          style={styles.textInput}
+          onChangeText={onChange}
+          value={tweet}
+          placeholder="What is happening?!"
+          maxLength={180}
+          multiline
+        />
+        {file && (
+          <View style={styles.imagePreview}>
+            <Image source={{uri: file.uri}} style={styles.image} />
+            <TouchableOpacity
+              style={styles.clearFileButton}
+              onPress={clearFile}
+              accessibilityLabel="Remove Image Button"
+              accessibilityHint="Remove selected image">
+              <Text style={styles.clearFileButtonText}>❌</Text>
+            </TouchableOpacity>
+          </View>
+        )}
+        <View style={styles.buttonContainer}>
+          <Button title="Add photo" onPress={onFileChange} />
+          <Button
+            title={isLoading ? 'Posting...' : 'Post Tweet'}
+            onPress={onSubmit}
+            disabled={!tweet || isLoading}
+          />
+        </View>
+        {isLoading && <ActivityIndicator size="large" color="#1DA1F2" />}
+      </View>
+      <Timeline />
     </View>
   );
 };
@@ -161,26 +168,45 @@ const TweetPage = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    justifyContent: 'center',
+    backgroundColor: 'white',
+  },
+  inputContainer: {
+    padding: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc',
   },
   textInput: {
-    marginBottom: 10,
-    padding: 10,
     borderColor: 'gray',
     borderWidth: 1,
     borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+    fontSize: 16,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   clearFileButton: {
-    marginVertical: 10,
-    padding: 10,
-    backgroundColor: 'red',
-    borderRadius: 5,
-    alignItems: 'center',
+    position: 'absolute',
+    top: 0,
+    right: 0,
+    padding: 5,
+    backgroundColor: 'rgba(255, 0, 0, 0.7)',
+    borderRadius: 12,
   },
   clearFileButtonText: {
     color: 'white',
-    fontWeight: 'bold',
+    fontSize: 12,
+  },
+  imagePreview: {
+    position: 'relative',
+    marginBottom: 10,
+  },
+  image: {
+    width: '100%',
+    height: 200,
+    borderRadius: 10,
   },
 });
 
