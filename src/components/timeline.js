@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {View, ScrollView, StyleSheet} from 'react-native';
+import {ScrollView, StyleSheet} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import Tweet from './tweet';
 
@@ -15,7 +15,7 @@ export default function Timeline() {
           const {tweet, createdAt, userId, username, photo} = doc.data();
           return {
             tweet,
-            createdAt: createdAt ? createdAt.toDate() : new Date(), // createdAt이 null일 경우 현재 시간으로 대체
+            createdAt: createdAt ? createdAt.toDate() : new Date(),
             userId,
             username,
             photo,
