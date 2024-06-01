@@ -1,10 +1,8 @@
 import React, {useState} from 'react';
 import {
   View,
-  Text,
   TextInput,
   Button,
-  TouchableOpacity,
   StyleSheet,
   Alert,
   Image,
@@ -139,13 +137,7 @@ const TweetPage = () => {
         {file && (
           <View style={styles.imagePreview}>
             <Image source={{uri: file.uri}} style={styles.image} />
-            <TouchableOpacity
-              style={styles.clearFileButton}
-              onPress={clearFile}
-              accessibilityLabel="Remove Image Button"
-              accessibilityHint="Remove selected image">
-              <Text style={styles.clearFileButtonText}>❌</Text>
-            </TouchableOpacity>
+            <Button title="Remove Image" onPress={clearFile} />
           </View>
         )}
         <View style={styles.buttonContainer}>
@@ -185,20 +177,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  clearFileButton: {
-    position: 'absolute',
-    top: 0,
-    right: 0,
-    padding: 5,
-    backgroundColor: 'rgba(255, 0, 0, 0.7)',
-    borderRadius: 12,
-  },
-  clearFileButtonText: {
-    color: 'white',
-    fontSize: 12,
-  },
   imagePreview: {
-    position: 'relative',
     marginBottom: 10,
   },
   image: {
