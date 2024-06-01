@@ -1,70 +1,41 @@
 import React from 'react';
 import {View, Text, Image, StyleSheet} from 'react-native';
 
-const Tweet = ({id, photo, tweet, userId, username, createdAt}) => {
+export default function Tweet({username, photo, tweet}) {
   return (
-    <View style={styles.tweetContainer}>
-      {photo ? (
-        <Image source={{uri: photo}} style={styles.photo} />
-      ) : (
-        <View style={styles.placeholderPhoto} />
-      )}
-      <View style={styles.textContainer}>
-        <Text style={styles.tweet}>{tweet}</Text>
-        <View style={styles.userInfo}>
-          <Text style={styles.username}>{username}</Text>
-          <Text style={styles.timestamp}>
-            {new Date(createdAt).toLocaleString()}
-          </Text>
-        </View>
+    <View style={styles.wrapper}>
+      <View style={styles.column}>
+        <Text style={styles.username}>{username}</Text>
+        <Text style={styles.payload}>{tweet}</Text>
       </View>
+      {photo && <Image style={styles.photo} source={{uri: photo}} />}
     </View>
   );
-};
+}
 
 const styles = StyleSheet.create({
-  tweetContainer: {
+  wrapper: {
     flexDirection: 'row',
-    padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#e1e8ed',
-    backgroundColor: '#FFFFFF',
+    padding: 20,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.5)',
+    borderRadius: 15,
   },
-  photo: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    marginRight: 10,
-  },
-  placeholderPhoto: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    marginRight: 10,
-    backgroundColor: '#e1e8ed',
-  },
-  textContainer: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  tweet: {
-    fontSize: 17,
-    fontWeight: '500',
-    marginBottom: 5,
-  },
-  userInfo: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  column: {
+    flex: 3,
   },
   username: {
+    fontWeight: '600',
     fontSize: 15,
-    color: '#1DA1F2',
-    marginRight: 5,
   },
-  timestamp: {
-    fontSize: 12,
-    color: '#657786',
+  payload: {
+    marginVertical: 10,
+    fontSize: 18,
+  },
+  photo: {
+    width: 100,
+    height: 100,
+    borderRadius: 15,
+    flex: 1,
   },
 });
-
-export default Tweet;
