@@ -93,9 +93,7 @@ const TweetPage = () => {
       await tweetRef.set(tweetData);
 
       if (file) {
-        const storageRef = storage().ref(
-          `tweets/${user.uid}-${user.displayName}/${tweetRef.id}`,
-        );
+        const storageRef = storage().ref(`tweets/${user.uid}/${tweetRef.id}`);
         const uploadTask = storageRef.putFile(file.uri);
         uploadTask.on(
           'state_changed',
