@@ -7,15 +7,22 @@ import {
   TouchableOpacity,
   Modal,
   ScrollView,
+  TextInput,
+  Alert,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import storage from '@react-native-firebase/storage';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 export default function Tweet({username, avatar, tweet, photo, id, userId}) {
   const currentUser = auth().currentUser;
   const [modalVisible, setModalVisible] = useState(false);
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [newTweet, setNewTweet] = useState(tweet);
+  const [newPhoto, setNewPhoto] = useState(photo);
+  const [imageUri, setImageUri] = useState(null);
 
   const deleteTweet = async () => {
     try {
@@ -26,6 +33,59 @@ export default function Tweet({username, avatar, tweet, photo, id, userId}) {
       }
     } catch (error) {
       console.error('Error deleting tweet:', error);
+    }
+  };
+
+  const editTweet = async () => {
+    try {
+      let updatedPhoto = newPhoto;
+      if (imageUri) {
+        const reference = storage().ref(`/tweets/${id}`);
+        await reference.putFile(imageUri);
+        updatedPhoto = await reference.getDownloadURL();
+      }
+
+      await firestore().collection('tweets').doc(id).update({
+        tweet: newTweet,
+        photo: updatedPhoto,
+      });
+      setEditModalVisible(false);
+      setModalVisible(false);
+    } catch (error) {
+      console.error('Error updating tweet:', error);
+    }
+  };
+
+  const onFileChange = () => {
+    Alert.alert(
+      'Select Image Source',
+      'Choose an option',
+      [
+        {
+          text: 'Take Photo',
+          onPress: async () => {
+            const result = await launchCamera({
+              mediaType: 'photo',
+              cameraType: 'back',
+            });
+            handleImageResult(result);
+          },
+        },
+        {
+          text: 'Choose from Library',
+          onPress: async () => {
+            const result = await launchImageLibrary({mediaType: 'photo'});
+            handleImageResult(result);
+          },
+        },
+      ],
+      {cancelable: true},
+    );
+  };
+
+  const handleImageResult = result => {
+    if (result.assets && result.assets.length > 0) {
+      setImageUri(result.assets[0].uri);
     }
   };
 
@@ -68,12 +128,64 @@ export default function Tweet({username, avatar, tweet, photo, id, userId}) {
               {photo && <Image style={styles.photo} source={{uri: photo}} />}
               <Text style={styles.payload}>{tweet}</Text>
               {currentUser && currentUser.uid === userId && (
-                <TouchableOpacity
-                  onPress={deleteTweet}
-                  style={styles.deleteButton}>
-                  <Text style={styles.deleteText}>Delete</Text>
-                </TouchableOpacity>
+                <View>
+                  <TouchableOpacity
+                    onPress={deleteTweet}
+                    style={styles.deleteButton}>
+                    <Text style={styles.deleteText}>Delete</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={() => setEditModalVisible(true)}
+                    style={styles.editButton}>
+                    <Text style={styles.editText}>Edit</Text>
+                  </TouchableOpacity>
+                </View>
               )}
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={editModalVisible}
+        onRequestClose={() => {
+          setEditModalVisible(!editModalVisible);
+        }}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <TouchableOpacity
+              onPress={() => setEditModalVisible(!editModalVisible)}
+              style={styles.iconCloseButton}>
+              <MaterialCommunityIcons
+                name="close-circle-outline"
+                size={32}
+                color="#3A3A3A"
+              />
+            </TouchableOpacity>
+            <ScrollView>
+              <Text style={styles.username}>{username}</Text>
+              <TextInput
+                style={styles.textInput}
+                value={newTweet}
+                onChangeText={setNewTweet}
+                multiline
+              />
+              {imageUri ? (
+                <Image style={styles.photo} source={{uri: imageUri}} />
+              ) : (
+                newPhoto && (
+                  <Image style={styles.photo} source={{uri: newPhoto}} />
+                )
+              )}
+              <TouchableOpacity
+                onPress={onFileChange}
+                style={styles.imageButton}>
+                <Text style={styles.imageButtonText}>Change Photo</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={editTweet} style={styles.saveButton}>
+                <Text style={styles.saveText}>Save</Text>
+              </TouchableOpacity>
             </ScrollView>
           </View>
         </View>
@@ -129,6 +241,18 @@ const styles = StyleSheet.create({
     color: 'white',
     fontSize: 14,
   },
+  editButton: {
+    backgroundColor: '#3498db',
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    alignSelf: 'flex-start',
+    marginTop: 5,
+  },
+  editText: {
+    color: 'white',
+    fontSize: 14,
+  },
   modalOverlay: {
     flex: 1,
     justifyContent: 'center',
@@ -154,5 +278,39 @@ const styles = StyleSheet.create({
     position: 'absolute',
     top: 15,
     right: 15,
+  },
+  textInput: {
+    borderColor: '#e0e0e0',
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 10,
+    fontSize: 16,
+    marginVertical: 10,
+    height: 100,
+    textAlignVertical: 'top',
+  },
+  imageButton: {
+    backgroundColor: '#3498db',
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    alignSelf: 'flex-start',
+    marginTop: 10,
+  },
+  imageButtonText: {
+    color: 'white',
+    fontSize: 14,
+  },
+  saveButton: {
+    backgroundColor: '#2ecc71',
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    alignSelf: 'flex-start',
+    marginTop: 10,
+  },
+  saveText: {
+    color: 'white',
+    fontSize: 14,
   },
 });

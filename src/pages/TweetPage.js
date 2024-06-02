@@ -7,17 +7,23 @@ import {
   Alert,
   Image,
   ActivityIndicator,
+  Modal,
+  TouchableOpacity,
+  Text,
+  ScrollView,
 } from 'react-native';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import auth from '@react-native-firebase/auth';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import Timeline from '../components/timeline';
 
 const TweetPage = () => {
   const [isLoading, setLoading] = useState(false);
   const [tweet, setTweet] = useState('');
   const [file, setFile] = useState(null);
+  const [isModalVisible, setModalVisible] = useState(false);
 
   const onChange = text => {
     setTweet(text);
@@ -112,6 +118,7 @@ const TweetPage = () => {
       }
 
       setTweet('');
+      setModalVisible(false); // Close the modal after submission
     } catch (error) {
       console.error('Tweet submission error: ', error);
       Alert.alert(
@@ -123,33 +130,68 @@ const TweetPage = () => {
     }
   };
 
+  const openModal = () => {
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+
   return (
     <View style={styles.container}>
-      <View style={styles.inputContainer}>
-        <TextInput
-          style={styles.textInput}
-          onChangeText={onChange}
-          value={tweet}
-          placeholder="What is happening?!"
-          maxLength={180}
-          multiline
-        />
-        {file && (
-          <View style={styles.imagePreview}>
-            <Image source={{uri: file.uri}} style={styles.image} />
-            <Button title="Remove Image" onPress={clearFile} />
+      <TouchableOpacity style={styles.addButton} onPress={openModal}>
+        <Text style={styles.addButtonText}>Add Tweet</Text>
+      </TouchableOpacity>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={isModalVisible}
+        onRequestClose={closeModal}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <TouchableOpacity
+              onPress={closeModal}
+              style={styles.iconCloseButton}>
+              <MaterialCommunityIcons
+                name="close-circle-outline"
+                size={32}
+                color="#3A3A3A"
+              />
+            </TouchableOpacity>
+            <ScrollView>
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={styles.textInput}
+                  onChangeText={onChange}
+                  value={tweet}
+                  placeholder="What is happening?!"
+                  maxLength={180}
+                  multiline
+                />
+                {file && (
+                  <View style={styles.imagePreview}>
+                    <Image source={{uri: file.uri}} style={styles.image} />
+                    <Button title="Remove Image" onPress={clearFile} />
+                  </View>
+                )}
+                <View style={styles.buttonContainer}>
+                  <Button title="Add photo" onPress={onFileChange} />
+                  <Button
+                    title={isLoading ? 'Posting...' : 'Post Tweet'}
+                    onPress={onSubmit}
+                    disabled={!tweet || isLoading}
+                  />
+                </View>
+                {isLoading && (
+                  <ActivityIndicator size="large" color="#1DA1F2" />
+                )}
+              </View>
+            </ScrollView>
           </View>
-        )}
-        <View style={styles.buttonContainer}>
-          <Button title="Add photo" onPress={onFileChange} />
-          <Button
-            title={isLoading ? 'Posting...' : 'Post Tweet'}
-            onPress={onSubmit}
-            disabled={!tweet || isLoading}
-          />
         </View>
-        {isLoading && <ActivityIndicator size="large" color="#1DA1F2" />}
-      </View>
+      </Modal>
+
       <Timeline />
     </View>
   );
@@ -160,17 +202,42 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
   },
-  inputContainer: {
+  addButton: {
+    alignSelf: 'flex-end',
     padding: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc',
+    backgroundColor: '#1DA1F2',
+    borderRadius: 5,
+    margin: 10,
+  },
+  addButtonText: {
+    color: 'white',
+    fontSize: 16,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    width: '90%',
+    backgroundColor: 'white',
+    borderRadius: 10,
+    padding: 20,
+  },
+  iconCloseButton: {
+    alignSelf: 'flex-end',
+  },
+  inputContainer: {
+    marginVertical: 10,
   },
   textInput: {
+    height: 200,
     borderColor: 'gray',
     borderWidth: 1,
     borderRadius: 5,
     padding: 10,
-    marginBottom: 10,
+    marginBottom: 30,
     fontSize: 16,
   },
   buttonContainer: {
