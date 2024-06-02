@@ -1,5 +1,13 @@
-import React from 'react';
-import {View, Text, Image, StyleSheet, TouchableOpacity} from 'react-native';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+  Modal,
+  ScrollView,
+} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
@@ -7,6 +15,7 @@ import storage from '@react-native-firebase/storage';
 
 export default function Tweet({username, avatar, tweet, photo, id, userId}) {
   const currentUser = auth().currentUser;
+  const [modalVisible, setModalVisible] = useState(false);
 
   const deleteTweet = async () => {
     try {
@@ -21,7 +30,9 @@ export default function Tweet({username, avatar, tweet, photo, id, userId}) {
   };
 
   return (
-    <View style={styles.wrapper}>
+    <TouchableOpacity
+      onPress={() => setModalVisible(true)}
+      style={styles.wrapper}>
       <MaterialCommunityIcons name="account-circle" size={50} />
       <View style={styles.content}>
         <Text style={styles.username}>{username}</Text>
@@ -33,7 +44,41 @@ export default function Tweet({username, avatar, tweet, photo, id, userId}) {
           </TouchableOpacity>
         )}
       </View>
-    </View>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => {
+          setModalVisible(!modalVisible);
+        }}>
+        <View style={styles.modalOverlay}>
+          <View style={styles.modalContent}>
+            <TouchableOpacity
+              onPress={() => setModalVisible(!modalVisible)}
+              style={styles.iconCloseButton}>
+              <MaterialCommunityIcons
+                name="close-circle-outline"
+                size={32}
+                color="#3A3A3A"
+              />
+            </TouchableOpacity>
+            <ScrollView>
+              <MaterialCommunityIcons name="account-circle" size={50} />
+              <Text style={styles.username}>{username}</Text>
+              {photo && <Image style={styles.photo} source={{uri: photo}} />}
+              <Text style={styles.payload}>{tweet}</Text>
+              {currentUser && currentUser.uid === userId && (
+                <TouchableOpacity
+                  onPress={deleteTweet}
+                  style={styles.deleteButton}>
+                  <Text style={styles.deleteText}>Delete</Text>
+                </TouchableOpacity>
+              )}
+            </ScrollView>
+          </View>
+        </View>
+      </Modal>
+    </TouchableOpacity>
   );
 }
 
@@ -57,8 +102,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   username: {
-    fontWeight: 'bold',
-    fontSize: 16,
+    fontWeight: 'semibold',
+    fontSize: 20,
     color: '#333333',
   },
   payload: {
@@ -83,5 +128,31 @@ const styles = StyleSheet.create({
   deleteText: {
     color: 'white',
     fontSize: 14,
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  modalContent: {
+    width: '90%',
+    backgroundColor: '#ffffff',
+    borderRadius: 10,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    position: 'relative',
+  },
+  iconCloseButton: {
+    position: 'absolute',
+    top: 15,
+    right: 15,
   },
 });
