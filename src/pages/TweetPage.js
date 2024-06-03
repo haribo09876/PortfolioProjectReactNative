@@ -17,7 +17,7 @@ import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import auth from '@react-native-firebase/auth';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import Timeline from '../components/timeline';
+import TweetTimeline from '../components/tweetTimeline';
 
 const TweetPage = () => {
   const [isLoading, setLoading] = useState(false);
@@ -118,7 +118,7 @@ const TweetPage = () => {
       }
 
       setTweet('');
-      setModalVisible(false); // Close the modal after submission
+      setModalVisible(false);
     } catch (error) {
       console.error('Tweet submission error: ', error);
       Alert.alert(
@@ -191,8 +191,7 @@ const TweetPage = () => {
           </View>
         </View>
       </Modal>
-
-      <Timeline />
+      <TweetTimeline />
     </View>
   );
 };

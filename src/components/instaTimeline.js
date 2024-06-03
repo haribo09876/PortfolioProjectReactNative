@@ -1,20 +1,20 @@
 import React, {useEffect, useState} from 'react';
 import {ScrollView, StyleSheet} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
-import Tweet from './tweet';
+import Insta from './insta';
 
-export default function Timeline() {
-  const [tweets, setTweets] = useState([]);
+export default function InstaTimeline() {
+  const [instas, setInstas] = useState([]);
 
   useEffect(() => {
     const unsubscribe = firestore()
-      .collection('tweets')
+      .collection('instas')
       .orderBy('createdAt', 'desc')
       .onSnapshot(querySnapshot => {
-        const updatedTweets = querySnapshot.docs.map(doc => {
-          const {tweet, createdAt, userId, username, photo} = doc.data();
+        const updatedInstas = querySnapshot.docs.map(doc => {
+          const {insta, createdAt, userId, username, photo} = doc.data();
           return {
-            tweet,
+            insta,
             createdAt: createdAt ? createdAt.toDate() : new Date(),
             userId,
             username,
@@ -22,7 +22,7 @@ export default function Timeline() {
             id: doc.id,
           };
         });
-        setTweets(updatedTweets);
+        setInstas(updatedInstas);
       });
 
     return () => unsubscribe();
@@ -30,8 +30,8 @@ export default function Timeline() {
 
   return (
     <ScrollView contentContainerStyle={styles.wrapper}>
-      {tweets.map(tweet => (
-        <Tweet key={tweet.id} {...tweet} />
+      {instas.map(insta => (
+        <Insta key={insta.id} {...insta} />
       ))}
     </ScrollView>
   );
