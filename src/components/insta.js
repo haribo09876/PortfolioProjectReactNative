@@ -93,16 +93,8 @@ export default function Insta({username, avatar, insta, photo, id, userId}) {
     <TouchableOpacity
       onPress={() => setModalVisible(true)}
       style={styles.wrapper}>
-      <MaterialCommunityIcons name="account-circle" size={50} />
       <View style={styles.content}>
-        <Text style={styles.username}>{username}</Text>
         {photo && <Image style={styles.photo} source={{uri: photo}} />}
-        <Text style={styles.payload}>{insta}</Text>
-        {currentUser && currentUser.uid === userId && (
-          <TouchableOpacity onPress={deleteInsta} style={styles.deleteButton}>
-            <MaterialCommunityIcons name="delete-outline" size={25} />
-          </TouchableOpacity>
-        )}
       </View>
       <Modal
         animationType="fade"
@@ -226,7 +218,6 @@ const styles = StyleSheet.create({
   photo: {
     width: '100%',
     height: 200,
-    borderRadius: 10,
     marginTop: 10,
   },
   deleteButton: {
