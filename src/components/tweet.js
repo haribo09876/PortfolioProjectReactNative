@@ -100,7 +100,7 @@ export default function Tweet({username, avatar, tweet, photo, id, userId}) {
         <Text style={styles.payload}>{tweet}</Text>
         {currentUser && currentUser.uid === userId && (
           <TouchableOpacity onPress={deleteTweet} style={styles.deleteButton}>
-            <Text style={styles.deleteText}>Delete</Text>
+            <MaterialCommunityIcons name="delete-outline" size={25} />
           </TouchableOpacity>
         )}
       </View>
@@ -132,12 +132,12 @@ export default function Tweet({username, avatar, tweet, photo, id, userId}) {
                   <TouchableOpacity
                     onPress={deleteTweet}
                     style={styles.deleteButton}>
-                    <Text style={styles.deleteText}>Delete</Text>
+                    <MaterialCommunityIcons name="delete-outline" size={25} />
                   </TouchableOpacity>
                   <TouchableOpacity
                     onPress={() => setEditModalVisible(true)}
                     style={styles.editButton}>
-                    <Text style={styles.editText}>Edit</Text>
+                    <MaterialCommunityIcons name="pencil-outline" size={25} />
                   </TouchableOpacity>
                 </View>
               )}
