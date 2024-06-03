@@ -218,7 +218,6 @@ const styles = StyleSheet.create({
   photo: {
     width: '100%',
     height: 200,
-    marginTop: 10,
   },
   deleteButton: {
     backgroundColor: '#e74c3c',
