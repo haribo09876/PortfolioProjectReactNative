@@ -106,7 +106,10 @@ export default function Insta({username, avatar, insta, photo, id, userId}) {
         onRequestClose={() => {
           setModalVisible(!modalVisible);
         }}>
-        <View style={styles.modalOverlay}>
+        <TouchableOpacity
+          activeOpacity={1}
+          onPressOut={() => setModalVisible(false)}
+          style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <TouchableOpacity
               onPress={() => setModalVisible(!modalVisible)}
@@ -122,23 +125,34 @@ export default function Insta({username, avatar, insta, photo, id, userId}) {
               <Text style={styles.username}>{username}</Text>
               {photo && <Image style={styles.photo} source={{uri: photo}} />}
               <Text style={styles.payload}>{insta}</Text>
-              {currentUser && currentUser.uid === userId && (
+              {currentUser && (
                 <View>
-                  <TouchableOpacity
-                    onPress={deleteInsta}
-                    style={styles.deleteButton}>
-                    <MaterialCommunityIcons name="delete-outline" size={25} />
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={() => setEditModalVisible(true)}
-                    style={styles.editButton}>
-                    <MaterialCommunityIcons name="pencil-outline" size={25} />
-                  </TouchableOpacity>
+                  {(currentUser.uid === userId ||
+                    currentUser.email === 'admin@gmail.com') && (
+                    <View>
+                      <TouchableOpacity
+                        onPress={deleteInsta}
+                        style={styles.deleteButton}>
+                        <MaterialCommunityIcons
+                          name="delete-outline"
+                          size={25}
+                        />
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={() => setEditModalVisible(true)}
+                        style={styles.editButton}>
+                        <MaterialCommunityIcons
+                          name="pencil-outline"
+                          size={25}
+                        />
+                      </TouchableOpacity>
+                    </View>
+                  )}
                 </View>
               )}
             </ScrollView>
           </View>
-        </View>
+        </TouchableOpacity>
       </Modal>
       <Modal
         animationType="fade"
@@ -147,7 +161,10 @@ export default function Insta({username, avatar, insta, photo, id, userId}) {
         onRequestClose={() => {
           setEditModalVisible(!editModalVisible);
         }}>
-        <View style={styles.modalOverlay}>
+        <TouchableOpacity
+          activeOpacity={1}
+          onPressOut={() => setEditModalVisible(false)}
+          style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <TouchableOpacity
               onPress={() => setEditModalVisible(!editModalVisible)}
@@ -183,7 +200,7 @@ export default function Insta({username, avatar, insta, photo, id, userId}) {
               </TouchableOpacity>
             </ScrollView>
           </View>
-        </View>
+        </TouchableOpacity>
       </Modal>
     </TouchableOpacity>
   );
