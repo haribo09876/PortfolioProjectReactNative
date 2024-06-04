@@ -9,12 +9,15 @@ import {
   ScrollView,
   TextInput,
   Alert,
+  Dimensions,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import storage from '@react-native-firebase/storage';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+
+const windowWidth = Dimensions.get('window').width;
 
 export default function Insta({username, avatar, insta, photo, id, userId}) {
   const currentUser = auth().currentUser;
@@ -188,13 +191,11 @@ export default function Insta({username, avatar, insta, photo, id, userId}) {
 
 const styles = StyleSheet.create({
   wrapper: {
+    width: windowWidth / 3,
+    height: windowWidth / 3,
     flexDirection: 'row',
-    padding: 15,
     backgroundColor: '#ffffff',
-    borderRadius: 10,
-    marginVertical: 5,
     borderColor: '#e0e0e0',
-    borderWidth: 1,
   },
   avatar: {
     width: 50,
@@ -217,7 +218,7 @@ const styles = StyleSheet.create({
   },
   photo: {
     width: '100%',
-    height: 200,
+    height: 300,
   },
   deleteButton: {
     backgroundColor: '#e74c3c',
