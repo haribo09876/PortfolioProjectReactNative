@@ -21,7 +21,9 @@ import ShopTimeline from '../components/shopTimeline';
 
 const ShopPage = () => {
   const [isLoading, setLoading] = useState(false);
-  const [shop, setShop] = useState('');
+  const [itemTitle, setItemTitle] = useState('');
+  const [itemPrice, setItemPrice] = useState('');
+  const [itemDetail, setItemDetail] = useState('');
   const [file, setFile] = useState(null);
   const [isModalVisible, setModalVisible] = useState(false);
   const [userEmail, setUserEmail] = useState('');
@@ -33,8 +35,16 @@ const ShopPage = () => {
     }
   }, []);
 
-  const onChange = text => {
-    setShop(text);
+  const onChangeItemTitle = text => {
+    setItemTitle(text);
+  };
+
+  const onChangeItemPrice = text => {
+    setItemPrice(text);
+  };
+
+  const onChangeItemDetail = text => {
+    setItemDetail(text);
   };
 
   const handleImageResult = response => {
@@ -91,13 +101,16 @@ const ShopPage = () => {
 
   const onSubmit = async () => {
     const user = auth().currentUser;
-    if (!user || isLoading || shop === '' || shop.length > 180) return;
-
+    if (!user || isLoading || itemTitle === '' || itemTitle.length > 180) {
+      return;
+    }
     try {
       setLoading(true);
       const shopRef = firestore().collection('shops').doc();
       const shopData = {
-        shop,
+        itemTitle,
+        itemPrice,
+        itemDetail,
         createdAt: firestore.FieldValue.serverTimestamp(),
         username: user.displayName || 'Anonymous',
         userId: user.uid,
@@ -124,8 +137,9 @@ const ShopPage = () => {
           },
         );
       }
-
-      setShop('');
+      setItemTitle('');
+      setItemPrice('');
+      setItemDetail('');
       setModalVisible(false);
     } catch (error) {
       console.error('Shop submission error: ', error);
@@ -173,24 +187,24 @@ const ShopPage = () => {
               <View style={styles.inputContainer}>
                 <TextInput
                   style={styles.itemInput}
-                  onChangeText={onChange}
-                  value={shop}
+                  onChangeText={onChangeItemTitle}
+                  value={itemTitle}
                   placeholder="itemTitle"
                   maxLength={180}
                   multiline
                 />
                 <TextInput
                   style={styles.itemInput}
-                  onChangeText={onChange}
-                  value={shop}
+                  onChangeText={onChangeItemPrice}
+                  value={itemPrice}
                   placeholder="itemPrice"
                   maxLength={180}
                   multiline
                 />
                 <TextInput
                   style={styles.textInput}
-                  onChangeText={onChange}
-                  value={shop}
+                  onChangeText={onChangeItemDetail}
+                  value={itemDetail}
                   placeholder="itemDetail"
                   maxLength={180}
                   multiline
@@ -206,7 +220,7 @@ const ShopPage = () => {
                   <Button
                     title={isLoading ? 'Posting...' : 'Post Shop'}
                     onPress={onSubmit}
-                    disabled={!shop || isLoading}
+                    disabled={!itemTitle || isLoading}
                   />
                 </View>
                 {isLoading && (

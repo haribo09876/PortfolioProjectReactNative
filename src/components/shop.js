@@ -17,11 +17,22 @@ import auth from '@react-native-firebase/auth';
 import storage from '@react-native-firebase/storage';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
-export default function Shop({username, avatar, shop, photo, id, userId}) {
+export default function Shop({
+  username,
+  avatar,
+  itemTitle,
+  itemPrice,
+  itemDetail,
+  photo,
+  id,
+  userId,
+}) {
   const currentUser = auth().currentUser;
   const [modalVisible, setModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
-  const [newShop, setNewShop] = useState(shop);
+  const [newItemTitle, setNewItemTitle] = useState(itemTitle);
+  const [newItemPrice, setNewItemPrice] = useState(itemPrice);
+  const [newItemDetail, setNewItemDetail] = useState(itemDetail);
   const [newPhoto, setNewPhoto] = useState(photo);
   const [imageUri, setImageUri] = useState(null);
 
@@ -45,9 +56,10 @@ export default function Shop({username, avatar, shop, photo, id, userId}) {
         await reference.putFile(imageUri);
         updatedPhoto = await reference.getDownloadURL();
       }
-
       await firestore().collection('shops').doc(id).update({
-        shop: newShop,
+        itemTitle: newItemTitle,
+        itemPrice: newItemPrice,
+        itemDetail: newItemDetail,
         photo: updatedPhoto,
       });
       setEditModalVisible(false);
@@ -95,8 +107,9 @@ export default function Shop({username, avatar, shop, photo, id, userId}) {
       onPress={() => setModalVisible(true)}
       style={styles.wrapper}>
       <View style={styles.content}>
-        <Text style={styles.payload}>{shop}</Text>
+        <Text style={styles.payload}>{itemTitle}</Text>
         {photo && <Image style={styles.photo} source={{uri: photo}} />}
+        <Text style={styles.payload}>{itemPrice} 원</Text>
       </View>
       <Modal
         animationType="fade"
@@ -122,18 +135,11 @@ export default function Shop({username, avatar, shop, photo, id, userId}) {
                 {photo && (
                   <Image style={styles.shopPhoto} source={{uri: photo}} />
                 )}
-                <Text style={styles.payload}>{itemPrice}</Text>
+                <Text style={styles.payload}>{itemPrice} 원</Text>
                 <Text style={styles.payload}>{itemDetail}</Text>
                 <TouchableOpacity style={styles.purchaseButton}>
                   <Text style={styles.purchaseText}>구 매</Text>
                 </TouchableOpacity>
-                {/* <Text style={styles.payload}>{shop}</Text>
-                {photo && (
-                  <Image style={styles.shopPhoto} source={{uri: photo}} />
-                )}
-                <TouchableOpacity style={styles.purchaseButton}>
-                  <Text style={styles.purchaseText}>구 매</Text>
-                </TouchableOpacity> */}
                 {currentUser && (
                   <View>
                     {currentUser.email === 'admin@gmail.com' && (
@@ -193,8 +199,20 @@ export default function Shop({username, avatar, shop, photo, id, userId}) {
                 )}
                 <TextInput
                   style={styles.textInput}
-                  value={newShop}
-                  onChangeText={setNewShop}
+                  value={newItemTitle}
+                  onChangeText={setNewItemTitle}
+                  multiline
+                />
+                <TextInput
+                  style={styles.textInput}
+                  value={newItemPrice}
+                  onChangeText={setNewItemPrice}
+                  multiline
+                />
+                <TextInput
+                  style={styles.textInput}
+                  value={newItemDetail}
+                  onChangeText={setNewItemDetail}
                   multiline
                 />
                 <TouchableOpacity
@@ -251,7 +269,7 @@ const styles = StyleSheet.create({
   },
   shopPhoto: {
     width: auth,
-    height: 500,
+    height: 400,
     borderRadius: 10,
     marginTop: 10,
   },

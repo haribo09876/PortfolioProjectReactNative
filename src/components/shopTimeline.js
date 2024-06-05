@@ -12,9 +12,19 @@ export default function ShopTimeline() {
       .orderBy('createdAt', 'desc')
       .onSnapshot(querySnapshot => {
         const updatedShops = querySnapshot.docs.map(doc => {
-          const {shop, createdAt, userId, username, photo} = doc.data();
+          const {
+            itemTitle,
+            itemPrice,
+            itemDetail,
+            createdAt,
+            userId,
+            username,
+            photo,
+          } = doc.data();
           return {
-            shop,
+            itemTitle,
+            itemPrice,
+            itemDetail,
             createdAt: createdAt ? createdAt.toDate() : new Date(),
             userId,
             username,
