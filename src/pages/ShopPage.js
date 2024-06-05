@@ -172,10 +172,26 @@ const ShopPage = () => {
             <ScrollView>
               <View style={styles.inputContainer}>
                 <TextInput
+                  style={styles.itemInput}
+                  onChangeText={onChange}
+                  value={shop}
+                  placeholder="itemTitle"
+                  maxLength={180}
+                  multiline
+                />
+                <TextInput
+                  style={styles.itemInput}
+                  onChangeText={onChange}
+                  value={shop}
+                  placeholder="itemPrice"
+                  maxLength={180}
+                  multiline
+                />
+                <TextInput
                   style={styles.textInput}
                   onChangeText={onChange}
                   value={shop}
-                  placeholder="내용을 입력하세요"
+                  placeholder="itemDetail"
                   maxLength={180}
                   multiline
                 />
@@ -239,6 +255,15 @@ const styles = StyleSheet.create({
   },
   inputContainer: {
     marginVertical: 10,
+  },
+  itemInput: {
+    height: 50,
+    borderColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 30,
+    fontSize: 16,
   },
   textInput: {
     height: 200,

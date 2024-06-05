@@ -97,7 +97,6 @@ export default function Shop({username, avatar, shop, photo, id, userId}) {
       <View style={styles.content}>
         <Text style={styles.payload}>{shop}</Text>
         {photo && <Image style={styles.photo} source={{uri: photo}} />}
-        <Text style={styles.payload}>{shop}</Text>
       </View>
       <Modal
         animationType="fade"
@@ -119,10 +118,22 @@ export default function Shop({username, avatar, shop, photo, id, userId}) {
                 />
               </TouchableOpacity>
               <ScrollView>
-                <Text style={styles.payload}>{shop}</Text>
+                <Text style={styles.payload}>{itemTitle}</Text>
                 {photo && (
                   <Image style={styles.shopPhoto} source={{uri: photo}} />
                 )}
+                <Text style={styles.payload}>{itemPrice}</Text>
+                <Text style={styles.payload}>{itemDetail}</Text>
+                <TouchableOpacity style={styles.purchaseButton}>
+                  <Text style={styles.purchaseText}>구 매</Text>
+                </TouchableOpacity>
+                {/* <Text style={styles.payload}>{shop}</Text>
+                {photo && (
+                  <Image style={styles.shopPhoto} source={{uri: photo}} />
+                )}
+                <TouchableOpacity style={styles.purchaseButton}>
+                  <Text style={styles.purchaseText}>구 매</Text>
+                </TouchableOpacity> */}
                 {currentUser && (
                   <View>
                     {currentUser.email === 'admin@gmail.com' && (
@@ -243,6 +254,20 @@ const styles = StyleSheet.create({
     height: 500,
     borderRadius: 10,
     marginTop: 10,
+  },
+  purchaseButton: {
+    width: '100%',
+    backgroundColor: '#3498db',
+    borderRadius: 5,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    alignItems: 'center',
+    alignSelf: 'flex-start',
+    marginTop: 5,
+  },
+  purchaseText: {
+    color: 'white',
+    fontSize: 20,
   },
   deleteButton: {
     backgroundColor: '#e74c3c',
