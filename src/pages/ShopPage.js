@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   TextInput,
@@ -24,6 +24,14 @@ const ShopPage = () => {
   const [shop, setShop] = useState('');
   const [file, setFile] = useState(null);
   const [isModalVisible, setModalVisible] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
+
+  useEffect(() => {
+    const user = auth().currentUser;
+    if (user) {
+      setUserEmail(user.email);
+    }
+  }, []);
 
   const onChange = text => {
     setShop(text);
@@ -140,9 +148,11 @@ const ShopPage = () => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.addButton} onPress={openModal}>
-        <Text style={styles.addButtonText}>Add Shop</Text>
-      </TouchableOpacity>
+      {userEmail === 'admin@gmail.com' && (
+        <TouchableOpacity style={styles.addButton} onPress={openModal}>
+          <Text style={styles.addButtonText}>새 상품 등록</Text>
+        </TouchableOpacity>
+      )}
       <Modal
         animationType="fade"
         transparent={true}
