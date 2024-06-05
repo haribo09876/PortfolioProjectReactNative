@@ -25,7 +25,6 @@ export default function Shop({
   itemDetail,
   photo,
   id,
-  userId,
 }) {
   const currentUser = auth().currentUser;
   const [modalVisible, setModalVisible] = useState(false);
@@ -189,22 +188,14 @@ export default function Shop({
                 />
               </TouchableOpacity>
               <ScrollView>
-                <Text style={styles.username}>{username}</Text>
-                {imageUri ? (
-                  <Image style={styles.photo} source={{uri: imageUri}} />
-                ) : (
-                  newPhoto && (
-                    <Image style={styles.photo} source={{uri: newPhoto}} />
-                  )
-                )}
                 <TextInput
-                  style={styles.textInput}
+                  style={styles.itemInput}
                   value={newItemTitle}
                   onChangeText={setNewItemTitle}
                   multiline
                 />
                 <TextInput
-                  style={styles.textInput}
+                  style={styles.itemInput}
                   value={newItemPrice}
                   onChangeText={setNewItemPrice}
                   multiline
@@ -215,6 +206,13 @@ export default function Shop({
                   onChangeText={setNewItemDetail}
                   multiline
                 />
+                {imageUri ? (
+                  <Image style={styles.photo} source={{uri: imageUri}} />
+                ) : (
+                  newPhoto && (
+                    <Image style={styles.photo} source={{uri: newPhoto}} />
+                  )
+                )}
                 <TouchableOpacity
                   onPress={onFileChange}
                   style={styles.imageButton}>
@@ -337,15 +335,23 @@ const styles = StyleSheet.create({
     top: 15,
     right: 15,
   },
-  textInput: {
-    borderColor: '#e0e0e0',
+  itemInput: {
+    height: 50,
+    borderColor: 'gray',
     borderWidth: 1,
     borderRadius: 5,
     padding: 10,
+    marginBottom: 30,
     fontSize: 16,
-    marginVertical: 10,
-    height: 100,
-    textAlignVertical: 'top',
+  },
+  textInput: {
+    height: 200,
+    borderColor: 'gray',
+    borderWidth: 1,
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 30,
+    fontSize: 16,
   },
   imageButton: {
     backgroundColor: '#3498db',
