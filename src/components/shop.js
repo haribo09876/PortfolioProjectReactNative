@@ -120,7 +120,9 @@ export default function Shop({username, avatar, shop, photo, id, userId}) {
               </TouchableOpacity>
               <ScrollView>
                 <Text style={styles.payload}>{shop}</Text>
-                {photo && <Image style={styles.photo} source={{uri: photo}} />}
+                {photo && (
+                  <Image style={styles.shopPhoto} source={{uri: photo}} />
+                )}
                 {currentUser && (
                   <View>
                     {currentUser.email === 'admin@gmail.com' && (
@@ -233,6 +235,12 @@ const styles = StyleSheet.create({
   photo: {
     width: '100%',
     height: 200,
+    borderRadius: 10,
+    marginTop: 10,
+  },
+  shopPhoto: {
+    width: auth,
+    height: 500,
     borderRadius: 10,
     marginTop: 10,
   },
