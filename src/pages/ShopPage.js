@@ -165,7 +165,7 @@ const ShopPage = () => {
                   style={styles.textInput}
                   onChangeText={onChange}
                   value={shop}
-                  placeholder="What is happening?!"
+                  placeholder="내용을 입력하세요"
                   maxLength={180}
                   multiline
                 />
