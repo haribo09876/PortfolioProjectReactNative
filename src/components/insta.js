@@ -177,12 +177,6 @@ export default function Insta({username, avatar, insta, photo, id, userId}) {
             </TouchableOpacity>
             <ScrollView>
               <Text style={styles.username}>{username}</Text>
-              <TextInput
-                style={styles.textInput}
-                value={newInsta}
-                onChangeText={setNewInsta}
-                multiline
-              />
               {imageUri ? (
                 <Image style={styles.photo} source={{uri: imageUri}} />
               ) : (
@@ -190,6 +184,12 @@ export default function Insta({username, avatar, insta, photo, id, userId}) {
                   <Image style={styles.photo} source={{uri: newPhoto}} />
                 )
               )}
+              <TextInput
+                style={styles.textInput}
+                value={newInsta}
+                onChangeText={setNewInsta}
+                multiline
+              />
               <TouchableOpacity
                 onPress={onFileChange}
                 style={styles.imageButton}>

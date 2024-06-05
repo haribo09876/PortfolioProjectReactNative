@@ -119,14 +119,11 @@ export default function Shop({username, avatar, shop, photo, id, userId}) {
                 />
               </TouchableOpacity>
               <ScrollView>
-                <MaterialCommunityIcons name="account-circle" size={50} />
-                <Text style={styles.username}>{username}</Text>
-                {photo && <Image style={styles.photo} source={{uri: photo}} />}
                 <Text style={styles.payload}>{shop}</Text>
+                {photo && <Image style={styles.photo} source={{uri: photo}} />}
                 {currentUser && (
                   <View>
-                    {(currentUser.uid === userId ||
-                      currentUser.email === 'admin@gmail.com') && (
+                    {currentUser.email === 'admin@gmail.com' && (
                       <View>
                         <TouchableOpacity
                           onPress={deleteShop}
@@ -174,12 +171,6 @@ export default function Shop({username, avatar, shop, photo, id, userId}) {
               </TouchableOpacity>
               <ScrollView>
                 <Text style={styles.username}>{username}</Text>
-                <TextInput
-                  style={styles.textInput}
-                  value={newShop}
-                  onChangeText={setNewShop}
-                  multiline
-                />
                 {imageUri ? (
                   <Image style={styles.photo} source={{uri: imageUri}} />
                 ) : (
@@ -187,6 +178,12 @@ export default function Shop({username, avatar, shop, photo, id, userId}) {
                     <Image style={styles.photo} source={{uri: newPhoto}} />
                   )
                 )}
+                <TextInput
+                  style={styles.textInput}
+                  value={newShop}
+                  onChangeText={setNewShop}
+                  multiline
+                />
                 <TouchableOpacity
                   onPress={onFileChange}
                   style={styles.imageButton}>
