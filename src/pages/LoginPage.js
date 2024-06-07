@@ -45,10 +45,10 @@ function LoginPage() {
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>로그인</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={[styles.button, styles.altButton]}>
+      <TouchableOpacity style={styles.altButton}>
         <Text style={styles.buttonText}>Google로 로그인</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={[styles.button, styles.altButton]}>
+      <TouchableOpacity style={styles.altButton}>
         <Text style={styles.buttonText}>Github로 로그인</Text>
       </TouchableOpacity>
       <TouchableOpacity
@@ -100,6 +100,12 @@ const styles = StyleSheet.create({
   },
   altButton: {
     backgroundColor: '#74b9ff',
+    width: 250,
+    paddingVertical: 15,
+    paddingHorizontal: 30,
+    borderRadius: 25,
+    marginTop: 20,
+    alignItems: 'center',
   },
   signupButton: {
     backgroundColor: '#2ecc71',
