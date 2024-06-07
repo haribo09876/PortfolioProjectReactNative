@@ -9,6 +9,7 @@ import {
   ScrollView,
   TextInput,
   Alert,
+  Dimensions,
   TouchableWithoutFeedback,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -16,6 +17,8 @@ import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import storage from '@react-native-firebase/storage';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+
+const windowWidth = Dimensions.get('window').width;
 
 export default function Shop({
   username,
@@ -232,13 +235,11 @@ export default function Shop({
 
 const styles = StyleSheet.create({
   wrapper: {
+    width: windowWidth / 2,
     flexDirection: 'row',
     padding: 15,
     backgroundColor: '#ffffff',
-    borderRadius: 10,
     marginVertical: 5,
-    borderColor: '#e0e0e0',
-    borderWidth: 1,
   },
   avatar: {
     width: 50,
@@ -262,7 +263,7 @@ const styles = StyleSheet.create({
   photo: {
     width: '100%',
     height: 200,
-    borderRadius: 10,
+    borderRadius: 5,
     marginTop: 10,
   },
   shopPhoto: {
