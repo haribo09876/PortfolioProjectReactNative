@@ -38,13 +38,6 @@ export default function InstaTimeline() {
       renderItem={renderItem}
       keyExtractor={item => item.id}
       numColumns={3}
-      contentContainerStyle={styles.wrapper}
     />
   );
 }
-
-const styles = StyleSheet.create({
-  wrapper: {
-    padding: 10,
-  },
-});

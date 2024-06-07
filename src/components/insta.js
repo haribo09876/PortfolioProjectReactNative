@@ -97,7 +97,7 @@ export default function Insta({username, avatar, insta, photo, id, userId}) {
       onPress={() => setModalVisible(true)}
       style={styles.wrapper}>
       <View style={styles.content}>
-        {photo && <Image style={styles.photo} source={{uri: photo}} />}
+        {photo && <Image style={styles.instaPhoto} source={{uri: photo}} />}
       </View>
       <Modal
         animationType="fade"
@@ -235,6 +235,10 @@ const styles = StyleSheet.create({
   },
   photo: {
     width: '100%',
+    height: 300,
+  },
+  instaPhoto: {
+    width: '100%',
     height: '100%',
   },
   deleteButton: {
@@ -303,7 +307,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 5,
     alignSelf: 'flex-start',
-    marginTop: 5,
+    marginTop: 10,
   },
   imageButtonText: {
     color: 'white',
@@ -315,7 +319,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 5,
     alignSelf: 'flex-start',
-    marginTop: 5,
+    marginTop: 10,
   },
   saveText: {
     color: 'white',
