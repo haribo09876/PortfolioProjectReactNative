@@ -1,5 +1,5 @@
 import {useNavigation} from '@react-navigation/native';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,11 @@ import {
   Alert,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
+import {
+  GoogleSignin,
+  GoogleSigninButton,
+  statusCodes,
+} from '@react-native-google-signin/google-signin';
 
 function LoginPage() {
   const navigation = useNavigation();
@@ -24,6 +29,28 @@ function LoginPage() {
       .catch(error => {
         Alert.alert('로그인 실패', error.message);
       });
+  };
+
+  useEffect(() => {
+    GoogleSignin.configure({
+      webClientId:
+        '204317415777-us0l59aof8r9399s22gn77qt64r7q1mi.apps.googleusercontent.com',
+    });
+  }, []);
+
+  const handleGoogleLogin = async () => {
+    try {
+      await GoogleSignin.hasPlayServices();
+      const userInfo = await GoogleSignin.signIn();
+      const googleCredential = auth.GoogleAuthProvider.credential(
+        userInfo.idToken,
+      );
+      await auth().signInWithCredential(googleCredential);
+      navigation.navigate('MainTabs');
+    } catch (error) {
+      console.error('Google sign in error:', error);
+      Alert.alert('로그인 실패', 'Google 로그인에 실패했습니다.');
+    }
   };
 
   return (
@@ -45,7 +72,7 @@ function LoginPage() {
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>로그인</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.altButton}>
+      <TouchableOpacity style={styles.altButton} onPress={handleGoogleLogin}>
         <Text style={styles.buttonText}>Google로 로그인</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.altButton}>
