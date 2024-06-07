@@ -1,9 +1,7 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, StyleSheet, View, Dimensions} from 'react-native';
+import {FlatList} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import Insta from './insta';
-
-const windowWidth = Dimensions.get('window').width;
 
 export default function InstaTimeline() {
   const [instas, setInstas] = useState([]);

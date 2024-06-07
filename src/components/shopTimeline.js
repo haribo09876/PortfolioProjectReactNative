@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {ScrollView, StyleSheet} from 'react-native';
+import {FlatList} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import Shop from './shop';
 
@@ -38,17 +38,14 @@ export default function ShopTimeline() {
     return () => unsubscribe();
   }, []);
 
+  const renderItem = ({item}) => <Shop key={item.id} {...item} />;
+
   return (
-    <ScrollView contentContainerStyle={styles.wrapper}>
-      {shops.map(shop => (
-        <Shop key={shop.id} {...shop} />
-      ))}
-    </ScrollView>
+    <FlatList
+      data={shops}
+      renderItem={renderItem}
+      keyExtractor={item => item.id}
+      numColumns={2}
+    />
   );
 }
-
-const styles = StyleSheet.create({
-  wrapper: {
-    padding: 10,
-  },
-});
