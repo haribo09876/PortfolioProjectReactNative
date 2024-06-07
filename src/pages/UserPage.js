@@ -3,7 +3,7 @@ import {View, Text, StyleSheet} from 'react-native';
 function UserPage() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>UserInfo</Text>
+      <Text style={styles.text}>UserPage</Text>
     </View>
   );
 }

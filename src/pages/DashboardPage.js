@@ -1,9 +1,9 @@
 import {View, Text, StyleSheet} from 'react-native';
 
-function DashboardPage() {
+function UserPage() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>Dashboard</Text>
+      <Text style={styles.text}>DashboardPage</Text>
     </View>
   );
 }
@@ -22,4 +22,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DashboardPage;
+export default UserPage;
