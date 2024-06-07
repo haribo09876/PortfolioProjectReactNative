@@ -12,69 +12,87 @@ import {
 import Geolocation from 'react-native-geolocation-service';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+
 const {width: SCREEN_WIDTH} = Dimensions.get('window');
 const API_KEY = '174580b1f4ee4ec1e406e56c83717aed';
 
+const icons = {
+  Clouds: 'weather-cloudy',
+  Clear: 'weather-sunny',
+  Atmosphere: 'weather-fog',
+  Snow: 'snowflake',
+  Rain: 'weather-pouring',
+  Drizzle: 'weather-fog',
+  Thunderstorm: 'weather-lightning',
+};
+
 export default function Weather() {
-  const [location, setLocation] = useState(true);
   const [city, setCity] = useState('Loading...');
   const [days, setDays] = useState([]);
-  const url = `https://api.openweathermap.org/data/2.5/forecast?lat=37.531&lon=126.9814&appid=${API_KEY}`;
+  const [locationPermission, setLocationPermission] = useState(false);
 
-  const icons = {
-    Clouds: 'weather-cloudy',
-    Clear: 'weather-sunny',
-    Atmosphere: 'weather-fog',
-    Snow: 'snowflake',
-    Rain: 'weather-pouring',
-    Drizzle: 'weather-fog',
-    Thunderstorm: 'weather-lightning',
-  };
-
-  // 위치 설정
   useEffect(() => {
-    if (Platform.OS === 'android') {
-      PermissionsAndroid.request(
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
-      );
-    }
-  }, []);
-
-  // 위도, 경도 설정
-  useEffect(() => {
-    const watchId = Geolocation.watchPosition(
-      position => {
-        const {latitude, longitude} = position.coords;
-        setLocation({latitude, longitude});
-      },
-      error => {
-        console.log(error);
-      },
-      {
-        enableHighAccuracy: true, // 배터리를 더 소모하여 보다 정확한 위치 추적
-        timeout: 20000,
-        maximumAge: 0, // 한 번 찾은 위치 정보를 해당 초만큼 캐싱
-        distanceFilter: 1,
-      },
-    );
-    // 컴포넌트 언마운트 시 위치 업데이트 중지
-    return () => {
-      Geolocation.clearWatch(watchId);
+    // 위치 권한 요청
+    const requestLocationPermission = async () => {
+      if (Platform.OS === 'android') {
+        try {
+          const granted = await PermissionsAndroid.request(
+            PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,
+          );
+          if (granted === PermissionsAndroid.RESULTS.GRANTED) {
+            setLocationPermission(true);
+          } else {
+            setLocationPermission(false);
+          }
+        } catch (error) {
+          console.error('Error requesting location permission: ', error);
+          setLocationPermission(false);
+        }
+      } else {
+        // iOS에서는 기본적으로 위치 권한이 허용되어 있음
+        setLocationPermission(true);
+      }
     };
+
+    requestLocationPermission();
   }, []);
 
   useEffect(() => {
-    // 날씨 설정
-    const getWeather = axios.get(url).then(
-      response => {
-        setCity(response.data.city.name);
-        setDays(response.data.list);
-      },
-      error => {
-        console.log(error);
-      },
-    );
-  }, [url]);
+    if (locationPermission) {
+      // 위치 설정
+      const watchId = Geolocation.watchPosition(
+        position => {
+          const {latitude, longitude} = position.coords;
+          fetchWeather(latitude, longitude);
+        },
+        error => {
+          console.error('Error getting location: ', error);
+        },
+        {
+          enableHighAccuracy: true,
+          timeout: 20000,
+          maximumAge: 0,
+          distanceFilter: 1,
+        },
+      );
+
+      return () => {
+        Geolocation.clearWatch(watchId);
+      };
+    }
+  }, [locationPermission]);
+
+  const fetchWeather = async (latitude, longitude) => {
+    const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${API_KEY}`;
+
+    try {
+      const response = await axios.get(url);
+      setCity(response.data.city.name);
+      setDays(response.data.list);
+    } catch (error) {
+      console.error('Error fetching weather data: ', error);
+    }
+  };
 
   return (
     <View style={styles.container}>
