@@ -9,11 +9,7 @@ import {
   Alert,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
-import {
-  GoogleSignin,
-  GoogleSigninButton,
-  statusCodes,
-} from '@react-native-google-signin/google-signin';
+import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
 function LoginPage() {
   const navigation = useNavigation();
@@ -58,25 +54,22 @@ function LoginPage() {
       <Text style={styles.title}>PPRN</Text>
       <TextInput
         style={styles.inputBox}
-        placeholder="  이메일을 입력하세요"
+        placeholder="이메일"
         value={email}
         onChangeText={setEmail}
       />
       <TextInput
         secureTextEntry={true}
         style={styles.inputBox}
-        placeholder="  비밀번호를 입력하세요"
+        placeholder="비밀번호"
         value={password}
         onChangeText={setPassword}
       />
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>로그인</Text>
       </TouchableOpacity>
-      <TouchableOpacity style={styles.altButton} onPress={handleGoogleLogin}>
+      <TouchableOpacity style={styles.googleButton} onPress={handleGoogleLogin}>
         <Text style={styles.buttonText}>Google로 로그인</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.altButton}>
-        <Text style={styles.buttonText}>Github로 로그인</Text>
       </TouchableOpacity>
       <TouchableOpacity
         style={[styles.button, styles.signupButton]}
@@ -102,34 +95,34 @@ const styles = StyleSheet.create({
   },
   inputBox: {
     width: 300,
-    backgroundColor: 'white',
+    backgroundColor: '#ffffff',
     borderRadius: 25,
     fontSize: 18,
-    paddingVertical: 10,
-    paddingHorizontal: 15,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
     marginVertical: 10,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: '#ccc',
   },
   button: {
     backgroundColor: '#3498db',
     width: 250,
     paddingVertical: 15,
-    paddingHorizontal: 30,
+    paddingHorizontal: 20,
     borderRadius: 25,
     marginTop: 20,
     alignItems: 'center',
   },
   buttonText: {
-    color: 'white',
+    color: '#ffffff',
     fontSize: 18,
     fontWeight: 'bold',
   },
-  altButton: {
+  googleButton: {
     backgroundColor: '#74b9ff',
     width: 250,
     paddingVertical: 15,
-    paddingHorizontal: 30,
+    paddingHorizontal: 20,
     borderRadius: 25,
     marginTop: 20,
     alignItems: 'center',
