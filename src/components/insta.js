@@ -235,7 +235,7 @@ const styles = StyleSheet.create({
   },
   photo: {
     width: '100%',
-    height: 300,
+    height: '100%',
   },
   deleteButton: {
     backgroundColor: '#e74c3c',
@@ -303,7 +303,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 5,
     alignSelf: 'flex-start',
-    marginTop: 10,
+    marginTop: 5,
   },
   imageButtonText: {
     color: 'white',
@@ -315,7 +315,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     paddingVertical: 5,
     alignSelf: 'flex-start',
-    marginTop: 10,
+    marginTop: 5,
   },
   saveText: {
     color: 'white',

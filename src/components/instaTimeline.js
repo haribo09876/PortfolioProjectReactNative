@@ -1,7 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import {ScrollView, StyleSheet} from 'react-native';
+import {FlatList, StyleSheet, View, Dimensions} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import Insta from './insta';
+
+const windowWidth = Dimensions.get('window').width;
 
 export default function InstaTimeline() {
   const [instas, setInstas] = useState([]);
@@ -28,12 +30,16 @@ export default function InstaTimeline() {
     return () => unsubscribe();
   }, []);
 
+  const renderItem = ({item}) => <Insta key={item.id} {...item} />;
+
   return (
-    <ScrollView contentContainerStyle={styles.wrapper}>
-      {instas.map(insta => (
-        <Insta key={insta.id} {...insta} />
-      ))}
-    </ScrollView>
+    <FlatList
+      data={instas}
+      renderItem={renderItem}
+      keyExtractor={item => item.id}
+      numColumns={3}
+      contentContainerStyle={styles.wrapper}
+    />
   );
 }
 
