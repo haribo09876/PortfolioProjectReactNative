@@ -12,7 +12,20 @@
           "package_name": "com.portfolioprojectreactnative"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "204317415777-34lk0ddbtcpf69al3q8mi6ffke41odii.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.portfolioprojectreactnative",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "204317415777-us0l59aof8r9399s22gn77qt64r7q1mi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyD6zxgUblEAuK9eXAPRENCvCjLdgsNhVJY"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "204317415777-d7gjm1c4au7lpckde1mvtfmliarsuocm.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }
