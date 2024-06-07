@@ -13,6 +13,8 @@ import HomePage from '../pages/HomePage';
 import TweetPage from '../pages/TweetPage';
 import InstaPage from '../pages/InstaPage';
 import ShopPage from '../pages/ShopPage';
+import DashboardPage from '../pages/DashboardPage';
+import UserPage from '../pages/UserPage';
 
 const Stack = createStackNavigator();
 const Tab = createMaterialTopTabNavigator();
@@ -105,7 +107,12 @@ const Navigator = () => {
                 <Icon name="logout" size={30} color="black" />
               </TouchableOpacity>
               <TouchableOpacity
-                onPress={() => alert('To User Page')}
+                onPress={() => navigation.navigate('DashboardPage')}
+                style={[styles.buttonContainer, styles.iconButton]}>
+                <Icon name="view-dashboard" size={40} color="black" />
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('UserPage')}
                 style={[styles.buttonContainer, styles.iconButton]}>
                 <Icon name="account-circle" size={40} color="black" />
               </TouchableOpacity>
@@ -113,6 +120,8 @@ const Navigator = () => {
           ),
         })}
       />
+      <Stack.Screen name="DashboardPage" component={DashboardPage} />
+      <Stack.Screen name="UserPage" component={UserPage} />
     </Stack.Navigator>
   );
 };
