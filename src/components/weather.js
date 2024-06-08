@@ -13,14 +13,14 @@ import Geolocation from 'react-native-geolocation-service';
 import axios from 'axios';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
-const {width: SCREEN_WIDTH} = Dimensions.get('window');
 const API_KEY = '174580b1f4ee4ec1e406e56c83717aed';
+const windowWidth = Dimensions.get('window').width;
 
 const icons = {
-  Clouds: 'weather-cloudy',
-  Clear: 'weather-sunny',
+  Clouds: 'cloud',
+  Clear: 'white-balance-sunny',
   Atmosphere: 'weather-fog',
-  Snow: 'snowflake',
+  Snow: 'weather-snowy-heavy',
   Rain: 'weather-pouring',
   Drizzle: 'weather-fog',
   Thunderstorm: 'weather-lightning',
@@ -32,7 +32,6 @@ export default function Weather() {
   const [locationPermission, setLocationPermission] = useState(false);
 
   useEffect(() => {
-    // 위치 권한 요청
     const requestLocationPermission = async () => {
       if (Platform.OS === 'android') {
         try {
@@ -42,14 +41,15 @@ export default function Weather() {
           if (granted === PermissionsAndroid.RESULTS.GRANTED) {
             setLocationPermission(true);
           } else {
+            setCity("Can't find location");
             setLocationPermission(false);
           }
         } catch (error) {
           console.error('Error requesting location permission: ', error);
+          setCity("Can't find location");
           setLocationPermission(false);
         }
       } else {
-        // iOS에서는 기본적으로 위치 권한이 허용되어 있음
         setLocationPermission(true);
       }
     };
@@ -59,7 +59,6 @@ export default function Weather() {
 
   useEffect(() => {
     if (locationPermission) {
-      // 위치 설정
       const watchId = Geolocation.watchPosition(
         position => {
           const {latitude, longitude} = position.coords;
@@ -67,6 +66,7 @@ export default function Weather() {
         },
         error => {
           console.error('Error getting location: ', error);
+          setCity("Can't find location");
         },
         {
           enableHighAccuracy: true,
@@ -79,6 +79,8 @@ export default function Weather() {
       return () => {
         Geolocation.clearWatch(watchId);
       };
+    } else {
+      setCity("Can't find location");
     }
   }, [locationPermission]);
 
@@ -91,6 +93,7 @@ export default function Weather() {
       setDays(response.data.list);
     } catch (error) {
       console.error('Error fetching weather data: ', error);
+      setCity("Can't find location");
     }
   };
 
@@ -124,18 +127,23 @@ export default function Weather() {
                 }}>
                 <Icon
                   name={icons[day.weather[0].main]}
-                  size={200}
+                  size={58}
                   color="white"
                 />
+                <Text style={styles.weather}>{day.weather[0].main}</Text>
                 <Text style={styles.temp}>
                   {parseFloat(day.main.temp - 273).toFixed(1)}&#8451;
                 </Text>
+                <Text style={styles.description}>
+                  {day.dt_txt.substring(5, 7)}/{day.dt_txt.substring(8, 10)}
+                </Text>
+                <Text style={styles.description}>
+                  {new Date(
+                    new Date(day.dt_txt).getTime() + 9 * 60 * 60 * 1000,
+                  ).getHours()}
+                  시
+                </Text>
               </View>
-              <Text style={styles.description}>
-                {day.dt_txt.substring(5, 7)}월 {day.dt_txt.substring(8, 10)}일
-                {day.dt_txt.substring(11, 13)}시
-              </Text>
-              <Text style={styles.tinyText}>{day.weather[0].main}</Text>
             </View>
           ))
         )}
@@ -147,39 +155,38 @@ export default function Weather() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'lightskyblue',
+    backgroundColor: '#A9A9F5',
   },
   city: {
-    flex: 1.2,
+    flex: 0.3,
     justifyContent: 'center',
     alignItems: 'center',
   },
   cityName: {
-    fontSize: 58,
+    fontSize: 40,
     fontWeight: '500',
     color: 'white',
   },
-  weather: {},
   day: {
-    width: SCREEN_WIDTH,
+    width: windowWidth / 4,
     alignItems: 'flex-start',
-    paddingHorizontal: 20,
+    paddingHorizontal: 10,
+  },
+  weather: {
+    marginTop: -5,
+    fontSize: 18,
+    color: 'white',
+    fontWeight: '500',
   },
   temp: {
     marginTop: 10,
-    fontWeight: '600',
-    fontSize: 70,
+    marginBottom: 10,
+    fontWeight: '500',
+    fontSize: 19,
     color: 'white',
   },
   description: {
-    marginTop: -10,
-    fontSize: 30,
-    color: 'white',
-    fontWeight: '500',
-  },
-  tinyText: {
-    marginTop: -5,
-    fontSize: 25,
+    fontSize: 15,
     color: 'white',
     fontWeight: '500',
   },
