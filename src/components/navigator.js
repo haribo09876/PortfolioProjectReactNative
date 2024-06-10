@@ -77,6 +77,8 @@ const Navigator = () => {
         component={SignupPage}
         options={{headerShown: false}}
       />
+      <Stack.Screen name="DashboardPage" component={DashboardPage} />
+      <Stack.Screen name="UserPage" component={UserPage} />
       <Stack.Screen
         name="MainTabs"
         component={MainTabs}
@@ -120,8 +122,6 @@ const Navigator = () => {
           ),
         })}
       />
-      <Stack.Screen name="DashboardPage" component={DashboardPage} />
-      <Stack.Screen name="UserPage" component={UserPage} />
     </Stack.Navigator>
   );
 };
