@@ -1,9 +1,17 @@
 import {View, Text, StyleSheet} from 'react-native';
+import UserTweet from '../components/userTweet';
+import UserInsta from '../components/userInsta';
+import UserInfo from '../components/userInfo';
 
 function UserPage() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>UserPage</Text>
+      <Text style={styles.text}>My Info</Text>
+      <UserInfo />
+      <Text style={styles.text}>My Tweets</Text>
+      <UserTweet />
+      <Text style={styles.text}>My Instas</Text>
+      <UserInsta />
     </View>
   );
 }
@@ -12,12 +20,9 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'lavender',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
   text: {
     fontSize: 30,
-    textAlign: 'center',
     fontWeight: 'bold',
   },
 });
