@@ -1,68 +1,52 @@
 import React, {useState} from 'react';
 import {
   View,
-  Text,
-  Image,
-  StyleSheet,
-  TouchableOpacity,
-  Modal,
-  ScrollView,
   TextInput,
+  Button,
+  StyleSheet,
   Alert,
-  Dimensions,
+  Image,
+  ActivityIndicator,
+  Modal,
+  TouchableOpacity,
+  Text,
+  ScrollView,
 } from 'react-native';
-import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import firestore from '@react-native-firebase/firestore';
-import auth from '@react-native-firebase/auth';
-import storage from '@react-native-firebase/storage';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import firestore from '@react-native-firebase/firestore';
+import storage from '@react-native-firebase/storage';
+import auth from '@react-native-firebase/auth';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
+import InstaTimeline from '../components/instaTimeline';
 
-const windowWidth = Dimensions.get('window').width;
+const UserInsta = () => {
+  const [isLoading, setLoading] = useState(false);
+  const [insta, setInsta] = useState('');
+  const [file, setFile] = useState(null);
+  const [isModalVisible, setModalVisible] = useState(false);
 
-export default function UserInsta({
-  username,
-  avatar,
-  insta,
-  photo,
-  id,
-  userId,
-}) {
-  const currentUser = auth().currentUser;
-  const [modalVisible, setModalVisible] = useState(false);
-  const [editModalVisible, setEditModalVisible] = useState(false);
-  const [newInsta, setNewInsta] = useState(insta);
-  const [newPhoto, setNewPhoto] = useState(photo);
-  const [imageUri, setImageUri] = useState(null);
-
-  const deleteInsta = async () => {
-    try {
-      await firestore().collection('instas').doc(id).delete();
-      if (photo) {
-        const storageRef = storage().refFromURL(photo);
-        await storageRef.delete();
-      }
-    } catch (error) {
-      console.error('Error deleting insta:', error);
-    }
+  const onChange = text => {
+    setInsta(text);
   };
 
-  const editInsta = async () => {
-    try {
-      let updatedPhoto = newPhoto;
-      if (imageUri) {
-        const reference = storage().ref(`/instas/${id}`);
-        await reference.putFile(imageUri);
-        updatedPhoto = await reference.getDownloadURL();
+  const handleImageResult = response => {
+    if (response.didCancel) {
+      console.log('User cancelled image picker');
+    } else if (response.errorCode) {
+      Alert.alert('ImagePicker Error', response.errorMessage);
+    } else {
+      const selectedAsset = response.assets[0];
+      if (selectedAsset.uri) {
+        const fileSizeInMB = selectedAsset.fileSize / (1024 * 1024);
+        if (fileSizeInMB > 3) {
+          Alert.alert(
+            'File size error',
+            'The selected image exceeds the 3MB size limit.',
+          );
+        } else {
+          setFile(selectedAsset);
+        }
       }
-
-      await firestore().collection('instas').doc(id).update({
-        insta: newInsta,
-        photo: updatedPhoto,
-      });
-      setEditModalVisible(false);
-      setModalVisible(false);
-    } catch (error) {
-      console.error('Error updating insta:', error);
     }
   };
 
@@ -93,33 +77,81 @@ export default function UserInsta({
     );
   };
 
-  const handleImageResult = result => {
-    if (result.assets && result.assets.length > 0) {
-      setImageUri(result.assets[0].uri);
+  const clearFile = () => {
+    setFile(null);
+  };
+
+  const onSubmit = async () => {
+    const user = auth().currentUser;
+    if (!user || isLoading || insta === '' || insta.length > 180) return;
+
+    try {
+      setLoading(true);
+      const instaRef = firestore().collection('instas').doc();
+      const instaData = {
+        insta,
+        createdAt: firestore.FieldValue.serverTimestamp(),
+        username: user.displayName || 'Anonymous',
+        userId: user.uid,
+      };
+      await instaRef.set(instaData);
+
+      if (file) {
+        const storageRef = storage().ref(`instas/${user.uid}/${instaRef.id}`);
+        const uploadTask = storageRef.putFile(file.uri);
+        uploadTask.on(
+          'state_changed',
+          snapshot => {},
+          error => {
+            console.error('Image upload error: ', error);
+            Alert.alert(
+              'Upload Error',
+              'There was an error uploading the image.',
+            );
+          },
+          async () => {
+            const url = await storageRef.getDownloadURL();
+            await instaRef.update({photo: url});
+            setFile(null);
+          },
+        );
+      }
+
+      setInsta('');
+      setModalVisible(false);
+    } catch (error) {
+      console.error('Insta submission error: ', error);
+      Alert.alert(
+        'Submission Error',
+        'There was an error submitting your insta.',
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
+  const openModal = () => {
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+  };
+
   return (
-    <TouchableOpacity
-      onPress={() => setModalVisible(true)}
-      style={styles.wrapper}>
-      <View style={styles.content}>
-        {photo && <Image style={styles.instaPhoto} source={{uri: photo}} />}
-      </View>
+    <View style={styles.container}>
+      <TouchableOpacity style={styles.addButton} onPress={openModal}>
+        <Text style={styles.addButtonText}>Add Insta</Text>
+      </TouchableOpacity>
       <Modal
         animationType="fade"
         transparent={true}
-        visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}>
-        <TouchableOpacity
-          activeOpacity={1}
-          onPressOut={() => setModalVisible(false)}
-          style={styles.modalOverlay}>
+        visible={isModalVisible}
+        onRequestClose={closeModal}>
+        <View style={styles.modalOverlay}>
           <View style={styles.modalContent}>
             <TouchableOpacity
-              onPress={() => setModalVisible(!modalVisible)}
+              onPress={closeModal}
               style={styles.iconCloseButton}>
               <MaterialCommunityIcons
                 name="close-circle-outline"
@@ -128,208 +160,97 @@ export default function UserInsta({
               />
             </TouchableOpacity>
             <ScrollView>
-              <MaterialCommunityIcons name="account-circle" size={50} />
-              <Text style={styles.username}>{username}</Text>
-              {photo && <Image style={styles.photo} source={{uri: photo}} />}
-              <Text style={styles.payload}>{insta}</Text>
-              {currentUser && (
-                <View>
-                  {(currentUser.uid === userId ||
-                    currentUser.email === 'admin@gmail.com') && (
-                    <View>
-                      <TouchableOpacity
-                        onPress={deleteInsta}
-                        style={styles.deleteButton}>
-                        <MaterialCommunityIcons
-                          name="delete-outline"
-                          size={25}
-                        />
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        onPress={() => setEditModalVisible(true)}
-                        style={styles.editButton}>
-                        <MaterialCommunityIcons
-                          name="pencil-outline"
-                          size={25}
-                        />
-                      </TouchableOpacity>
-                    </View>
-                  )}
+              <View style={styles.inputContainer}>
+                <TextInput
+                  style={styles.textInput}
+                  onChangeText={onChange}
+                  value={insta}
+                  placeholder="내용을 입력하세요"
+                  maxLength={180}
+                  multiline
+                />
+                {file && (
+                  <View style={styles.imagePreview}>
+                    <Image source={{uri: file.uri}} style={styles.image} />
+                    <Button title="Remove Image" onPress={clearFile} />
+                  </View>
+                )}
+                <View style={styles.buttonContainer}>
+                  <Button title="Add photo" onPress={onFileChange} />
+                  <Button
+                    title={isLoading ? 'Posting...' : 'Post Insta'}
+                    onPress={onSubmit}
+                    disabled={!insta || isLoading}
+                  />
                 </View>
-              )}
+                {isLoading && (
+                  <ActivityIndicator size="large" color="#1DA1F2" />
+                )}
+              </View>
             </ScrollView>
           </View>
-        </TouchableOpacity>
+        </View>
       </Modal>
-      <Modal
-        animationType="fade"
-        transparent={true}
-        visible={editModalVisible}
-        onRequestClose={() => {
-          setEditModalVisible(!editModalVisible);
-        }}>
-        <TouchableOpacity
-          activeOpacity={1}
-          onPressOut={() => setEditModalVisible(false)}
-          style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <TouchableOpacity
-              onPress={() => setEditModalVisible(!editModalVisible)}
-              style={styles.iconCloseButton}>
-              <MaterialCommunityIcons
-                name="close-circle-outline"
-                size={32}
-                color="#3A3A3A"
-              />
-            </TouchableOpacity>
-            <ScrollView>
-              <Text style={styles.username}>{username}</Text>
-              {imageUri ? (
-                <Image style={styles.photo} source={{uri: imageUri}} />
-              ) : (
-                newPhoto && (
-                  <Image style={styles.photo} source={{uri: newPhoto}} />
-                )
-              )}
-              <TextInput
-                style={styles.textInput}
-                value={newInsta}
-                onChangeText={setNewInsta}
-                multiline
-              />
-              <TouchableOpacity
-                onPress={onFileChange}
-                style={styles.imageButton}>
-                <Text style={styles.imageButtonText}>Change Photo</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={editInsta} style={styles.saveButton}>
-                <Text style={styles.saveText}>Save</Text>
-              </TouchableOpacity>
-            </ScrollView>
-          </View>
-        </TouchableOpacity>
-      </Modal>
-    </TouchableOpacity>
+      <InstaTimeline />
+    </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
-  wrapper: {
-    width: windowWidth / 3,
-    height: windowWidth / 3,
-    flexDirection: 'row',
-    backgroundColor: '#ffffff',
-    borderColor: '#e0e0e0',
-  },
-  avatar: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    marginRight: 15,
-  },
-  content: {
+  container: {
     flex: 1,
+    backgroundColor: 'white',
   },
-  username: {
-    fontWeight: 'semibold',
-    fontSize: 20,
-    color: '#333333',
+  addButton: {
+    alignSelf: 'flex-end',
+    padding: 10,
+    backgroundColor: '#1DA1F2',
+    borderRadius: 5,
+    margin: 10,
   },
-  payload: {
-    marginVertical: 5,
+  addButtonText: {
+    color: 'white',
     fontSize: 16,
-    color: '#666666',
-  },
-  photo: {
-    width: '100%',
-    height: 300,
-  },
-  instaPhoto: {
-    width: '100%',
-    height: '100%',
-  },
-  deleteButton: {
-    backgroundColor: '#e74c3c',
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    alignSelf: 'flex-start',
-    marginTop: 5,
-  },
-  deleteText: {
-    color: 'white',
-    fontSize: 14,
-  },
-  editButton: {
-    backgroundColor: '#3498db',
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    alignSelf: 'flex-start',
-    marginTop: 5,
-  },
-  editText: {
-    color: 'white',
-    fontSize: 14,
   },
   modalOverlay: {
     flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.5)',
   },
   modalContent: {
     width: '90%',
-    backgroundColor: '#ffffff',
+    backgroundColor: 'white',
     borderRadius: 10,
     padding: 20,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-    position: 'relative',
   },
   iconCloseButton: {
-    position: 'absolute',
-    top: 15,
-    right: 15,
+    alignSelf: 'flex-end',
+  },
+  inputContainer: {
+    marginVertical: 10,
   },
   textInput: {
-    borderColor: '#e0e0e0',
+    height: 200,
+    borderColor: 'gray',
     borderWidth: 1,
     borderRadius: 5,
     padding: 10,
+    marginBottom: 30,
     fontSize: 16,
-    marginVertical: 10,
-    height: 100,
-    textAlignVertical: 'top',
   },
-  imageButton: {
-    backgroundColor: '#3498db',
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    alignSelf: 'flex-start',
-    marginTop: 10,
+  buttonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
-  imageButtonText: {
-    color: 'white',
-    fontSize: 14,
+  imagePreview: {
+    marginBottom: 10,
   },
-  saveButton: {
-    backgroundColor: '#2ecc71',
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    alignSelf: 'flex-start',
-    marginTop: 10,
-  },
-  saveText: {
-    color: 'white',
-    fontSize: 14,
+  image: {
+    width: '100%',
+    height: 200,
+    borderRadius: 10,
   },
 });
+
+export default UserInsta;

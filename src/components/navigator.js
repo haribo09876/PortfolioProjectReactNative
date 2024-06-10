@@ -30,6 +30,7 @@ const MainTabs = () => (
     <Tab.Screen name="TweetPage" component={TweetPage} />
     <Tab.Screen name="InstaPage" component={InstaPage} />
     <Tab.Screen name="ShopPage" component={ShopPage} />
+    <Tab.Screen name="UserPage" component={UserPage} />
   </Tab.Navigator>
 );
 
