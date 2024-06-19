@@ -44,6 +44,6 @@ export default function UserTweetTimeline() {
 
 const styles = StyleSheet.create({
   wrapper: {
-    padding: 10,
+    padding: 5,
   },
 });

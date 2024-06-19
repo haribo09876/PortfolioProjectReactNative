@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList} from 'react-native';
+import {ScrollView, StyleSheet} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import Insta from './insta';
 import auth from '@react-native-firebase/auth';
@@ -33,14 +33,11 @@ export default function UserInstaTimeline() {
     return () => unsubscribe();
   }, []);
 
-  const renderItem = ({item}) => <Insta key={item.id} {...item} />;
-
   return (
-    <FlatList
-      data={instas}
-      renderItem={renderItem}
-      keyExtractor={item => item.id}
-      numColumns={3}
-    />
+    <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+      {instas.map(insta => (
+        <Insta key={insta.id} {...insta} />
+      ))}
+    </ScrollView>
   );
 }

@@ -62,18 +62,25 @@ function UserPage() {
   return (
     <View style={styles.container}>
       <Text style={styles.sectionTitle}>My Info</Text>
-      <TouchableOpacity style={styles.avatarUpload} onPress={onAvatarChange}>
-        {avatar ? (
-          <Image source={{uri: avatar}} style={styles.avatarImg} />
-        ) : (
-          <MaterialCommunityIcons name="face-man" style={styles.avatarIcon} />
-        )}
-      </TouchableOpacity>
-      <Text style={styles.name}>{user?.displayName ?? 'Anonymous'}</Text>
-      <Text style={styles.sectionTitle}>My Tweets</Text>
-      <UserTweet />
+      <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <TouchableOpacity style={styles.avatarUpload} onPress={onAvatarChange}>
+          {avatar ? (
+            <Image source={{uri: avatar}} style={styles.avatarImg} />
+          ) : (
+            <MaterialCommunityIcons name="face-man" style={styles.avatarIcon} />
+          )}
+        </TouchableOpacity>
+        <Text style={styles.name}>{user?.displayName ?? 'Anonymous'}</Text>
+        <MaterialCommunityIcons
+          name="pencil-outline"
+          size={25}
+          style={{marginLeft: 10}}
+        />
+      </View>
       <Text style={styles.sectionTitle}>My Instas</Text>
       <UserInsta />
+      <Text style={styles.sectionTitle}>My Tweets</Text>
+      <UserTweet />
     </View>
   );
 }
@@ -85,9 +92,10 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   avatarUpload: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+    width: 70,
+    height: 70,
+    borderRadius: 50,
+    margin: 10,
     backgroundColor: '#1d9bf0',
     justifyContent: 'center',
     alignItems: 'center',
@@ -102,13 +110,15 @@ const styles = StyleSheet.create({
     color: 'white',
   },
   name: {
-    fontSize: 22,
-    marginTop: 10,
+    fontSize: 25,
+    fontWeight: '500',
+    marginLeft: 10,
   },
   sectionTitle: {
-    fontSize: 30,
-    fontWeight: 'bold',
+    fontSize: 25,
+    fontWeight: '400',
     marginTop: 20,
+    marginBottom: 5,
   },
 });
 
