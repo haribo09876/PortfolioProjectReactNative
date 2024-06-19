@@ -130,9 +130,9 @@ const UserInsta = () => {
     }
   };
 
-  const openModal = () => {
-    setModalVisible(true);
-  };
+  // const openModal = () => {
+  //   setModalVisible(true);
+  // };
 
   const closeModal = () => {
     setModalVisible(false);
@@ -140,9 +140,9 @@ const UserInsta = () => {
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.addButton} onPress={openModal}>
+      {/* <TouchableOpacity style={styles.addButton} onPress={openModal}>
         <Text style={styles.addButtonText}>Add Insta</Text>
-      </TouchableOpacity>
+      </TouchableOpacity> */}
       <Modal
         animationType="fade"
         transparent={true}
