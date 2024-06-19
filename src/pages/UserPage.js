@@ -67,13 +67,12 @@ function UserPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
     backgroundColor: 'lavender',
     padding: 20,
   },
   avatarUpload: {
-    width: 80,
-    height: 80,
+    width: 60,
+    height: 60,
     borderRadius: 40,
     backgroundColor: '#1d9bf0',
     justifyContent: 'center',
