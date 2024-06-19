@@ -2,15 +2,14 @@ import React, {useState} from 'react';
 import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {launchImageLibrary} from 'react-native-image-picker';
-import {getAuth} from 'firebase/auth';
-import {getStorage, ref, uploadBytes, getDownloadURL} from 'firebase/storage';
+import auth from '@react-native-firebase/auth';
+import storage from '@react-native-firebase/storage';
+import {ref, uploadBytes, getDownloadURL} from 'firebase/storage';
 import UserTweet from '../components/userTweet';
 import UserInsta from '../components/userInsta';
 
 function UserPage() {
-  const auth = getAuth();
-  const storage = getStorage();
-  const user = auth.currentUser;
+  const user = auth().currentUser;
   const [avatar, setAvatar] = useState(user?.photoURL);
 
   const onAvatarChange = async () => {
@@ -32,13 +31,12 @@ function UserPage() {
         const asset = response.assets[0];
         const response = await fetch(asset.uri);
         const blob = await response.blob();
-        const storageRef = ref(storage, `avatars/${user.uid}`);
+        const storageRef = storage().ref(`avatars/${user.uid}`);
 
         try {
           const uploadSnapshot = await uploadBytes(storageRef, blob);
           const avatarUrl = await getDownloadURL(uploadSnapshot.ref);
           setAvatar(avatarUrl);
-          // Update user's photoURL in Firebase auth
           await auth.currentUser.updateProfile({photoURL: avatarUrl});
         } catch (error) {
           console.error('Error uploading image: ', error);
