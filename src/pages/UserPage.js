@@ -4,7 +4,6 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {launchImageLibrary} from 'react-native-image-picker';
 import {getAuth} from 'firebase/auth';
 import {getStorage, ref, uploadBytes, getDownloadURL} from 'firebase/storage';
-import UserInfo from '../components/userInfo';
 import UserTweet from '../components/userTweet';
 import UserInsta from '../components/userInsta';
 
