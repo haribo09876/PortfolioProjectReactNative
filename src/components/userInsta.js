@@ -17,7 +17,7 @@ import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import auth from '@react-native-firebase/auth';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import InstaTimeline from '../components/instaTimeline';
+import UserInstaTimeline from '../components/userInstaTimeline';
 
 const UserInsta = () => {
   const [isLoading, setLoading] = useState(false);
@@ -191,7 +191,7 @@ const UserInsta = () => {
           </View>
         </View>
       </Modal>
-      <InstaTimeline />
+      <UserInstaTimeline />
     </View>
   );
 };

@@ -17,7 +17,7 @@ import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
 import auth from '@react-native-firebase/auth';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
-import TweetTimeline from '../components/tweetTimeline';
+import UserTweetTimeline from '../components/userTweetTimeline';
 
 const UserTweet = () => {
   const [isLoading, setLoading] = useState(false);
@@ -191,7 +191,7 @@ const UserTweet = () => {
           </View>
         </View>
       </Modal>
-      <TweetTimeline />
+      <UserTweetTimeline />
     </View>
   );
 };

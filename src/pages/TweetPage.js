@@ -141,7 +141,7 @@ const TweetPage = () => {
   return (
     <View style={styles.container}>
       <TouchableOpacity style={styles.addButton} onPress={openModal}>
-        <Text style={styles.addButtonText}>Add Tweet</Text>
+        <Text style={styles.addButtonText}>새 Tweet 추가</Text>
       </TouchableOpacity>
       <Modal
         animationType="fade"

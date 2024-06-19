@@ -164,7 +164,7 @@ const ShopPage = () => {
     <View style={styles.container}>
       {userEmail === 'admin@gmail.com' && (
         <TouchableOpacity style={styles.addButton} onPress={openModal}>
-          <Text style={styles.addButtonText}>새 상품 등록</Text>
+          <Text style={styles.addButtonText}>새 상품 추가</Text>
         </TouchableOpacity>
       )}
       <Modal
