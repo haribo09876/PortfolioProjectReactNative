@@ -4,7 +4,6 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 import {launchImageLibrary} from 'react-native-image-picker';
 import auth from '@react-native-firebase/auth';
 import storage from '@react-native-firebase/storage';
-import {ref, uploadBytes, getDownloadURL} from 'firebase/storage';
 import UserTweet from '../components/userTweet';
 import UserInsta from '../components/userInsta';
 
@@ -13,7 +12,9 @@ function UserPage() {
   const [avatar, setAvatar] = useState(user?.photoURL);
 
   const onAvatarChange = async () => {
-    if (!user) return;
+    if (!user) {
+      return;
+    }
 
     const options = {
       mediaType: 'photo',
@@ -29,15 +30,28 @@ function UserPage() {
         console.log('ImagePicker Error: ', response.errorMessage);
       } else if (response.assets && response.assets.length > 0) {
         const asset = response.assets[0];
-        const response = await fetch(asset.uri);
-        const blob = await response.blob();
-        const storageRef = storage().ref(`avatars/${user.uid}`);
+        const imageResponse = await fetch(asset.uri);
+        const blob = await imageResponse.blob();
+        const storageRef = storage().ref().child(`avatars/${user?.uid}`);
 
         try {
-          const uploadSnapshot = await uploadBytes(storageRef, blob);
-          const avatarUrl = await getDownloadURL(uploadSnapshot.ref);
-          setAvatar(avatarUrl);
-          await auth.currentUser.updateProfile({photoURL: avatarUrl});
+          const uploadTask = storageRef.put(blob);
+          uploadTask.on(
+            'state_changed',
+            null,
+            error => {
+              console.error('Error uploading image: ', error);
+            },
+            async () => {
+              try {
+                const downloadURL = await storageRef.getDownloadURL();
+                setAvatar(downloadURL);
+                await auth().currentUser.updateProfile({photoURL: downloadURL});
+              } catch (error) {
+                console.error('Error getting download URL: ', error);
+              }
+            },
+          );
         } catch (error) {
           console.error('Error uploading image: ', error);
         }
@@ -73,7 +87,7 @@ const styles = StyleSheet.create({
   avatarUpload: {
     width: 60,
     height: 60,
-    borderRadius: 40,
+    borderRadius: 30,
     backgroundColor: '#1d9bf0',
     justifyContent: 'center',
     alignItems: 'center',
