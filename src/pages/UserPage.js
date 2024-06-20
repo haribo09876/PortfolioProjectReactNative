@@ -67,7 +67,10 @@ function UserPage() {
           {avatar ? (
             <Image source={{uri: avatar}} style={styles.avatarImg} />
           ) : (
-            <MaterialCommunityIcons name="face-man" style={styles.avatarIcon} />
+            <MaterialCommunityIcons
+              name="account-circle"
+              style={styles.avatarIcon}
+            />
           )}
         </TouchableOpacity>
         <Text style={styles.name}>{user?.displayName ?? 'Anonymous'}</Text>
@@ -92,11 +95,11 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   avatarUpload: {
-    width: 70,
-    height: 70,
+    width: 65,
+    height: 65,
     borderRadius: 50,
     margin: 10,
-    backgroundColor: '#1d9bf0',
+    backgroundColor: 'gray',
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',

@@ -58,12 +58,15 @@ export default function Shop({
         await reference.putFile(imageUri);
         updatedPhoto = await reference.getDownloadURL();
       }
-      await firestore().collection('shops').doc(id).update({
-        itemTitle: newItemTitle,
-        itemPrice: newItemPrice,
-        itemDetail: newItemDetail,
-        photo: updatedPhoto,
-      });
+      await firestore()
+        .collection('shops')
+        .doc(id)
+        .update({
+          itemTitle: newItemTitle,
+          itemPrice: Number(newItemPrice),
+          itemDetail: newItemDetail,
+          photo: updatedPhoto,
+        });
       setEditModalVisible(false);
       setModalVisible(false);
     } catch (error) {
@@ -195,12 +198,15 @@ export default function Shop({
                   style={styles.itemInput}
                   value={newItemTitle}
                   onChangeText={setNewItemTitle}
+                  maxLength={50}
                   multiline
                 />
                 <TextInput
                   style={styles.itemInput}
-                  value={newItemPrice}
-                  onChangeText={setNewItemPrice}
+                  value={newItemPrice.toString()}
+                  onChangeText={text => setNewItemPrice(Number(text))}
+                  maxLength={9}
+                  keyboardType="numeric"
                   multiline
                 />
                 <TextInput

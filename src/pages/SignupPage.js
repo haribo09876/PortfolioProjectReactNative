@@ -1,7 +1,8 @@
 import {useNavigation} from '@react-navigation/native';
 import {auth} from '../firebase';
-import {createUserWithEmailAndPassword, updateProfile} from 'firebase/auth';
 import React, {useState} from 'react';
+import {createUserWithEmailAndPassword, updateProfile} from 'firebase/auth';
+import firestore from '@react-native-firebase/firestore';
 import {
   View,
   Text,
@@ -30,6 +31,26 @@ function SignUpPage() {
     setPassword(text);
   };
 
+  async function Money() {
+    try {
+      const moneyRef = firestore().collection('moneys').doc();
+      const moneyData = {
+        money: Number(1000000),
+        spend: Number(0),
+        createdAt: firestore.FieldValue.serverTimestamp(),
+        username: name,
+        userEmail: email,
+      };
+      await moneyRef.set(moneyData);
+    } catch (error) {
+      console.error('Money submission error: ', error);
+      Alert.alert(
+        'Submission Error',
+        'There was an error submitting your money.',
+      );
+    }
+  }
+
   const onSubmit = async () => {
     if (name === '' || email === '' || password === '') {
       Alert.alert('모든 필드를 채워주세요');
@@ -43,6 +64,7 @@ function SignUpPage() {
       );
       await updateProfile(credentials.user, {displayName: name});
       Alert.alert('회원가입에 성공했습니다');
+      Money();
       navigation.navigate('LoginPage');
     } catch (error) {
       console.error('Firebase 에러:', error);
