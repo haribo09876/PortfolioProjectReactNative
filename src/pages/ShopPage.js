@@ -40,7 +40,7 @@ const ShopPage = () => {
   };
 
   const onChangeItemPrice = text => {
-    setItemPrice(text);
+    setItemPrice(Number(text));
   };
 
   const onChangeItemDetail = text => {
@@ -190,7 +190,7 @@ const ShopPage = () => {
                   onChangeText={onChangeItemTitle}
                   value={itemTitle}
                   placeholder="itemTitle"
-                  maxLength={180}
+                  maxLength={50}
                   multiline
                 />
                 <TextInput
@@ -198,7 +198,8 @@ const ShopPage = () => {
                   onChangeText={onChangeItemPrice}
                   value={itemPrice}
                   placeholder="itemPrice"
-                  maxLength={180}
+                  maxLength={9}
+                  keyboardType="numeric"
                   multiline
                 />
                 <TextInput
@@ -206,7 +207,6 @@ const ShopPage = () => {
                   onChangeText={onChangeItemDetail}
                   value={itemDetail}
                   placeholder="itemDetail"
-                  maxLength={180}
                   multiline
                 />
                 {file && (
