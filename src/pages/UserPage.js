@@ -1,15 +1,53 @@
-import React, {useState} from 'react';
-import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import React, {useEffect, useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {launchImageLibrary} from 'react-native-image-picker';
 import auth from '@react-native-firebase/auth';
 import storage from '@react-native-firebase/storage';
+import firestore from '@react-native-firebase/firestore';
 import UserTweet from '../components/userTweet';
 import UserInsta from '../components/userInsta';
 
 function UserPage() {
   const user = auth().currentUser;
   const [avatar, setAvatar] = useState(user?.photoURL);
+  const [moneys, setMoneys] = useState([]);
+
+  useEffect(() => {
+    if (!user) {
+      return;
+    }
+
+    const moneyData = firestore()
+      .collection('moneys')
+      .where('userEmail', '==', user.email)
+      .onSnapshot(querySnapshot => {
+        if (querySnapshot) {
+          const updatedMoneys = querySnapshot.docs.map(doc => {
+            const {money, createdAt, spend, userEmail, username} = doc.data();
+            return {
+              money,
+              createdAt: createdAt ? createdAt.toDate() : new Date(),
+              spend,
+              userEmail,
+              username,
+            };
+          });
+          setMoneys(updatedMoneys);
+        } else {
+          console.log('No data found');
+        }
+      });
+
+    return () => moneyData();
+  }, [user]);
 
   const onAvatarChange = async () => {
     if (!user) {
@@ -61,29 +99,37 @@ function UserPage() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.sectionTitle}>My Info</Text>
-      <View style={{flexDirection: 'row', alignItems: 'center'}}>
-        <TouchableOpacity style={styles.avatarUpload} onPress={onAvatarChange}>
-          {avatar ? (
-            <Image source={{uri: avatar}} style={styles.avatarImg} />
-          ) : (
-            <MaterialCommunityIcons
-              name="account-circle"
-              style={styles.avatarIcon}
-            />
-          )}
-        </TouchableOpacity>
-        <Text style={styles.name}>{user?.displayName ?? 'Anonymous'}</Text>
-        <MaterialCommunityIcons
-          name="pencil-outline"
-          size={25}
-          style={{marginLeft: 10}}
-        />
-      </View>
-      <Text style={styles.sectionTitle}>My Instas</Text>
-      <UserInsta />
-      <Text style={styles.sectionTitle}>My Tweets</Text>
-      <UserTweet />
+      <ScrollView showsVerticalScrollIndicator={false}>
+        <Text style={styles.sectionTitle}>My Info</Text>
+        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+          <TouchableOpacity
+            style={styles.avatarUpload}
+            onPress={onAvatarChange}>
+            {avatar ? (
+              <Image source={{uri: avatar}} style={styles.avatarImg} />
+            ) : (
+              <MaterialCommunityIcons
+                name="account-circle"
+                style={styles.avatarIcon}
+              />
+            )}
+          </TouchableOpacity>
+          <Text style={styles.name}>{user?.displayName ?? 'Anonymous'}</Text>
+          <MaterialCommunityIcons
+            name="pencil-outline"
+            size={25}
+            style={styles.edit}
+          />
+          <Text style={styles.money}>
+            {moneys.length > 0 ? moneys[0].money - moneys[0].spend : 'No data'}{' '}
+            원
+          </Text>
+        </View>
+        <Text style={styles.sectionTitle}>My Instas</Text>
+        <UserInsta />
+        <Text style={styles.sectionTitle}>My Tweets</Text>
+        <UserTweet />
+      </ScrollView>
     </View>
   );
 }
@@ -116,6 +162,15 @@ const styles = StyleSheet.create({
     fontSize: 25,
     fontWeight: '500',
     marginLeft: 10,
+  },
+  edit: {
+    fontSize: 22,
+    marginLeft: 10,
+  },
+  money: {
+    fontSize: 20,
+    fontWeight: '500',
+    marginLeft: 50,
   },
   sectionTitle: {
     fontSize: 25,

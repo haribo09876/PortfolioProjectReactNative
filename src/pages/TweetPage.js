@@ -83,7 +83,9 @@ const TweetPage = () => {
 
   const onSubmit = async () => {
     const user = auth().currentUser;
-    if (!user || isLoading || tweet === '' || tweet.length > 180) return;
+    if (!user || isLoading || tweet === '' || tweet.length > 180) {
+      return;
+    }
 
     try {
       setLoading(true);
