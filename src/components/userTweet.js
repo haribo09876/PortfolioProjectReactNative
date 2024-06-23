@@ -9,7 +9,6 @@ import {
   ActivityIndicator,
   Modal,
   TouchableOpacity,
-  Text,
   ScrollView,
 } from 'react-native';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
@@ -130,19 +129,12 @@ const UserTweet = () => {
     }
   };
 
-  // const openModal = () => {
-  //   setModalVisible(true);
-  // };
-
   const closeModal = () => {
     setModalVisible(false);
   };
 
   return (
     <View style={styles.container}>
-      {/* <TouchableOpacity style={styles.addButton} onPress={openModal}>
-        <Text style={styles.addButtonText}>Add Tweet</Text>
-      </TouchableOpacity> */}
       <Modal
         animationType="fade"
         transparent={true}
