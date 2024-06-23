@@ -11,7 +11,7 @@ function CompletionPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'lavender',
+    backgroundColor: 'skyblue',
     alignItems: 'center',
     justifyContent: 'center',
   },
