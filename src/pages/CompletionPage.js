@@ -1,9 +1,9 @@
 import {View, Text, StyleSheet} from 'react-native';
 
-function DashboardPage() {
+function CompletionPage() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>DashboardPage</Text>
+      <Text style={styles.text}>상품 구매가 완료되었습니다</Text>
     </View>
   );
 }
@@ -22,4 +22,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default DashboardPage;
+export default CompletionPage;
