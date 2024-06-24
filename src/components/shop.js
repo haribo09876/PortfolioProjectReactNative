@@ -12,6 +12,7 @@ import {
   Dimensions,
   TouchableWithoutFeedback,
 } from 'react-native';
+import useNavigation from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
@@ -30,6 +31,7 @@ export default function Shop({
   id,
 }) {
   const currentUser = auth().currentUser;
+  const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [newItemTitle, setNewItemTitle] = useState(itemTitle);
