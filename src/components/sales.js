@@ -31,8 +31,6 @@ export default function Sales() {
             };
           });
           setSales(salesData);
-        } else {
-          console.log('No data found');
         }
       });
 
