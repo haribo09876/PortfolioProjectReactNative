@@ -93,6 +93,7 @@ const UserInsta = () => {
         createdAt: firestore.FieldValue.serverTimestamp(),
         username: user.displayName || 'Anonymous',
         userId: user.uid,
+        modifiedAt: firestore.FieldValue.serverTimestamp(),
       };
       await instaRef.set(instaData);
 

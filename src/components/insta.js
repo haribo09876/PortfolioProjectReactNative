@@ -51,6 +51,7 @@ export default function Insta({username, avatar, insta, photo, id, userId}) {
       await firestore().collection('instas').doc(id).update({
         insta: newInsta,
         photo: updatedPhoto,
+        modifiedAt: firestore.FieldValue.serverTimestamp(),
       });
       setEditModalVisible(false);
       setModalVisible(false);

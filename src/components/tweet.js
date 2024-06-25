@@ -49,6 +49,7 @@ export default function Tweet({username, avatar, tweet, photo, id, userId}) {
       await firestore().collection('tweets').doc(id).update({
         tweet: newTweet,
         photo: updatedPhoto,
+        modifiedAt: firestore.FieldValue.serverTimestamp(),
       });
       setEditModalVisible(false);
       setModalVisible(false);

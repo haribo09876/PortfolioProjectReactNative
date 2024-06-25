@@ -69,6 +69,7 @@ export default function Shop({
           itemPrice: Number(newItemPrice),
           itemDetail: newItemDetail,
           photo: updatedPhoto,
+          modifiedAt: firestore.FieldValue.serverTimestamp(),
         });
       setEditModalVisible(false);
       setModalVisible(false);
