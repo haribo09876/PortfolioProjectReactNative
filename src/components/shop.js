@@ -112,6 +112,30 @@ export default function Shop({
 
   const purchase = async () => {
     try {
+      const querySnapshot = await firestore()
+        .collection('moneys')
+        .where('userEmail', '==', currentUser.email)
+        .get();
+
+      if (!querySnapshot.empty) {
+        querySnapshot.forEach(async documentSnapshot => {
+          await documentSnapshot.ref.update({
+            spend: Number(itemPrice),
+            modifiedAt: firestore.FieldValue.serverTimestamp(),
+          });
+        });
+      } else {
+        console.error('No documents found with the given userEmail.');
+      }
+
+      const moneyRef = firestore().collection('sales').doc();
+      const moneyData = {
+        createdAt: firestore.FieldValue.serverTimestamp(),
+        itemId: id,
+        itemPrice: Number(itemPrice),
+        userId: currentUser.uid,
+      };
+      await moneyRef.set(moneyData);
       navigation.navigate('CompletionPage');
     } catch (error) {
       console.error('Error purchase:', error);
