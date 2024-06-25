@@ -12,7 +12,7 @@ import {
   Dimensions,
   TouchableWithoutFeedback,
 } from 'react-native';
-import useNavigation from '@react-navigation/native';
+import {useNavigation} from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
@@ -31,7 +31,6 @@ export default function Shop({
   id,
 }) {
   const currentUser = auth().currentUser;
-  const navigation = useNavigation();
   const [modalVisible, setModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [newItemTitle, setNewItemTitle] = useState(itemTitle);
@@ -39,6 +38,8 @@ export default function Shop({
   const [newItemDetail, setNewItemDetail] = useState(itemDetail);
   const [newPhoto, setNewPhoto] = useState(photo);
   const [imageUri, setImageUri] = useState(null);
+
+  const navigation = useNavigation();
 
   const deleteShop = async () => {
     try {
@@ -109,6 +110,14 @@ export default function Shop({
     }
   };
 
+  const purchase = async () => {
+    try {
+      navigation.navigate('CompletionPage');
+    } catch (error) {
+      console.error('Error purchase:', error);
+    }
+  };
+
   return (
     <TouchableOpacity
       onPress={() => setModalVisible(true)}
@@ -144,7 +153,9 @@ export default function Shop({
                 )}
                 <Text style={styles.payload}>{itemPrice} 원</Text>
                 <Text style={styles.payload}>{itemDetail}</Text>
-                <TouchableOpacity style={styles.purchaseButton}>
+                <TouchableOpacity
+                  style={styles.purchaseButton}
+                  onPress={purchase}>
                   <Text style={styles.purchaseText}>구 매</Text>
                 </TouchableOpacity>
                 {currentUser && (
