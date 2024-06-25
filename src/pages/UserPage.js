@@ -129,6 +129,8 @@ function UserPage() {
         <UserInsta />
         <Text style={styles.sectionTitle}>My Tweets</Text>
         <UserTweet />
+        <Text style={styles.sectionTitle}>My Purchases</Text>
+        {/* <UserPurchase /> */}
       </ScrollView>
     </View>
   );
