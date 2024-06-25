@@ -132,6 +132,7 @@ export default function Shop({
       const moneyData = {
         createdAt: firestore.FieldValue.serverTimestamp(),
         itemId: id,
+        itemTitle: itemTitle,
         itemPrice: Number(itemPrice),
         userId: currentUser.uid,
       };
