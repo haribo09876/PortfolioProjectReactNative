@@ -119,8 +119,10 @@ export default function Shop({
 
       if (!querySnapshot.empty) {
         querySnapshot.forEach(async documentSnapshot => {
+          const currentSpend = documentSnapshot.data().spend;
+          const updatedSpend = currentSpend + Number(itemPrice);
           await documentSnapshot.ref.update({
-            spend: Number(itemPrice),
+            spend: updatedSpend,
             modifiedAt: firestore.FieldValue.serverTimestamp(),
           });
         });
