@@ -14,6 +14,7 @@ import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
 import UserTweet from '../components/userTweet';
 import UserInsta from '../components/userInsta';
+import Sales from '../components/sales';
 
 function UserPage() {
   const user = auth().currentUser;
@@ -129,8 +130,8 @@ function UserPage() {
         <UserInsta />
         <Text style={styles.sectionTitle}>My Tweets</Text>
         <UserTweet />
-        <Text style={styles.sectionTitle}>My Purchases</Text>
-        {/* <UserPurchase /> */}
+        <Text style={styles.sectionTitle}>My Sales</Text>
+        <Sales />
       </ScrollView>
     </View>
   );
