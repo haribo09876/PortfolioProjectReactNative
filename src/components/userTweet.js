@@ -92,6 +92,7 @@ const UserTweet = () => {
         createdAt: firestore.FieldValue.serverTimestamp(),
         username: user.displayName || 'Anonymous',
         userId: user.uid,
+        modifiedAt: firestore.FieldValue.serverTimestamp(),
       };
       await tweetRef.set(tweetData);
 
