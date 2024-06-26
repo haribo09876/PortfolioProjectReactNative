@@ -41,7 +41,7 @@ export default function Tweet({username, avatar, tweet, photo, id, userId}) {
     try {
       let updatedPhoto = newPhoto;
       if (imageUri) {
-        const reference = storage().ref(`/tweets/${id}`);
+        const reference = storage().ref(`/tweets/${currentUser.uid}/${id}`);
         await reference.putFile(imageUri);
         updatedPhoto = await reference.getDownloadURL();
       }
