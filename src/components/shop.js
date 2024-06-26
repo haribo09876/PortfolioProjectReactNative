@@ -57,7 +57,7 @@ export default function Shop({
     try {
       let updatedPhoto = newPhoto;
       if (imageUri) {
-        const reference = storage().ref(`/shops/${id}`);
+        const reference = storage().ref(`/shops/${currentUser.uid}/${id}`);
         await reference.putFile(imageUri);
         updatedPhoto = await reference.getDownloadURL();
       }

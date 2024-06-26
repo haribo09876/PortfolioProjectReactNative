@@ -43,7 +43,7 @@ export default function Insta({username, avatar, insta, photo, id, userId}) {
     try {
       let updatedPhoto = newPhoto;
       if (imageUri) {
-        const reference = storage().ref(`/instas/${id}`);
+        const reference = storage().ref(`/instas/${currentUser.uid}/${id}`);
         await reference.putFile(imageUri);
         updatedPhoto = await reference.getDownloadURL();
       }
