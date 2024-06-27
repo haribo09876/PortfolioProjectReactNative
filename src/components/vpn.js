@@ -1,25 +1,95 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {
+  saveConfig,
+  prepare,
+  connect,
+  disconnect,
+  getCurrentState,
+  VpnState,
+  CharonErrorState,
+  onStateChangedListener,
+  removeOnStateChangeListener,
+} from 'react-native-vpn-ipsec';
 
 const Vpn = () => {
   const [vpnConnected, setVpnConnected] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [currentState, setCurrentState] = useState(VpnState.disconnected);
 
-  const toggleVpnConnection = () => {
-    setLoading(true); // Show loading indicator during connection attempt
+  // VPN 연결 준비
+  useEffect(() => {
+    const setupVpn = async () => {
+      try {
+        await prepare();
+        console.log('VPN 준비 완료');
+      } catch (error) {
+        console.error('VPN 준비 중 오류 발생:', error);
+      }
+    };
 
-    // Simulating VPN connection toggle (replace with actual logic)
-    setTimeout(() => {
-      setVpnConnected(!vpnConnected);
+    setupVpn();
+  }, []);
+
+  // VPN 상태 변경 리스너 등록
+  useEffect(() => {
+    const stateChangeListener = onStateChangedListener(({state}) => {
+      setCurrentState(state);
+    });
+
+    return () => {
+      removeOnStateChangeListener(stateChangeListener);
+    };
+  }, []);
+
+  const toggleVpnConnection = async () => {
+    setLoading(true);
+
+    try {
+      if (vpnConnected) {
+        // VPN 연결 해제
+        await disconnect();
+        setVpnConnected(false);
+      } else {
+        // VPN 연결 설정
+        const vpnConfig = {
+          address: 'public-vpn-98.opengw.net',
+          username: 'vpn',
+          password: 'vpn',
+          vpnType: undefined, // Currently not implemented
+          mtu: undefined, // Currently not implemented
+        };
+
+        await saveConfig(
+          'MyVPN',
+          vpnConfig.address,
+          vpnConfig.username,
+          vpnConfig.password,
+          vpnConfig.password,
+        );
+        await connect(
+          'MyVPN',
+          vpnConfig.address,
+          vpnConfig.username,
+          vpnConfig.password,
+          vpnConfig.vpnType,
+          vpnConfig.mtu,
+        );
+        setVpnConnected(true);
+      }
+    } catch (error) {
+      Alert.alert('오류 발생', error.message);
+    } finally {
       setLoading(false);
-    }, 1500); // Simulating delay for connection (replace with actual connection code)
+    }
   };
 
   return (
@@ -58,6 +128,10 @@ const Vpn = () => {
             </Text>
           )}
         </TouchableOpacity>
+        <Text style={styles.currentStateText}>
+          현재 상태:{' '}
+          {currentState === VpnState.connected ? '연결됨' : '연결 안 됨'}
+        </Text>
       </View>
     </View>
   );
@@ -84,6 +158,10 @@ const styles = StyleSheet.create({
   statusText: {
     fontSize: 20,
     marginVertical: 20,
+    color: 'white',
+  },
+  currentStateText: {
+    marginTop: 20,
     color: 'white',
   },
   toggleButton: {
