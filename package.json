@@ -37,6 +37,8 @@
     "react-native-screens": "^3.32.0",
     "react-native-tab-view": "^3.5.2",
     "react-native-vector-icons": "^10.1.0",
+    "react-native-vpn": "^1.0.1",
+    "react-native-vpn-ipsec": "^1.1.2",
     "react-native-webview": "^13.10.3"
   },
   "devDependencies": {
