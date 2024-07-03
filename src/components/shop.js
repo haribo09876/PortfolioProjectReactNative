@@ -188,7 +188,7 @@ export default function Shop({
                 </TouchableOpacity>
                 {currentUser && (
                   <View>
-                    {currentUser.email === 'admin@gmail.com' && (
+                    {currentUser.uid === 'PdWutJuG1yPegHocDTMJVLPu1jr2' && (
                       <View>
                         <TouchableOpacity
                           onPress={deleteShop}
