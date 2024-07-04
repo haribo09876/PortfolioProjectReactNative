@@ -1,4 +1,5 @@
 import {View, Text, StyleSheet} from 'react-native';
+import DashboardShop from '../components/dashboardShop';
 
 function DashboardPage() {
   return (
@@ -6,7 +7,7 @@ function DashboardPage() {
       <Text style={styles.sectionTitle}>Dashboard Location</Text>
       {/* <DashboardLocation /> */}
       <Text style={styles.sectionTitle}>Dashboard Shop</Text>
-      {/* <DashboardShop /> */}
+      <DashboardShop />
       <Text style={styles.sectionTitle}>Dashboard Tweet</Text>
       {/* <DashboardTweet /> */}
       <Text style={styles.sectionTitle}>Dashboard Insta</Text>
@@ -24,7 +25,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 25,
     fontWeight: '400',
-    marginTop: 20,
+    marginTop: 50,
     marginBottom: 5,
   },
 });

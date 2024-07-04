@@ -1,11 +1,10 @@
-import React, {useEffect, useState} from 'react';
-import {FlatList} from 'react-native';
-import firestore from '@react-native-firebase/firestore';
+// import React, {useEffect, useState} from 'react';
+// import {FlatList} from 'react-native';
+// import firestore from '@react-native-firebase/firestore';
 
-export default function DashBoardLocation() {
-  
-  
-  return (
-  
-  );
-}
+// export default function DashboardLocation() {
+
+//   return (
+
+//   );
+// }
