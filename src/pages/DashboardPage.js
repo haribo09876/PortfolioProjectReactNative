@@ -3,7 +3,14 @@ import {View, Text, StyleSheet} from 'react-native';
 function DashboardPage() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>DashboardPage</Text>
+      <Text style={styles.sectionTitle}>Dashboard Location</Text>
+      {/* <DashboardLocation /> */}
+      <Text style={styles.sectionTitle}>Dashboard Shop</Text>
+      {/* <DashboardShop /> */}
+      <Text style={styles.sectionTitle}>Dashboard Tweet</Text>
+      {/* <DashboardTweet /> */}
+      <Text style={styles.sectionTitle}>Dashboard Insta</Text>
+      {/* <DashboardInsta /> */}
     </View>
   );
 }
@@ -12,13 +19,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'lavender',
-    alignItems: 'center',
-    justifyContent: 'center',
+    padding: 20,
   },
-  text: {
-    fontSize: 30,
-    textAlign: 'center',
-    fontWeight: 'bold',
+  sectionTitle: {
+    fontSize: 25,
+    fontWeight: '400',
+    marginTop: 20,
+    marginBottom: 5,
   },
 });
 
