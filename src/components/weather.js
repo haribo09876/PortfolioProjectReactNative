@@ -10,8 +10,9 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
-import axios from 'axios';
+import firestore from '@react-native-firebase/firestore';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import axios from 'axios';
 
 const API_KEY = '174580b1f4ee4ec1e406e56c83717aed';
 const windowWidth = Dimensions.get('window').width;
@@ -30,6 +31,7 @@ export default function Weather() {
   const [city, setCity] = useState('Loading...');
   const [days, setDays] = useState([]);
   const [locationPermission, setLocationPermission] = useState(false);
+  const [locationSaved, setLocationSaved] = useState(false);
 
   useEffect(() => {
     const requestLocationPermission = async () => {
@@ -58,11 +60,12 @@ export default function Weather() {
   }, []);
 
   useEffect(() => {
-    if (locationPermission) {
+    if (locationPermission && !locationSaved) {
       const watchId = Geolocation.watchPosition(
         position => {
           const {latitude, longitude} = position.coords;
           fetchWeather(latitude, longitude);
+          saveLocationToFirestore(city, latitude, longitude);
         },
         error => {
           console.error('Error getting location: ', error);
@@ -82,7 +85,7 @@ export default function Weather() {
     } else {
       setCity("Can't find location");
     }
-  }, [locationPermission]);
+  }, [locationPermission, locationSaved]);
 
   const fetchWeather = async (latitude, longitude) => {
     const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${API_KEY}`;
@@ -94,6 +97,23 @@ export default function Weather() {
     } catch (error) {
       console.error('Error fetching weather data: ', error);
       setCity("Can't find location");
+    }
+  };
+
+  const saveLocationToFirestore = async (city, latitude, longitude) => {
+    const locationRef = firestore().collection('locations').doc();
+    const locationData = {
+      createdAt: firestore.FieldValue.serverTimestamp(),
+      city: city,
+      latitude: latitude,
+      longitude: longitude,
+    };
+
+    try {
+      await locationRef.set(locationData);
+      setLocationSaved(true);
+    } catch (error) {
+      console.error('Error saving location to Firestore: ', error);
     }
   };
 
