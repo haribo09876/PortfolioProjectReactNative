@@ -7,7 +7,7 @@ function DashboardPage() {
       <View style={styles.container}>
         <Text style={styles.sectionTitle}>Dashboard Location</Text>
         {/* <DashboardLocation /> */}
-        <Text style={styles.sectionTitle}>Dashboard Shop</Text>
+        <Text style={styles.sectionTitle}>일자별 매출액</Text>
         <DashboardShop />
         <Text style={styles.sectionTitle}>Dashboard Tweet</Text>
         {/* <DashboardTweet /> */}

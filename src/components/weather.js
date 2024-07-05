@@ -66,7 +66,6 @@ export default function Weather() {
         position => {
           const {latitude, longitude} = position.coords;
           fetchWeather(latitude, longitude);
-          saveLocationToFirestore(city, latitude, longitude);
         },
         error => {
           console.error('Error getting location: ', error);
@@ -101,6 +100,8 @@ export default function Weather() {
       setDays(response.data.list);
       setCurrentWeather(responseCurrent.data.weather[0].main);
       setCurrentTemp(responseCurrent.data.main.temp);
+      saveLocationToFirestore(response.data.city.name, latitude, longitude);
+      setLocationSaved(true);
     } catch (error) {
       console.error('Error fetching weather data: ', error);
       handleLocationError("Can't find location");
@@ -118,7 +119,6 @@ export default function Weather() {
 
     try {
       await locationRef.set(locationData);
-      setLocationSaved(true);
     } catch (error) {
       console.error('Error saving location to Firestore: ', error);
       Alert.alert('Error', 'Failed to save location information.');
@@ -126,7 +126,8 @@ export default function Weather() {
   };
 
   const handleLocationError = errorMessage => {
-    setCity(errorMessage);
+    // Keep the current city value if an error occurs
+    setCity(city);
     setLocationPermission(false);
   };
 
