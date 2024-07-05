@@ -70,7 +70,7 @@ export default function Weather() {
         },
         {
           enableHighAccuracy: true,
-          timeout: 20000,
+          timeout: 5000,
           maximumAge: 0,
           distanceFilter: 1,
         },
