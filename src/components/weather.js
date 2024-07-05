@@ -8,6 +8,7 @@ import {
   Platform,
   PermissionsAndroid,
   ActivityIndicator,
+  Alert,
 } from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import firestore from '@react-native-firebase/firestore';
@@ -30,8 +31,8 @@ const icons = {
 export default function Weather() {
   const [city, setCity] = useState('Loading...');
   const [days, setDays] = useState([]);
-  const [currentWeather, setCurrentWeather] = useState();
-  const [currentTemp, setCurrentTemp] = useState();
+  const [currentWeather, setCurrentWeather] = useState('');
+  const [currentTemp, setCurrentTemp] = useState(0);
   const [locationPermission, setLocationPermission] = useState(false);
   const [locationSaved, setLocationSaved] = useState(false);
 
@@ -45,13 +46,11 @@ export default function Weather() {
           if (granted === PermissionsAndroid.RESULTS.GRANTED) {
             setLocationPermission(true);
           } else {
-            setCity("Can't find location");
-            setLocationPermission(false);
+            handleLocationError("Can't find location");
           }
         } catch (error) {
           console.error('Error requesting location permission: ', error);
-          setCity("Can't find location");
-          setLocationPermission(false);
+          handleLocationError("Can't find location");
         }
       } else {
         setLocationPermission(true);
@@ -71,7 +70,7 @@ export default function Weather() {
         },
         error => {
           console.error('Error getting location: ', error);
-          setCity("Can't find location");
+          handleLocationError("Can't find location");
         },
         {
           enableHighAccuracy: true,
@@ -85,7 +84,7 @@ export default function Weather() {
         Geolocation.clearWatch(watchId);
       };
     } else {
-      setCity("Can't find location");
+      handleLocationError("Can't find location");
     }
   }, [locationPermission, locationSaved]);
 
@@ -94,15 +93,17 @@ export default function Weather() {
     const urlCurrent = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}`;
 
     try {
-      const response = await axios.get(url);
-      const responseCurrent = await axios.get(urlCurrent);
+      const [response, responseCurrent] = await Promise.all([
+        axios.get(url),
+        axios.get(urlCurrent),
+      ]);
       setCity(response.data.city.name);
       setDays(response.data.list);
       setCurrentWeather(responseCurrent.data.weather[0].main);
       setCurrentTemp(responseCurrent.data.main.temp);
     } catch (error) {
       console.error('Error fetching weather data: ', error);
-      setCity("Can't find location");
+      handleLocationError("Can't find location");
     }
   };
 
@@ -120,7 +121,13 @@ export default function Weather() {
       setLocationSaved(true);
     } catch (error) {
       console.error('Error saving location to Firestore: ', error);
+      Alert.alert('Error', 'Failed to save location information.');
     }
+  };
+
+  const handleLocationError = errorMessage => {
+    setCity(errorMessage);
+    setLocationPermission(false);
   };
 
   return (
@@ -149,13 +156,7 @@ export default function Weather() {
         ) : (
           days.map((day, index) => (
             <View key={index} style={styles.day}>
-              <View
-                style={{
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  width: '100%',
-                  justifyContent: 'center',
-                }}>
+              <View style={styles.dayContent}>
                 <Icon
                   name={icons[day.weather[0].main]}
                   size={58}
@@ -192,11 +193,11 @@ const styles = StyleSheet.create({
     flex: 2,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: 120,
-    paddingBottom: 120,
+    paddingTop: 130,
+    paddingBottom: 130,
   },
   cityName: {
-    fontSize: 45,
+    fontSize: 47,
     fontWeight: '500',
     color: 'white',
   },
@@ -204,11 +205,17 @@ const styles = StyleSheet.create({
     fontSize: 35,
     fontWeight: '500',
     color: 'white',
+    paddingTop: 5,
   },
   day: {
     width: windowWidth / 4,
-    alignItems: 'flex-start',
+    alignItems: 'center',
     paddingHorizontal: 10,
+  },
+  dayContent: {
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   weather: {
     marginTop: -5,
