@@ -30,6 +30,8 @@ const icons = {
 export default function Weather() {
   const [city, setCity] = useState('Loading...');
   const [days, setDays] = useState([]);
+  const [currentWeather, setCurrentWeather] = useState();
+  const [currentTemp, setCurrentTemp] = useState();
   const [locationPermission, setLocationPermission] = useState(false);
   const [locationSaved, setLocationSaved] = useState(false);
 
@@ -89,11 +91,15 @@ export default function Weather() {
 
   const fetchWeather = async (latitude, longitude) => {
     const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${API_KEY}`;
+    const urlCurrent = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}`;
 
     try {
       const response = await axios.get(url);
+      const responseCurrent = await axios.get(urlCurrent);
       setCity(response.data.city.name);
       setDays(response.data.list);
+      setCurrentWeather(responseCurrent.data.weather[0].main);
+      setCurrentTemp(responseCurrent.data.main.temp);
     } catch (error) {
       console.error('Error fetching weather data: ', error);
       setCity("Can't find location");
@@ -121,6 +127,11 @@ export default function Weather() {
     <View style={styles.container}>
       <View style={styles.city}>
         <Text style={styles.cityName}>{city}</Text>
+        <Icon name={icons[currentWeather]} size={150} color="white" />
+        <Text style={styles.currentWeather}>{currentWeather}</Text>
+        <Text style={styles.currentWeather}>
+          {parseFloat(currentTemp - 273).toFixed(1)} &#8451;
+        </Text>
       </View>
       <ScrollView
         pagingEnabled
@@ -152,7 +163,7 @@ export default function Weather() {
                 />
                 <Text style={styles.weather}>{day.weather[0].main}</Text>
                 <Text style={styles.temp}>
-                  {parseFloat(day.main.temp - 273).toFixed(1)}&#8451;
+                  {parseFloat(day.main.temp - 273).toFixed(1)} &#8451;
                 </Text>
                 <Text style={styles.description}>
                   {day.dt_txt.substring(5, 7)}/{day.dt_txt.substring(8, 10)}
@@ -178,12 +189,19 @@ const styles = StyleSheet.create({
     backgroundColor: '#A9A9F5',
   },
   city: {
-    flex: 0.3,
+    flex: 2,
     justifyContent: 'center',
     alignItems: 'center',
+    paddingTop: 120,
+    paddingBottom: 120,
   },
   cityName: {
-    fontSize: 40,
+    fontSize: 45,
+    fontWeight: '500',
+    color: 'white',
+  },
+  currentWeather: {
+    fontSize: 35,
     fontWeight: '500',
     color: 'white',
   },
