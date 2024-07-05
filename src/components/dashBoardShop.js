@@ -17,7 +17,7 @@ const DashboardShop = () => {
     labels: [],
     legend: [],
     data: [],
-    barColors: ['#3366FF', '#FF9900', '#109618', '#990099'], // Example colors for itemTitles
+    barColors: ['#3366FF', '#FF9900', '#109618', '#990099'],
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -28,9 +28,8 @@ const DashboardShop = () => {
         const salesSnapshot = await firestore().collection('sales').get();
         const salesData = salesSnapshot.docs.map(doc => doc.data());
 
-        // Process data to group by day and sum itemPrice per itemTitle
         const groupedData = salesData.reduce((acc, sale) => {
-          const date = sale.createdAt.toDate().toISOString().split('T')[0]; // Format date as YYYY-MM-DD
+          const date = sale.createdAt.toDate().toISOString().split('T')[0];
           const itemTitle = sale.itemTitle;
           const itemPrice = sale.itemPrice;
 
@@ -45,11 +44,10 @@ const DashboardShop = () => {
           return acc;
         }, {});
 
-        // Transform groupedData to chart data format
-        const labels = Object.keys(groupedData).sort(); // Sort dates in ascending order
+        const labels = Object.keys(groupedData).sort();
         const legend = Array.from(
           new Set(Object.values(groupedData).flatMap(obj => Object.keys(obj))),
-        ); // Get all itemTitles
+        );
         const data = labels.map(date => {
           return legend.map(title => groupedData[date][title] || 0);
         });
@@ -65,16 +63,15 @@ const DashboardShop = () => {
             '#990099',
             '#FF3366',
             '#66FF33',
-          ], // Add more colors if necessary
+          ],
         });
-        setLoading(false); // Set loading to false after data is processed
+        setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
-        setError('Failed to fetch data'); // Set error state for user feedback
-        setLoading(false); // Set loading to false on error
+        setError('Failed to fetch data');
+        setLoading(false);
       }
     };
-
     fetchData();
   }, []);
 
@@ -104,8 +101,8 @@ const DashboardShop = () => {
             data: data.data,
             barColors: data.barColors,
           }}
-          width={screenWidth * data.labels.length} // Adjust the width to accommodate more data
-          height={220}
+          width={screenWidth * data.labels.length * 0.4}
+          height={360}
           chartConfig={{
             backgroundColor: '#1cc910',
             backgroundGradientFrom: '#eff3ff',
