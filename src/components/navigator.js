@@ -110,11 +110,11 @@ const Navigator = () => {
                 style={styles.buttonContainer}>
                 <Icon name="logout" size={25} color="black" />
               </TouchableOpacity>
-              <TouchableOpacity
+              {/* <TouchableOpacity
                 onPress={() => navigation.navigate('DashboardPage')}
                 style={[styles.buttonContainer, styles.iconButton]}>
                 <Icon name="view-dashboard" size={25} color="black" />
-              </TouchableOpacity>
+              </TouchableOpacity> */}
               <TouchableOpacity
                 onPress={() => navigation.navigate('UserPage')}
                 style={[styles.buttonContainer, styles.iconButton]}>

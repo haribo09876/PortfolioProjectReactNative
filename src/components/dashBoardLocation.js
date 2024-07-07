@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
   mapContainer: {
     flex: 1,
     marginVertical: 10,
-    height: height * 0.4, // Adjust the height here if needed
+    height: height * 0.4,
   },
   map: {
     flex: 1,

@@ -10,10 +10,6 @@ function DashboardPage() {
         <DashboardShop />
         <Text style={styles.sectionTitle}>접속 위치</Text>
         <DashboardLocation />
-        <Text style={styles.sectionTitle}>Dashboard Tweet</Text>
-        {/* <DashboardTweet /> */}
-        <Text style={styles.sectionTitle}>Dashboard Insta</Text>
-        {/* <DashboardInsta /> */}
       </View>
     </ScrollView>
   );
