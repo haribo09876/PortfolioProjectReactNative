@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {launchImageLibrary} from 'react-native-image-picker';
+import {useNavigation} from '@react-navigation/native';
 import auth from '@react-native-firebase/auth';
 import storage from '@react-native-firebase/storage';
 import firestore from '@react-native-firebase/firestore';
@@ -18,6 +19,7 @@ import Sales from '../components/sales';
 
 function UserPage() {
   const user = auth().currentUser;
+  const navigation = useNavigation();
   const [avatar, setAvatar] = useState(user?.photoURL);
   const [moneys, setMoneys] = useState([]);
 
@@ -101,6 +103,12 @@ function UserPage() {
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
+        {user?.uid === 'PdWutJuG1yPegHocDTMJVLPu1jr2' && (
+          <TouchableOpacity
+            onPress={() => navigation.navigate('DashboardPage')}>
+            <Text style={styles.sectionTitle}>DashboardPage로 이동</Text>
+          </TouchableOpacity>
+        )}
         <Text style={styles.sectionTitle}>My Info</Text>
         <View style={{flexDirection: 'row', alignItems: 'center'}}>
           <TouchableOpacity

@@ -16,26 +16,31 @@ export default function Sales() {
       .collection('sales')
       .where('userId', '==', user.uid)
       .orderBy('createdAt', 'desc')
-      .onSnapshot(querySnapshot => {
-        if (querySnapshot) {
-          const salesData = querySnapshot.docs.map(doc => {
-            const {itemId, createdAt, itemPrice, itemTitle, userId} =
-              doc.data();
-            return {
-              itemId,
-              createdAt: createdAt ? createdAt.toDate() : new Date(),
-              itemPrice,
-              itemTitle,
-              userId,
-              id: doc.id,
-            };
-          });
-          setSales(salesData);
-        }
-      });
+      .onSnapshot(
+        querySnapshot => {
+          if (querySnapshot) {
+            const salesData = querySnapshot.docs.map(doc => {
+              const {itemId, createdAt, itemPrice, itemTitle, userId} =
+                doc.data();
+              return {
+                itemId,
+                createdAt: createdAt ? createdAt.toDate() : new Date(),
+                itemPrice,
+                itemTitle,
+                userId,
+                id: doc.id,
+              };
+            });
+            setSales(salesData);
+          }
+        },
+        error => {
+          console.error('Firestore query error: ', error);
+        },
+      );
 
     return () => unsubscribe();
-  }, []);
+  }, [user]);
 
   return (
     <View style={styles.container}>
@@ -75,6 +80,6 @@ const styles = StyleSheet.create({
   },
   itemPrice: {
     fontSize: 18,
-    color: '#1DA1F2', // Adjust color as needed
+    color: '#1DA1F2',
   },
 });
