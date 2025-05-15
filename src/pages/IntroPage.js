@@ -7,11 +7,12 @@ function IntroPage() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>PPRN에 오신 것을 환영합니다</Text>
+      <Text style={styles.title}>Welcome to PPRN</Text>
+      <Text style={styles.semiTitle}>Welcome to PPRN</Text>
       <TouchableOpacity
         style={styles.button}
         onPress={() => navigation.navigate('LoginPage')}>
-        <Text style={styles.buttonText}>시작하기</Text>
+        <Text style={styles.buttonText}>Get started</Text>
       </TouchableOpacity>
     </View>
   );
@@ -20,29 +21,34 @@ function IntroPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: 'rgba(255, 255, 255, 1)',
     alignItems: 'center',
-    justifyContent: 'center',
   },
   title: {
     fontSize: 40,
-    fontWeight: 'bold',
-    color: '#333',
-    marginBottom: 40,
+    fontWeight: '500',
+    color: 'black',
+    marginTop: 180,
+    marginBottom: 5,
+  },
+  semiTitle: {
+    fontSize: 15,
+    fontWeight: '500',
+    color: 'rgba(176, 176, 176, 1)',
+    marginBottom: 250,
   },
   button: {
-    backgroundColor: '#3498db',
-    width: 250,
+    backgroundColor: 'rgba(75, 127, 247, 1)',
+    width: 360,
     paddingVertical: 15,
     paddingHorizontal: 30,
-    borderRadius: 25,
-    marginTop: 50,
+    borderRadius: 50,
     alignItems: 'center',
   },
   buttonText: {
     color: 'white',
-    fontSize: 20,
-    fontWeight: 'bold',
+    fontSize: 15,
+    fontWeight: '500',
   },
 });
 

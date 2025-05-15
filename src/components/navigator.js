@@ -24,13 +24,29 @@ const MainTabs = () => (
   <Tab.Navigator
     screenOptions={{
       tabBarIndicatorStyle: {backgroundColor: 'black'},
-      tabBarLabelStyle: {fontSize: 12},
-      tabBarStyle: {backgroundColor: '#fff'},
+      tabBarLabelStyle: {fontSize: 15, fontWeight: 500, textTransform: 'none'},
+      tabBarStyle: {backgroundColor: 'rgba(255, 255, 255, 1)'},
     }}>
-    <Tab.Screen name="HomePage" component={HomePage} />
-    <Tab.Screen name="TweetPage" component={TweetPage} />
-    <Tab.Screen name="InstaPage" component={InstaPage} />
-    <Tab.Screen name="ShopPage" component={ShopPage} />
+    <Tab.Screen
+      name="HomePage"
+      component={HomePage}
+      options={{title: 'Home'}}
+    />
+    <Tab.Screen
+      name="TweetPage"
+      component={TweetPage}
+      options={{title: 'Tweet'}}
+    />
+    <Tab.Screen
+      name="InstaPage"
+      component={InstaPage}
+      options={{title: 'Insta'}}
+    />
+    <Tab.Screen
+      name="ShopPage"
+      component={ShopPage}
+      options={{title: 'Shop'}}
+    />
   </Tab.Navigator>
 );
 
@@ -76,7 +92,7 @@ const Navigator = () => {
       <Stack.Screen
         name="SignupPage"
         component={SignupPage}
-        options={{headerShown: false}}
+        options={{title: 'Sign up'}}
       />
       <Stack.Screen name="CompletionPage" component={CompletionPage} />
       <Stack.Screen name="DashboardPage" component={DashboardPage} />
@@ -88,12 +104,20 @@ const Navigator = () => {
           headerTitle: 'PPRN',
           headerTitleAlign: 'center',
           headerTitleStyle: {
-            fontSize: 30,
-            fontWeight: 'semi-bold',
+            fontSize: 25,
           },
           headerLeft: null,
           headerRight: () => (
             <View style={styles.headerButtonsContainer}>
+              <TouchableOpacity
+                onPress={() => navigation.navigate('UserPage')}
+                style={[styles.buttonContainer, styles.iconButton]}>
+                <Icon
+                  name="account-outline"
+                  size={25}
+                  color="rgba(89, 89, 89, 1)"
+                />
+              </TouchableOpacity>
               <TouchableOpacity
                 onPress={() =>
                   Alert.alert('로그아웃', '정말 로그아웃 하시겠습니까?', [
@@ -108,17 +132,7 @@ const Navigator = () => {
                   ])
                 }
                 style={styles.buttonContainer}>
-                <Icon name="logout" size={25} color="black" />
-              </TouchableOpacity>
-              {/* <TouchableOpacity
-                onPress={() => navigation.navigate('DashboardPage')}
-                style={[styles.buttonContainer, styles.iconButton]}>
-                <Icon name="view-dashboard" size={25} color="black" />
-              </TouchableOpacity> */}
-              <TouchableOpacity
-                onPress={() => navigation.navigate('UserPage')}
-                style={[styles.buttonContainer, styles.iconButton]}>
-                <Icon name="account-circle" size={25} color="black" />
+                <Icon name="logout" size={20} color="rgba(89, 89, 89, 1)" />
               </TouchableOpacity>
             </View>
           ),
@@ -130,7 +144,7 @@ const Navigator = () => {
 
 const styles = StyleSheet.create({
   buttonContainer: {
-    marginRight: 10,
+    marginRight: 15,
     justifyContent: 'center',
   },
   headerButtonsContainer: {

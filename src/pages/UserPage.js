@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
+import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {useNavigation} from '@react-navigation/native';
@@ -105,8 +106,9 @@ function UserPage() {
       <ScrollView showsVerticalScrollIndicator={false}>
         {user?.uid === 'PdWutJuG1yPegHocDTMJVLPu1jr2' && (
           <TouchableOpacity
-            onPress={() => navigation.navigate('DashboardPage')}>
-            <Text style={styles.sectionTitle}>DashboardPage로 이동</Text>
+            onPress={() => navigation.navigate('DashboardPage')}
+            style={[styles.buttonContainer, styles.iconButton]}>
+            <Icon name="book-outline" size={25} color="rgba(89, 89, 89, 1)" />
           </TouchableOpacity>
         )}
         <Text style={styles.sectionTitle}>My Info</Text>

@@ -77,24 +77,27 @@ function SignUpPage() {
       <TextInput
         value={name}
         onChangeText={handleNameChange}
-        placeholder="이름"
+        placeholder="Username"
+        placeholderTextColor="rgba(89, 89, 89, 1)"
         style={styles.inputBox}
       />
       <TextInput
         value={email}
         onChangeText={handleEmailChange}
-        placeholder="이메일"
+        placeholder="Email"
+        placeholderTextColor="rgba(89, 89, 89, 1)"
         style={styles.inputBox}
       />
       <TextInput
         value={password}
         onChangeText={handlePasswordChange}
-        placeholder="비밀번호"
+        placeholder="Password"
+        placeholderTextColor="rgba(89, 89, 89, 1)"
         style={styles.inputBox}
         secureTextEntry={true}
       />
       <TouchableOpacity style={styles.button} onPress={onSubmit}>
-        <Text style={styles.buttonText}>가입하기</Text>
+        <Text style={styles.buttonText}>Sign up</Text>
       </TouchableOpacity>
     </View>
   );
@@ -103,34 +106,35 @@ function SignUpPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: 'rgba(255, 255, 255, 1)',
     alignItems: 'center',
     justifyContent: 'center',
   },
   inputBox: {
-    width: 300,
+    width: 360,
     backgroundColor: 'white',
-    borderRadius: 25,
-    fontSize: 18,
-    paddingVertical: 10,
+    borderRadius: 20,
+    fontSize: 15,
+    fontWeight: '500',
+    paddingVertical: 12,
     paddingHorizontal: 15,
     marginVertical: 10,
     borderWidth: 1,
-    borderColor: '#ddd',
+    borderColor: 'rgba(89, 89, 89, 1)',
   },
   button: {
-    backgroundColor: '#3498db',
-    width: 250,
+    backgroundColor: 'rgba(75, 127, 247, 1)',
+    width: 360,
     paddingVertical: 15,
-    paddingHorizontal: 30,
+    paddingHorizontal: 20,
     borderRadius: 25,
-    marginTop: 20,
+    marginTop: 100,
     alignItems: 'center',
   },
   buttonText: {
     color: 'white',
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 15,
+    fontWeight: '500',
   },
 });
 
