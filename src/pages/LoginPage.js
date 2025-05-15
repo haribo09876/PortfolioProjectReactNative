@@ -54,27 +54,29 @@ function LoginPage() {
       <Text style={styles.title}>PPRN</Text>
       <TextInput
         style={styles.inputBox}
-        placeholder="이메일"
+        placeholder="Email"
+        placeholderTextColor="rgba(89, 89, 89, 1)"
         value={email}
         onChangeText={setEmail}
       />
       <TextInput
         secureTextEntry={true}
         style={styles.inputBox}
-        placeholder="비밀번호"
+        placeholder="Password"
+        placeholderTextColor="rgba(89, 89, 89, 1)"
         value={password}
         onChangeText={setPassword}
       />
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>로그인</Text>
+        <Text style={styles.buttonText}>Log in</Text>
       </TouchableOpacity>
       <TouchableOpacity style={styles.googleButton} onPress={handleGoogleLogin}>
-        <Text style={styles.buttonText}>Google로 로그인</Text>
+        <Text style={styles.buttonText}>Log in with Google</Text>
       </TouchableOpacity>
       <TouchableOpacity
-        style={[styles.button, styles.signupButton]}
+        style={[styles.signupButton]}
         onPress={() => navigation.navigate('SignupPage')}>
-        <Text style={styles.buttonText}>회원가입</Text>
+        <Text style={styles.signupButtonText}>Sign up</Text>
       </TouchableOpacity>
     </View>
   );
@@ -83,52 +85,64 @@ function LoginPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f5f5f5',
+    backgroundColor: 'rgba(255, 255, 255, 1)',
     alignItems: 'center',
-    justifyContent: 'center',
   },
   title: {
     fontSize: 40,
-    fontWeight: 'bold',
+    fontWeight: '600',
     color: '#333',
+    marginTop: 120,
     marginBottom: 40,
   },
   inputBox: {
-    width: 300,
+    width: 360,
     backgroundColor: '#ffffff',
-    borderRadius: 25,
-    fontSize: 18,
+    borderRadius: 20,
+    fontSize: 15,
+    fontWeight: '500',
     paddingVertical: 12,
     paddingHorizontal: 20,
-    marginVertical: 10,
+    marginVertical: 5,
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: 'rgba(89, 89, 89, 1)',
   },
   button: {
-    backgroundColor: '#3498db',
-    width: 250,
+    backgroundColor: 'rgba(75, 127, 247, 1)',
+    width: 360,
     paddingVertical: 15,
     paddingHorizontal: 20,
     borderRadius: 25,
-    marginTop: 20,
+    marginTop: 100,
     alignItems: 'center',
   },
   buttonText: {
     color: '#ffffff',
-    fontSize: 18,
-    fontWeight: 'bold',
+    fontSize: 15,
+    fontWeight: '500',
   },
   googleButton: {
-    backgroundColor: '#74b9ff',
-    width: 250,
+    backgroundColor: 'rgba(18, 172, 120, 1)',
+    width: 360,
     paddingVertical: 15,
     paddingHorizontal: 20,
-    borderRadius: 25,
-    marginTop: 20,
+    borderRadius: 50,
+    marginTop: 10,
     alignItems: 'center',
   },
   signupButton: {
-    backgroundColor: '#2ecc71',
+    backgroundColor: 'rgba(242, 242, 242, 1)',
+    width: 360,
+    paddingVertical: 15,
+    paddingHorizontal: 20,
+    borderRadius: 50,
+    marginTop: 10,
+    alignItems: 'center',
+  },
+  signupButtonText: {
+    color: 'rgba(89, 89, 89, 1)',
+    fontSize: 15,
+    fontWeight: '500',
   },
 });
 

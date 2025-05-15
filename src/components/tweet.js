@@ -98,8 +98,8 @@ export default function Tweet({username, avatar, tweet, photo, id, userId}) {
       <MaterialCommunityIcons name="account-circle" size={50} />
       <View style={styles.content}>
         <Text style={styles.username}>{username}</Text>
-        {photo && <Image style={styles.photo} source={{uri: photo}} />}
         <Text style={styles.payload}>{tweet}</Text>
+        {photo && <Image style={styles.photo} source={{uri: photo}} />}
       </View>
       <Modal
         animationType="fade"
@@ -115,7 +115,7 @@ export default function Tweet({username, avatar, tweet, photo, id, userId}) {
                 onPress={() => setModalVisible(!modalVisible)}
                 style={styles.iconCloseButton}>
                 <MaterialCommunityIcons
-                  name="close-circle-outline"
+                  name="close"
                   size={32}
                   color="#3A3A3A"
                 />
@@ -169,7 +169,7 @@ export default function Tweet({username, avatar, tweet, photo, id, userId}) {
                 onPress={() => setEditModalVisible(!editModalVisible)}
                 style={styles.iconCloseButton}>
                 <MaterialCommunityIcons
-                  name="close-circle-outline"
+                  name="close"
                   size={32}
                   color="#3A3A3A"
                 />
@@ -213,8 +213,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     borderRadius: 10,
     marginVertical: 5,
-    borderColor: '#e0e0e0',
-    borderWidth: 1,
   },
   avatar: {
     width: 50,
@@ -238,7 +236,7 @@ const styles = StyleSheet.create({
   photo: {
     width: '100%',
     height: 200,
-    borderRadius: 10,
+    borderRadius: 20,
     marginTop: 10,
   },
   deleteButton: {

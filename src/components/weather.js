@@ -19,13 +19,13 @@ const API_KEY = '174580b1f4ee4ec1e406e56c83717aed';
 const windowWidth = Dimensions.get('window').width;
 
 const icons = {
-  Clouds: 'cloud',
-  Clear: 'white-balance-sunny',
+  Clouds: 'weather-cloudy',
+  Clear: 'weather-sunny',
   Atmosphere: 'weather-fog',
-  Snow: 'weather-snowy-heavy',
-  Rain: 'weather-pouring',
-  Drizzle: 'weather-fog',
-  Thunderstorm: 'weather-lightning',
+  Snow: 'weather-snowy',
+  Rain: 'weather-pouringg',
+  Drizzle: 'weather-rainy',
+  Thunderstorm: 'weather-lightning-rainy',
 };
 
 export default function Weather() {
@@ -126,7 +126,6 @@ export default function Weather() {
   };
 
   const handleLocationError = errorMessage => {
-    // Keep the current city value if an error occurs
     setCity(city);
     setLocationPermission(false);
   };
@@ -135,7 +134,11 @@ export default function Weather() {
     <View style={styles.container}>
       <View style={styles.city}>
         <Text style={styles.cityName}>{city}</Text>
-        <Icon name={icons[currentWeather]} size={150} color="white" />
+        <Icon
+          name={icons[currentWeather]}
+          size={150}
+          color="rgba(89, 89, 89, 1)"
+        />
         <Text style={styles.currentWeather}>{currentWeather}</Text>
         <Text style={styles.currentWeather}>
           {parseFloat(currentTemp - 273).toFixed(1)} &#8451;
@@ -149,7 +152,7 @@ export default function Weather() {
         {days.length === 0 ? (
           <View style={styles.day}>
             <ActivityIndicator
-              color="white"
+              color="rgba(89, 89, 89, 1)"
               style={{marginTop: 10}}
               size="large"
             />
@@ -161,7 +164,7 @@ export default function Weather() {
                 <Icon
                   name={icons[day.weather[0].main]}
                   size={58}
-                  color="white"
+                  color="rgba(89, 89, 89, 1)"
                 />
                 <Text style={styles.weather}>{day.weather[0].main}</Text>
                 <Text style={styles.temp}>
@@ -188,28 +191,28 @@ export default function Weather() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#A9A9F5',
+    backgroundColor: 'rgba(255, 255, 255, 1)',
   },
   city: {
     flex: 2,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingTop: 130,
-    paddingBottom: 130,
+    marginTop: 150,
+    marginBottom: 120,
   },
   cityName: {
-    fontSize: 47,
+    fontSize: 40,
     fontWeight: '500',
-    color: 'white',
+    color: 'rgba(89, 89, 89, 1)',
   },
   currentWeather: {
-    fontSize: 35,
+    fontSize: 30,
     fontWeight: '500',
-    color: 'white',
+    color: 'rgba(89, 89, 89, 1)',
     paddingTop: 5,
   },
   day: {
-    width: windowWidth / 4,
+    width: windowWidth / 4.5,
     alignItems: 'center',
     paddingHorizontal: 10,
   },
@@ -221,19 +224,17 @@ const styles = StyleSheet.create({
   weather: {
     marginTop: -5,
     fontSize: 18,
-    color: 'white',
+    color: 'rgba(89, 89, 89, 1)',
     fontWeight: '500',
   },
   temp: {
-    marginTop: 10,
-    marginBottom: 10,
     fontWeight: '500',
     fontSize: 19,
-    color: 'white',
+    color: 'rgba(89, 89, 89, 1)',
   },
   description: {
     fontSize: 15,
-    color: 'white',
+    color: 'rgba(89, 89, 89, 1)',
     fontWeight: '500',
   },
 });

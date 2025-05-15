@@ -155,11 +155,7 @@ const TweetPage = () => {
             <TouchableOpacity
               onPress={closeModal}
               style={styles.iconCloseButton}>
-              <MaterialCommunityIcons
-                name="close-circle-outline"
-                size={32}
-                color="#3A3A3A"
-              />
+              <MaterialCommunityIcons name="close" size={32} color="#3A3A3A" />
             </TouchableOpacity>
             <ScrollView>
               <View style={styles.inputContainer}>
