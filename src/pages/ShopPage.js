@@ -162,11 +162,6 @@ const ShopPage = () => {
 
   return (
     <View style={styles.container}>
-      {userEmail === 'admin@gmail.com' && (
-        <TouchableOpacity style={styles.addButton} onPress={openModal}>
-          <Text style={styles.addButtonText}>새 상품 추가</Text>
-        </TouchableOpacity>
-      )}
       <Modal
         animationType="fade"
         transparent={true}
@@ -232,6 +227,11 @@ const ShopPage = () => {
         </View>
       </Modal>
       <ShopTimeline />
+      {userEmail === 'admin@gmail.com' && (
+        <TouchableOpacity style={styles.addButton} onPress={openModal}>
+          <Text style={styles.addButtonText}>Add item</Text>
+        </TouchableOpacity>
+      )}
     </View>
   );
 };
@@ -242,15 +242,19 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
   },
   addButton: {
-    alignSelf: 'flex-end',
-    padding: 10,
-    backgroundColor: '#1DA1F2',
-    borderRadius: 5,
-    margin: 10,
+    backgroundColor: 'rgba(75, 127, 247, 1)',
+    width: 360,
+    height: 45,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderRadius: 25,
+    alignItems: 'center',
+    alignSelf: 'center',
   },
   addButtonText: {
     color: 'white',
-    fontSize: 16,
+    fontSize: 15,
+    fontWeight: '600',
   },
   modalOverlay: {
     flex: 1,

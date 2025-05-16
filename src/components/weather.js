@@ -23,7 +23,7 @@ const icons = {
   Clear: 'weather-sunny',
   Atmosphere: 'weather-fog',
   Snow: 'weather-snowy',
-  Rain: 'weather-pouringg',
+  Rain: 'weather-pouring',
   Drizzle: 'weather-rainy',
   Thunderstorm: 'weather-lightning-rainy',
 };
