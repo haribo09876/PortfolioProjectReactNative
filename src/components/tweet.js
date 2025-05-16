@@ -95,12 +95,13 @@ export default function Tweet({username, avatar, tweet, photo, id, userId}) {
     <TouchableOpacity
       onPress={() => setModalVisible(true)}
       style={styles.wrapper}>
-      <MaterialCommunityIcons name="account-circle" size={50} />
-      <View style={styles.content}>
+      <View style={styles.header}>
+        <MaterialCommunityIcons name="account-circle" size={50} />
         <Text style={styles.username}>{username}</Text>
-        <Text style={styles.payload}>{tweet}</Text>
-        {photo && <Image style={styles.photo} source={{uri: photo}} />}
       </View>
+      <Text style={styles.payload}>{tweet}</Text>
+      {photo && <Image style={styles.photo} source={{uri: photo}} />}
+      <View style={{height: 0.5, backgroundColor: 'rgba(176, 176, 176, 1)'}} />
       <Modal
         animationType="fade"
         transparent={true}
@@ -121,10 +122,12 @@ export default function Tweet({username, avatar, tweet, photo, id, userId}) {
                 />
               </TouchableOpacity>
               <ScrollView>
-                <MaterialCommunityIcons name="account-circle" size={50} />
-                <Text style={styles.username}>{username}</Text>
-                {photo && <Image style={styles.photo} source={{uri: photo}} />}
+                <View style={styles.header}>
+                  <MaterialCommunityIcons name="account-circle" size={50} />
+                  <Text style={styles.username}>{username}</Text>
+                </View>
                 <Text style={styles.payload}>{tweet}</Text>
+                {photo && <Image style={styles.photo} source={{uri: photo}} />}
                 {currentUser && (
                   <View>
                     {(currentUser.uid === userId ||
@@ -208,11 +211,16 @@ export default function Tweet({username, avatar, tweet, photo, id, userId}) {
 
 const styles = StyleSheet.create({
   wrapper: {
-    flexDirection: 'row',
+    flexDirection: 'column',
     padding: 15,
     backgroundColor: '#ffffff',
     borderRadius: 10,
     marginVertical: 5,
+  },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 5,
   },
   avatar: {
     width: 50,
@@ -227,17 +235,20 @@ const styles = StyleSheet.create({
     fontWeight: 'semibold',
     fontSize: 20,
     color: '#333333',
+    marginLeft: 10,
   },
   payload: {
     marginVertical: 5,
-    fontSize: 16,
-    color: '#666666',
+    fontSize: 15,
+    fontWeight: '400',
+    color: 'rgba(52, 52, 52, 1)',
   },
   photo: {
-    width: '100%',
+    width: 330,
     height: 200,
     borderRadius: 20,
     marginTop: 10,
+    marginBottom: 30,
   },
   deleteButton: {
     backgroundColor: '#e74c3c',
