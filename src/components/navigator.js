@@ -1,5 +1,13 @@
-import React, {useState, useEffect} from 'react';
-import {View, StyleSheet, TouchableOpacity, Alert} from 'react-native';
+import React, {useState, useEffect, useRef} from 'react';
+import {
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  Modal,
+  Text,
+  TouchableWithoutFeedback,
+  Alert,
+} from 'react-native';
 import {createStackNavigator} from '@react-navigation/stack';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import {onAuthStateChanged} from 'firebase/auth';
@@ -24,7 +32,11 @@ const MainTabs = () => (
   <Tab.Navigator
     screenOptions={{
       tabBarIndicatorStyle: {backgroundColor: 'black'},
-      tabBarLabelStyle: {fontSize: 15, fontWeight: 500, textTransform: 'none'},
+      tabBarLabelStyle: {
+        fontSize: 15,
+        fontWeight: '500',
+        textTransform: 'none',
+      },
       tabBarStyle: {backgroundColor: 'rgba(255, 255, 255, 1)'},
     }}>
     <Tab.Screen
@@ -53,6 +65,8 @@ const MainTabs = () => (
 const Navigator = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [initializing, setInitializing] = useState(true);
+  const [modalVisible, setModalVisible] = useState(false);
+  const navRef = useRef(null);
 
   useEffect(() => {
     const subscriber = onAuthStateChanged(auth, user => {
@@ -64,81 +78,107 @@ const Navigator = () => {
     return subscriber;
   }, []);
 
-  if (initializing) {
-    return <LoadingScreen />;
-  }
-
-  const handleLogout = async navigation => {
+  const handleLogout = async () => {
     try {
       await auth.signOut();
-      navigation.replace('LoginPage');
+      setModalVisible(false);
+      navRef.current?.replace('LoginPage');
     } catch (error) {
-      Alert.alert('로그아웃 에러', '로그아웃 중 문제가 발생했습니다.');
+      Alert.alert('Logout error', 'Problem while logout');
     }
   };
 
+  if (initializing) return <LoadingScreen />;
+
   return (
-    <Stack.Navigator initialRouteName={isLoggedIn ? 'MainTabs' : 'IntroPage'}>
-      <Stack.Screen
-        name="IntroPage"
-        component={IntroPage}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="LoginPage"
-        component={LoginPage}
-        options={{headerShown: false}}
-      />
-      <Stack.Screen
-        name="SignupPage"
-        component={SignupPage}
-        options={{title: 'Sign up'}}
-      />
-      <Stack.Screen name="CompletionPage" component={CompletionPage} />
-      <Stack.Screen name="DashboardPage" component={DashboardPage} />
-      <Stack.Screen name="UserPage" component={UserPage} />
-      <Stack.Screen
-        name="MainTabs"
-        component={MainTabs}
-        options={({navigation}) => ({
-          headerTitle: 'PPRN',
-          headerTitleAlign: 'center',
-          headerTitleStyle: {
-            fontSize: 25,
-          },
-          headerLeft: null,
-          headerRight: () => (
-            <View style={styles.headerButtonsContainer}>
-              <TouchableOpacity
-                onPress={() => navigation.navigate('UserPage')}
-                style={[styles.buttonContainer, styles.iconButton]}>
-                <Icon
-                  name="account-outline"
-                  size={25}
-                  color="rgba(89, 89, 89, 1)"
-                />
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() =>
-                  Alert.alert('로그아웃', '정말 로그아웃 하시겠습니까?', [
-                    {
-                      text: 'Cancel',
-                      style: 'cancel',
-                    },
-                    {
-                      text: 'OK',
-                      onPress: () => handleLogout(navigation),
-                    },
-                  ])
-                }
-                style={styles.buttonContainer}>
-                <Icon name="logout" size={20} color="rgba(89, 89, 89, 1)" />
-              </TouchableOpacity>
-            </View>
-          ),
-        })}
-      />
-    </Stack.Navigator>
+    <>
+      <Stack.Navigator
+        initialRouteName={isLoggedIn ? 'MainTabs' : 'IntroPage'}
+        screenOptions={{
+          headerStyle: {backgroundColor: 'white'},
+        }}>
+        <Stack.Screen
+          name="IntroPage"
+          component={IntroPage}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="LoginPage"
+          component={LoginPage}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="SignupPage"
+          component={SignupPage}
+          options={{title: 'Sign up'}}
+        />
+        <Stack.Screen name="CompletionPage" component={CompletionPage} />
+        <Stack.Screen name="DashboardPage" component={DashboardPage} />
+        <Stack.Screen name="UserPage" component={UserPage} />
+        <Stack.Screen
+          name="MainTabs"
+          options={{
+            headerTitle: 'PPRN',
+            headerTitleAlign: 'center',
+            headerTitleStyle: {fontSize: 25},
+            headerLeft: null,
+            headerRight: () => (
+              <View style={styles.headerButtonsContainer}>
+                <TouchableOpacity
+                  onPress={() => navRef.current?.navigate('UserPage')}
+                  style={[styles.buttonContainer, styles.iconButton]}>
+                  <Icon
+                    name="account-outline"
+                    size={25}
+                    color="rgba(89, 89, 89, 1)"
+                  />
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => setModalVisible(true)}
+                  style={styles.buttonContainer}>
+                  <Icon name="logout" size={20} color="rgba(89, 89, 89, 1)" />
+                </TouchableOpacity>
+              </View>
+            ),
+          }}>
+          {props => {
+            navRef.current = props.navigation;
+            return <MainTabs {...props} />;
+          }}
+        </Stack.Screen>
+      </Stack.Navigator>
+
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={modalVisible}
+        onRequestClose={() => setModalVisible(false)}>
+        <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={styles.modalContent}>
+                <View style={styles.headerRow}>
+                  <Text style={styles.title}>Log out</Text>
+                </View>
+                <Text style={styles.confirmText}>
+                  Are you sure you want to log out?
+                </Text>
+                <TouchableOpacity
+                  style={styles.confirmButton}
+                  onPress={handleLogout}>
+                  <Text style={styles.confirmButtonText}>Log out</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={styles.cancelButton}
+                  onPress={() => setModalVisible(false)}>
+                  <Text style={styles.cancelButtonText}>Cancel</Text>
+                </TouchableOpacity>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+    </>
   );
 };
 
@@ -151,6 +191,59 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     marginRight: 5,
+  },
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContent: {
+    width: 320,
+    height: 340,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 20,
+  },
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 15,
+  },
+  title: {
+    fontSize: 20,
+    fontWeight: '500',
+    color: 'rgba(52, 52, 52, 1)',
+  },
+  confirmText: {
+    fontSize: 15,
+    fontWeight: '500',
+    color: 'rgba(52, 52, 52, 1)',
+    marginVertical: 70,
+    alignSelf: 'center',
+  },
+  confirmButton: {
+    backgroundColor: 'rgba(240, 68, 82, 1)',
+    paddingVertical: 10,
+    borderRadius: 25,
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  confirmButtonText: {
+    color: 'white',
+    fontSize: 15,
+    fontWeight: '500',
+  },
+  cancelButton: {
+    backgroundColor: 'rgba(242, 242, 242, 1)',
+    paddingVertical: 10,
+    borderRadius: 25,
+    alignItems: 'center',
+  },
+  cancelButtonText: {
+    color: 'rgba(89, 89, 89, 1)',
+    fontSize: 15,
+    fontWeight: '500',
   },
 });
 
