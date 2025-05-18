@@ -151,9 +151,11 @@ export default function Shop({
       onPress={() => setModalVisible(true)}
       style={styles.wrapper}>
       <View style={styles.content}>
-        <Text style={styles.payload}>{itemTitle}</Text>
         {photo && <Image style={styles.photo} source={{uri: photo}} />}
-        <Text style={styles.payload}>{itemPrice} 원</Text>
+        <Text style={styles.itemTitle}>{itemTitle}</Text>
+        <Text style={styles.itemPrice}>
+          {Number(itemPrice).toLocaleString()}원
+        </Text>
       </View>
       <Modal
         animationType="fade"
@@ -175,12 +177,15 @@ export default function Shop({
                 />
               </TouchableOpacity>
               <ScrollView>
-                <Text style={styles.payload}>{itemTitle}</Text>
+                <Text style={styles.itemTitle}>{itemTitle}</Text>
                 {photo && (
                   <Image style={styles.shopPhoto} source={{uri: photo}} />
                 )}
-                <Text style={styles.payload}>{itemPrice} 원</Text>
-                <Text style={styles.payload}>{itemDetail}</Text>
+                <Text style={styles.itemPrice}>
+                  {Number(itemPrice).toLocaleString()}원
+                </Text>
+
+                <Text style={styles.itemDetail}>{itemDetail}</Text>
                 <TouchableOpacity
                   style={styles.purchaseButton}
                   onPress={purchase}>
@@ -284,9 +289,8 @@ const styles = StyleSheet.create({
   wrapper: {
     width: windowWidth / 2,
     flexDirection: 'row',
-    padding: 15,
+    padding: 10,
     backgroundColor: '#ffffff',
-    marginVertical: 5,
   },
   avatar: {
     width: 50,
@@ -296,22 +300,36 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
+    marginBottom: 10,
   },
   username: {
     fontWeight: 'semibold',
     fontSize: 20,
     color: '#333333',
   },
-  payload: {
+  itemTitle: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: 'rgba(52, 52, 52, 1)',
+    padding: 10,
+  },
+  itemPrice: {
+    fontSize: 15,
+    fontWeight: '400',
+    color: 'rgba(52, 52, 52, 1)',
+    paddingRight: 10,
+    textAlign: 'right',
+  },
+  itemDetail: {
     marginVertical: 5,
-    fontSize: 16,
-    color: '#666666',
+    fontSize: 15,
+    fontWeight: '600',
+    color: 'rgba(52, 52, 52, 1)',
   },
   photo: {
     width: '100%',
-    height: 200,
-    borderRadius: 5,
-    marginTop: 10,
+    height: 220,
+    borderRadius: 20,
   },
   shopPhoto: {
     width: auth,

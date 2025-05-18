@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   Modal,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   Text,
   ScrollView,
 } from 'react-native';
@@ -83,7 +84,9 @@ const InstaPage = () => {
 
   const onSubmit = async () => {
     const user = auth().currentUser;
-    if (!user || isLoading || insta === '' || insta.length > 180) return;
+    if (!user || isLoading || insta === '' || insta.length > 500) {
+      return;
+    }
 
     try {
       setLoading(true);
@@ -115,6 +118,8 @@ const InstaPage = () => {
             setFile(null);
           },
         );
+      } else {
+        setFile(null);
       }
 
       setInsta('');
@@ -135,6 +140,8 @@ const InstaPage = () => {
   };
 
   const closeModal = () => {
+    setInsta('');
+    setFile(null);
     setModalVisible(false);
   };
 
@@ -145,48 +152,71 @@ const InstaPage = () => {
         transparent={true}
         visible={isModalVisible}
         onRequestClose={closeModal}>
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <TouchableOpacity
-              onPress={closeModal}
-              style={styles.iconCloseButton}>
-              <MaterialCommunityIcons
-                name="close-circle-outline"
-                size={32}
-                color="#3A3A3A"
-              />
-            </TouchableOpacity>
-            <ScrollView>
-              <View style={styles.inputContainer}>
-                <TextInput
-                  style={styles.textInput}
-                  onChangeText={onChange}
-                  value={insta}
-                  placeholder="내용을 입력하세요"
-                  maxLength={180}
-                  multiline
-                />
-                {file && (
-                  <View style={styles.imagePreview}>
-                    <Image source={{uri: file.uri}} style={styles.image} />
-                    <Button title="Remove Image" onPress={clearFile} />
-                  </View>
-                )}
-                <View style={styles.buttonContainer}>
-                  <Button title="Add photo" onPress={onFileChange} />
-                  <Button
-                    title={isLoading ? 'Posting...' : 'Post Insta'}
-                    onPress={onSubmit}
-                    disabled={!insta || isLoading}
-                  />
+        <TouchableWithoutFeedback onPress={closeModal}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback onPress={() => {}}>
+              <View style={styles.modalContent}>
+                <View style={styles.headerRow}>
+                  <Text style={styles.title}>Post insta</Text>
+                  <TouchableOpacity onPress={closeModal}>
+                    <MaterialCommunityIcons
+                      name="close"
+                      size={25}
+                      color="rgba(89, 89, 89, 1)"
+                    />
+                  </TouchableOpacity>
                 </View>
-                {isLoading && (
-                  <ActivityIndicator size="large" color="#1DA1F2" />
-                )}
+                <ScrollView>
+                  <View style={styles.inputContainer}>
+                    {file && (
+                      <View style={styles.imagePreview}>
+                        <Image source={{uri: file.uri}} style={styles.image} />
+                      </View>
+                    )}
+                    <TextInput
+                      style={styles.textInput}
+                      onChangeText={onChange}
+                      value={insta}
+                      placeholder="What's happening?"
+                      placeholderTextColor="rgba(89, 89, 89, 1)"
+                      paddingVertical={20}
+                      textAlignVertical="top"
+                      maxLength={500}
+                      multiline
+                    />
+                    {file && (
+                      <View style={styles.imagePreview}>
+                        <TouchableOpacity
+                          style={styles.imageButton}
+                          onPress={clearFile}>
+                          <Text style={styles.imageButtonText}>
+                            Remove image
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    )}
+                    <TouchableOpacity
+                      style={styles.imageButton}
+                      onPress={onFileChange}>
+                      <Text style={styles.imageButtonText}>Add image</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.postButton}
+                      onPress={onSubmit}
+                      disabled={!insta || isLoading}>
+                      <Text style={styles.postButtonText}>
+                        {isLoading ? 'Posting...' : 'Post'}
+                      </Text>
+                    </TouchableOpacity>
+                    {isLoading && (
+                      <ActivityIndicator size="large" color="#1DA1F2" />
+                    )}
+                  </View>
+                </ScrollView>
               </View>
-            </ScrollView>
+            </TouchableWithoutFeedback>
           </View>
-        </View>
+        </TouchableWithoutFeedback>
       </Modal>
       <InstaTimeline />
       <TouchableOpacity style={styles.addButton} onPress={openModal}>
@@ -199,7 +229,7 @@ const InstaPage = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: 'rgba(255, 255, 255, 1)',
   },
   addButton: {
     backgroundColor: 'rgba(75, 127, 247, 1)',
@@ -216,6 +246,18 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '600',
   },
+  title: {
+    color: 'rgba(52, 52, 52, 1)',
+    fontSize: 20,
+    fontWeight: '600',
+  },
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 20,
+  },
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -223,9 +265,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalContent: {
-    width: '90%',
+    width: 320,
+    height: 600,
     backgroundColor: 'white',
-    borderRadius: 10,
+    borderRadius: 20,
     padding: 20,
   },
   iconCloseButton: {
@@ -235,25 +278,52 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   textInput: {
-    height: 200,
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 30,
+    color: 'rgba(52, 52, 52, 1)',
     fontSize: 16,
+    height: 100,
+    borderColor: 'rgba(89, 89, 89, 1)',
+    borderWidth: 1,
+    borderRadius: 20,
+    padding: 10,
+    marginBottom: 50,
   },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  imageButton: {
+    backgroundColor: 'rgba(242, 242, 242, 1)',
+    width: 280,
+    height: 40,
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 50,
+    alignItems: 'center',
+  },
+  imageButtonText: {
+    color: 'rgba(89, 89, 89, 1)',
+    fontSize: 15,
+    fontWeight: '600',
+  },
+  postButton: {
+    backgroundColor: 'rgba(18, 172, 120, 1)',
+    width: 280,
+    height: 40,
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 50,
+    marginTop: 10,
+    alignItems: 'center',
+  },
+  postButtonText: {
+    color: 'white',
+    fontSize: 15,
+    fontWeight: '600',
   },
   imagePreview: {
     marginBottom: 10,
   },
   image: {
-    width: '100%',
+    width: 280,
     height: 200,
-    borderRadius: 10,
+    borderRadius: 20,
+    marginBottom: 10,
   },
 });
 
