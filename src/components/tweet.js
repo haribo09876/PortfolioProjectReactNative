@@ -10,6 +10,8 @@ import {
   TextInput,
   Alert,
   TouchableWithoutFeedback,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import firestore from '@react-native-firebase/firestore';
@@ -106,55 +108,48 @@ export default function Tweet({username, avatar, tweet, photo, id, userId}) {
         animationType="fade"
         transparent={true}
         visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}>
+        onRequestClose={() => setModalVisible(false)}>
         <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
           <View style={styles.modalOverlay}>
-            <View style={styles.modalContent}>
-              <TouchableOpacity
-                onPress={() => setModalVisible(!modalVisible)}
-                style={styles.iconCloseButton}>
-                <MaterialCommunityIcons
-                  name="close"
-                  size={32}
-                  color="#3A3A3A"
-                />
-              </TouchableOpacity>
-              <ScrollView>
-                <View style={styles.header}>
-                  <MaterialCommunityIcons name="account-circle" size={50} />
-                  <Text style={styles.username}>{username}</Text>
-                </View>
-                <Text style={styles.payload}>{tweet}</Text>
-                {photo && <Image style={styles.photo} source={{uri: photo}} />}
-                {currentUser && (
-                  <View>
-                    {(currentUser.uid === userId ||
+            <TouchableWithoutFeedback onPress={() => {}}>
+              <View style={styles.modalContent}>
+                <ScrollView>
+                  <View style={styles.header}>
+                    <MaterialCommunityIcons name="account-circle" size={50} />
+                    <Text style={styles.username}>{username}</Text>
+                    <TouchableOpacity
+                      onPress={() => setModalVisible(false)}
+                      style={styles.iconCloseButton}>
+                      <MaterialCommunityIcons
+                        name="close"
+                        size={25}
+                        color="rgba(89, 89, 89, 1)"
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  <Text style={styles.payload}>{tweet}</Text>
+                  {photo && (
+                    <Image style={styles.modalPhoto} source={{uri: photo}} />
+                  )}
+                  {currentUser &&
+                    (currentUser.uid === userId ||
                       currentUser.email === 'admin@gmail.com') && (
-                      <View>
-                        <TouchableOpacity
-                          onPress={deleteTweet}
-                          style={styles.deleteButton}>
-                          <MaterialCommunityIcons
-                            name="delete-outline"
-                            size={25}
-                          />
-                        </TouchableOpacity>
+                      <>
                         <TouchableOpacity
                           onPress={() => setEditModalVisible(true)}
                           style={styles.editButton}>
-                          <MaterialCommunityIcons
-                            name="pencil-outline"
-                            size={25}
-                          />
+                          <Text style={styles.editText}>Edit</Text>
                         </TouchableOpacity>
-                      </View>
+                        <TouchableOpacity
+                          onPress={deleteTweet}
+                          style={styles.deleteButton}>
+                          <Text style={styles.deleteText}>Delete</Text>
+                        </TouchableOpacity>
+                      </>
                     )}
-                  </View>
-                )}
-              </ScrollView>
-            </View>
+                </ScrollView>
+              </View>
+            </TouchableWithoutFeedback>
           </View>
         </TouchableWithoutFeedback>
       </Modal>
@@ -162,46 +157,48 @@ export default function Tweet({username, avatar, tweet, photo, id, userId}) {
         animationType="fade"
         transparent={true}
         visible={editModalVisible}
-        onRequestClose={() => {
-          setEditModalVisible(!editModalVisible);
-        }}>
+        onRequestClose={() => setEditModalVisible(false)}>
         <TouchableWithoutFeedback onPress={() => setEditModalVisible(false)}>
           <View style={styles.modalOverlay}>
-            <View style={styles.modalContent}>
-              <TouchableOpacity
-                onPress={() => setEditModalVisible(!editModalVisible)}
-                style={styles.iconCloseButton}>
-                <MaterialCommunityIcons
-                  name="close"
-                  size={32}
-                  color="#3A3A3A"
-                />
-              </TouchableOpacity>
-              <ScrollView>
-                <Text style={styles.username}>{username}</Text>
-                {imageUri ? (
-                  <Image style={styles.photo} source={{uri: imageUri}} />
-                ) : (
-                  newPhoto && (
-                    <Image style={styles.photo} source={{uri: newPhoto}} />
-                  )
-                )}
-                <TextInput
-                  style={styles.textInput}
-                  value={newTweet}
-                  onChangeText={setNewTweet}
-                  multiline
-                />
+            <TouchableWithoutFeedback onPress={() => {}}>
+              <View style={styles.modalContent}>
                 <TouchableOpacity
-                  onPress={onFileChange}
-                  style={styles.imageButton}>
-                  <Text style={styles.imageButtonText}>Change Photo</Text>
+                  onPress={() => setEditModalVisible(false)}
+                  style={styles.iconCloseButton}>
+                  <MaterialCommunityIcons
+                    name="close"
+                    size={32}
+                    color="#3A3A3A"
+                  />
                 </TouchableOpacity>
-                <TouchableOpacity onPress={editTweet} style={styles.saveButton}>
-                  <Text style={styles.saveText}>Save</Text>
-                </TouchableOpacity>
-              </ScrollView>
-            </View>
+                <ScrollView>
+                  <Text style={styles.username}>{username}</Text>
+                  {imageUri ? (
+                    <Image style={styles.photo} source={{uri: imageUri}} />
+                  ) : (
+                    newPhoto && (
+                      <Image style={styles.photo} source={{uri: newPhoto}} />
+                    )
+                  )}
+                  <TextInput
+                    style={styles.textInput}
+                    value={newTweet}
+                    onChangeText={setNewTweet}
+                    multiline
+                  />
+                  <TouchableOpacity
+                    onPress={onFileChange}
+                    style={styles.imageButton}>
+                    <Text style={styles.imageButtonText}>Change Photo</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity
+                    onPress={editTweet}
+                    style={styles.saveButton}>
+                    <Text style={styles.saveText}>Save</Text>
+                  </TouchableOpacity>
+                </ScrollView>
+              </View>
+            </TouchableWithoutFeedback>
           </View>
         </TouchableWithoutFeedback>
       </Modal>
@@ -250,30 +247,43 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 50,
   },
-  deleteButton: {
-    backgroundColor: '#e74c3c',
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    alignSelf: 'flex-start',
-    marginTop: 5,
-  },
-  deleteText: {
-    color: 'white',
-    fontSize: 14,
+  modalPhoto: {
+    width: 280,
+    height: 150,
+    marginTop: 10,
+    marginBottom: 30,
   },
   editButton: {
-    backgroundColor: '#3498db',
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    alignSelf: 'flex-start',
-    marginTop: 5,
+    backgroundColor: 'rgba(75, 127, 247, 1)',
+    width: 280,
+    height: 40,
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 50,
+    marginTop: 10,
+    alignItems: 'center',
   },
   editText: {
     color: 'white',
-    fontSize: 14,
+    fontSize: 15,
+    fontWeight: '600',
   },
+  deleteButton: {
+    backgroundColor: 'rgba(240, 68, 82, 1)',
+    width: 280,
+    height: 40,
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 50,
+    marginTop: 10,
+    alignItems: 'center',
+  },
+  deleteText: {
+    color: 'white',
+    fontSize: 15,
+    fontWeight: '600',
+  },
+
   modalOverlay: {
     flex: 1,
     justifyContent: 'center',
@@ -281,9 +291,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.5)',
   },
   modalContent: {
-    width: '90%',
+    width: 320,
+    height: 510,
     backgroundColor: '#ffffff',
-    borderRadius: 10,
+    borderRadius: 20,
     padding: 20,
     shadowColor: '#000',
     shadowOffset: {
@@ -297,8 +308,8 @@ const styles = StyleSheet.create({
   },
   iconCloseButton: {
     position: 'absolute',
-    top: 15,
-    right: 15,
+    top: 12,
+    right: 10,
   },
   textInput: {
     borderColor: '#e0e0e0',
