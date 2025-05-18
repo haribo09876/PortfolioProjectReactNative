@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   Modal,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   Text,
   ScrollView,
 } from 'react-native';
@@ -101,7 +102,7 @@ const ShopPage = () => {
 
   const onSubmit = async () => {
     const user = auth().currentUser;
-    if (!user || isLoading || itemTitle === '' || itemTitle.length > 180) {
+    if (!user || isLoading || itemTitle === '' || itemTitle.length > 500) {
       return;
     }
     try {
@@ -136,7 +137,10 @@ const ShopPage = () => {
             setFile(null);
           },
         );
+      } else {
+        setFile(null);
       }
+
       setItemTitle('');
       setItemPrice('');
       setItemDetail('');
@@ -157,6 +161,10 @@ const ShopPage = () => {
   };
 
   const closeModal = () => {
+    setItemTitle('');
+    setItemPrice('');
+    setItemDetail('');
+    setFile(null);
     setModalVisible(false);
   };
 
@@ -167,64 +175,92 @@ const ShopPage = () => {
         transparent={true}
         visible={isModalVisible}
         onRequestClose={closeModal}>
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <TouchableOpacity
-              onPress={closeModal}
-              style={styles.iconCloseButton}>
-              <MaterialCommunityIcons
-                name="close-circle-outline"
-                size={32}
-                color="#3A3A3A"
-              />
-            </TouchableOpacity>
-            <ScrollView>
-              <View style={styles.inputContainer}>
-                <TextInput
-                  style={styles.itemInput}
-                  onChangeText={onChangeItemTitle}
-                  value={itemTitle}
-                  placeholder="itemTitle"
-                  maxLength={50}
-                  multiline
-                />
-                <TextInput
-                  style={styles.itemInput}
-                  onChangeText={onChangeItemPrice}
-                  value={itemPrice}
-                  placeholder="itemPrice"
-                  maxLength={9}
-                  keyboardType="numeric"
-                  multiline
-                />
-                <TextInput
-                  style={styles.textInput}
-                  onChangeText={onChangeItemDetail}
-                  value={itemDetail}
-                  placeholder="itemDetail"
-                  multiline
-                />
-                {file && (
-                  <View style={styles.imagePreview}>
-                    <Image source={{uri: file.uri}} style={styles.image} />
-                    <Button title="Remove Image" onPress={clearFile} />
-                  </View>
-                )}
-                <View style={styles.buttonContainer}>
-                  <Button title="Add photo" onPress={onFileChange} />
-                  <Button
-                    title={isLoading ? 'Posting...' : 'Post Shop'}
-                    onPress={onSubmit}
-                    disabled={!itemTitle || isLoading}
-                  />
+        <TouchableWithoutFeedback onPress={closeModal}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback onPress={() => {}}>
+              <View style={styles.modalContent}>
+                <View style={styles.headerRow}>
+                  <Text style={styles.title}>Post item</Text>
+                  <TouchableOpacity onPress={closeModal}>
+                    <MaterialCommunityIcons
+                      name="close"
+                      size={25}
+                      color="rgba(89, 89, 89, 1)"
+                    />
+                  </TouchableOpacity>
                 </View>
-                {isLoading && (
-                  <ActivityIndicator size="large" color="#1DA1F2" />
-                )}
+                <ScrollView>
+                  <View style={styles.inputContainer}>
+                    <TextInput
+                      style={styles.textItemTitleInput}
+                      onChangeText={onChangeItemTitle}
+                      value={itemTitle}
+                      placeholder="Item title"
+                      placeholderTextColor="rgba(89, 89, 89, 1)"
+                      paddingVertical={20}
+                      textAlignVertical="top"
+                      maxLength={50}
+                      multiline
+                    />
+                    <TextInput
+                      style={styles.textItemPriceInput}
+                      onChangeText={onChangeItemPrice}
+                      value={itemPrice}
+                      placeholder="Item price"
+                      placeholderTextColor="rgba(89, 89, 89, 1)"
+                      paddingVertical={20}
+                      textAlignVertical="top"
+                      maxLength={9}
+                      keyboardType="numeric"
+                      multiline
+                    />
+                    <TextInput
+                      style={styles.textItemDetailInput}
+                      onChangeText={onChangeItemDetail}
+                      value={itemDetail}
+                      placeholder="Item contents"
+                      placeholderTextColor="rgba(89, 89, 89, 1)"
+                      paddingVertical={20}
+                      textAlignVertical="top"
+                      maxLength={500}
+                      multiline
+                    />
+                    {file && (
+                      <View style={styles.imagePreview}>
+                        <Image source={{uri: file.uri}} style={styles.image} />
+                        <TouchableOpacity
+                          style={styles.imageButton}
+                          onPress={clearFile}>
+                          <Text style={styles.imageButtonText}>
+                            Remove image
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    )}
+                    <TouchableOpacity
+                      style={styles.imageButton}
+                      onPress={onFileChange}>
+                      <Text style={styles.imageButtonText}>Add image</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.postButton}
+                      onPress={onSubmit}
+                      disabled={
+                        !itemTitle || !itemPrice || !itemDetail || isLoading
+                      }>
+                      <Text style={styles.postButtonText}>
+                        {isLoading ? 'Posting...' : 'Post'}
+                      </Text>
+                    </TouchableOpacity>
+                    {isLoading && (
+                      <ActivityIndicator size="large" color="#1DA1F2" />
+                    )}
+                  </View>
+                </ScrollView>
               </View>
-            </ScrollView>
+            </TouchableWithoutFeedback>
           </View>
-        </View>
+        </TouchableWithoutFeedback>
       </Modal>
       <ShopTimeline />
       {userEmail === 'admin@gmail.com' && (
@@ -239,7 +275,7 @@ const ShopPage = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'white',
+    backgroundColor: 'rgba(255, 255, 255, 1)',
   },
   addButton: {
     backgroundColor: 'rgba(75, 127, 247, 1)',
@@ -256,6 +292,18 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '600',
   },
+  title: {
+    color: 'rgba(52, 52, 52, 1)',
+    fontSize: 20,
+    fontWeight: '600',
+  },
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 10,
+    marginBottom: 20,
+  },
   modalOverlay: {
     flex: 1,
     backgroundColor: 'rgba(0, 0, 0, 0.5)',
@@ -263,9 +311,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   modalContent: {
-    width: '90%',
+    width: 320,
+    height: 600,
     backgroundColor: 'white',
-    borderRadius: 10,
+    borderRadius: 20,
     padding: 20,
   },
   iconCloseButton: {
@@ -274,35 +323,73 @@ const styles = StyleSheet.create({
   inputContainer: {
     marginVertical: 10,
   },
-  itemInput: {
-    height: 50,
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 30,
+  textItemTitleInput: {
+    color: 'rgba(52, 52, 52, 1)',
     fontSize: 16,
-  },
-  textInput: {
-    height: 200,
-    borderColor: 'gray',
+    height: 80,
+    borderColor: 'rgba(89, 89, 89, 1)',
     borderWidth: 1,
-    borderRadius: 5,
+    borderRadius: 20,
     padding: 10,
-    marginBottom: 30,
-    fontSize: 16,
+    marginBottom: 10,
   },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  textItemPriceInput: {
+    color: 'rgba(52, 52, 52, 1)',
+    fontSize: 16,
+    height: 60,
+    borderColor: 'rgba(89, 89, 89, 1)',
+    borderWidth: 1,
+    borderRadius: 20,
+    padding: 10,
+    marginBottom: 10,
+  },
+  textItemDetailInput: {
+    color: 'rgba(52, 52, 52, 1)',
+    fontSize: 16,
+    height: 150,
+    borderColor: 'rgba(89, 89, 89, 1)',
+    borderWidth: 1,
+    borderRadius: 20,
+    padding: 10,
+    marginBottom: 50,
+  },
+  imageButton: {
+    backgroundColor: 'rgba(242, 242, 242, 1)',
+    width: 280,
+    height: 40,
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 50,
+    alignItems: 'center',
+  },
+  imageButtonText: {
+    color: 'rgba(89, 89, 89, 1)',
+    fontSize: 15,
+    fontWeight: '600',
+  },
+  postButton: {
+    backgroundColor: 'rgba(18, 172, 120, 1)',
+    width: 280,
+    height: 40,
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 50,
+    marginTop: 10,
+    alignItems: 'center',
+  },
+  postButtonText: {
+    color: 'white',
+    fontSize: 15,
+    fontWeight: '600',
   },
   imagePreview: {
     marginBottom: 10,
   },
   image: {
-    width: '100%',
+    width: 280,
     height: 200,
-    borderRadius: 10,
+    borderRadius: 20,
+    marginBottom: 10,
   },
 });
 

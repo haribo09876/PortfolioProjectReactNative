@@ -101,7 +101,7 @@ export default function Tweet({username, avatar, tweet, photo, id, userId}) {
       </View>
       <Text style={styles.payload}>{tweet}</Text>
       {photo && <Image style={styles.photo} source={{uri: photo}} />}
-      <View style={{height: 0.5, backgroundColor: 'rgba(176, 176, 176, 1)'}} />
+      <View style={{height: 0.3, backgroundColor: 'rgba(176, 176, 176, 1)'}} />
       <Modal
         animationType="fade"
         transparent={true}
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
     height: 200,
     borderRadius: 20,
     marginTop: 10,
-    marginBottom: 30,
+    marginBottom: 50,
   },
   deleteButton: {
     backgroundColor: '#e74c3c',

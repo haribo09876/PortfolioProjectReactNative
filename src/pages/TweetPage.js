@@ -9,6 +9,7 @@ import {
   ActivityIndicator,
   Modal,
   TouchableOpacity,
+  TouchableWithoutFeedback,
   Text,
   ScrollView,
 } from 'react-native';
@@ -151,61 +152,67 @@ const TweetPage = () => {
         transparent={true}
         visible={isModalVisible}
         onRequestClose={closeModal}>
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <View style={styles.headerRow}>
-              <Text style={styles.title}>Post tweet</Text>
-              <TouchableOpacity onPress={closeModal}>
-                <MaterialCommunityIcons
-                  name="close"
-                  size={25}
-                  color="rgba(89, 89, 89, 1)"
-                />
-              </TouchableOpacity>
-            </View>
-            <ScrollView>
-              <View style={styles.inputContainer}>
-                <TextInput
-                  style={styles.textInput}
-                  onChangeText={onChange}
-                  value={tweet}
-                  placeholder="What's happening?"
-                  placeholderTextColor="rgba(89, 89, 89, 1)"
-                  paddingVertical={20}
-                  textAlignVertical="top"
-                  maxLength={500}
-                  multiline
-                />
-                {file && (
-                  <View style={styles.imagePreview}>
-                    <Image source={{uri: file.uri}} style={styles.image} />
+        <TouchableWithoutFeedback onPress={closeModal}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback onPress={() => {}}>
+              <View style={styles.modalContent}>
+                <View style={styles.headerRow}>
+                  <Text style={styles.title}>Post tweet</Text>
+                  <TouchableOpacity onPress={closeModal}>
+                    <MaterialCommunityIcons
+                      name="close"
+                      size={25}
+                      color="rgba(89, 89, 89, 1)"
+                    />
+                  </TouchableOpacity>
+                </View>
+                <ScrollView>
+                  <View style={styles.inputContainer}>
+                    <TextInput
+                      style={styles.textInput}
+                      onChangeText={onChange}
+                      value={tweet}
+                      placeholder="What's happening?"
+                      placeholderTextColor="rgba(89, 89, 89, 1)"
+                      paddingVertical={20}
+                      textAlignVertical="top"
+                      maxLength={500}
+                      multiline
+                    />
+                    {file && (
+                      <View style={styles.imagePreview}>
+                        <Image source={{uri: file.uri}} style={styles.image} />
+                        <TouchableOpacity
+                          style={styles.imageButton}
+                          onPress={clearFile}>
+                          <Text style={styles.imageButtonText}>
+                            Remove image
+                          </Text>
+                        </TouchableOpacity>
+                      </View>
+                    )}
                     <TouchableOpacity
                       style={styles.imageButton}
-                      onPress={clearFile}>
-                      <Text style={styles.imageButtonText}>Remove image</Text>
+                      onPress={onFileChange}>
+                      <Text style={styles.imageButtonText}>Add image</Text>
                     </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.postButton}
+                      onPress={onSubmit}
+                      disabled={!tweet || isLoading}>
+                      <Text style={styles.postButtonText}>
+                        {isLoading ? 'Posting...' : 'Post'}
+                      </Text>
+                    </TouchableOpacity>
+                    {isLoading && (
+                      <ActivityIndicator size="large" color="#1DA1F2" />
+                    )}
                   </View>
-                )}
-                <TouchableOpacity
-                  style={styles.imageButton}
-                  onPress={onFileChange}>
-                  <Text style={styles.imageButtonText}>Add image</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.postButton}
-                  onPress={onSubmit}
-                  disabled={!tweet || isLoading}>
-                  <Text style={styles.postButtonText}>
-                    {isLoading ? 'Posting...' : 'Post'}
-                  </Text>
-                </TouchableOpacity>
-                {isLoading && (
-                  <ActivityIndicator size="large" color="#1DA1F2" />
-                )}
+                </ScrollView>
               </View>
-            </ScrollView>
+            </TouchableWithoutFeedback>
           </View>
-        </View>
+        </TouchableWithoutFeedback>
       </Modal>
       <TweetTimeline />
       <TouchableOpacity style={styles.addButton} onPress={openModal}>
@@ -313,6 +320,7 @@ const styles = StyleSheet.create({
     width: 280,
     height: 200,
     borderRadius: 20,
+    marginBottom: 10,
   },
 });
 

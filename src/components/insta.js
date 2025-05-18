@@ -209,9 +209,8 @@ export default function Insta({username, avatar, insta, photo, id, userId}) {
 
 const styles = StyleSheet.create({
   wrapper: {
-    width: windowWidth / 3,
-    height: windowWidth / 3,
-    flexDirection: 'row',
+    width: 120,
+    height: 120,
     backgroundColor: '#ffffff',
     borderColor: '#e0e0e0',
   },
