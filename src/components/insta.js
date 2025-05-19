@@ -29,6 +29,7 @@ export default function Insta({username, avatar, insta, photo, id, userId}) {
   const [newInsta, setNewInsta] = useState(insta);
   const [newPhoto, setNewPhoto] = useState(photo);
   const [imageUri, setImageUri] = useState(null);
+  const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
 
   const deleteInsta = async () => {
     try {
@@ -140,7 +141,7 @@ export default function Insta({username, avatar, insta, photo, id, userId}) {
                           <Text style={styles.editText}>Edit</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
-                          onPress={deleteInsta}
+                          onPress={() => setDeleteConfirmVisible(true)}
                           style={styles.deleteButton}>
                           <Text style={styles.deleteText}>Delete</Text>
                         </TouchableOpacity>
@@ -200,6 +201,39 @@ export default function Insta({username, avatar, insta, photo, id, userId}) {
           </View>
         </TouchableOpacity>
       </Modal>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={deleteConfirmVisible}
+        onRequestClose={() => setDeleteConfirmVisible(false)}>
+        <TouchableWithoutFeedback
+          onPress={() => setDeleteConfirmVisible(false)}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={styles.deleteModalContent}>
+                <Text style={styles.username}>Delete insta</Text>
+                <Text style={styles.deleteConfirmText}>
+                  Are you sure you want to delete this insta?
+                </Text>
+                <TouchableOpacity
+                  onPress={async () => {
+                    await deleteInsta();
+                    setDeleteConfirmVisible(false);
+                    setModalVisible(false);
+                  }}
+                  style={styles.updateButton}>
+                  <Text style={styles.updateText}>Confirm</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => setDeleteConfirmVisible(false)}
+                  style={styles.editButton}>
+                  <Text style={styles.editText}>Cancel</Text>
+                </TouchableOpacity>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
     </TouchableOpacity>
   );
 }
@@ -226,10 +260,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   username: {
-    fontWeight: 'semibold',
+    color: 'rgba(52, 52, 52, 1)',
     fontSize: 20,
-    color: '#333333',
-    marginLeft: 10,
+    fontWeight: '500',
+    marginLeft: 5,
   },
   payload: {
     marginVertical: 5,
@@ -269,6 +303,21 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '600',
   },
+  updateButton: {
+    backgroundColor: 'rgba(68, 88, 200, 1)',
+    width: 280,
+    height: 40,
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 50,
+    marginTop: 10,
+    alignItems: 'center',
+  },
+  updateText: {
+    color: 'white',
+    fontSize: 15,
+    fontWeight: '600',
+  },
   deleteButton: {
     backgroundColor: 'rgba(240, 68, 82, 1)',
     width: 280,
@@ -284,6 +333,13 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '600',
   },
+  deleteConfirmText: {
+    color: 'rgba(52, 52, 52, 1)',
+    fontSize: 15,
+    fontWeight: '500',
+    marginLeft: 10,
+    marginVertical: 50,
+  },
   modalOverlay: {
     flex: 1,
     justifyContent: 'center',
@@ -293,6 +349,22 @@ const styles = StyleSheet.create({
   modalContent: {
     width: 320,
     height: 520,
+    backgroundColor: '#ffffff',
+    borderRadius: 20,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    position: 'relative',
+  },
+  deleteModalContent: {
+    width: 320,
+    height: 320,
     backgroundColor: '#ffffff',
     borderRadius: 20,
     padding: 20,
