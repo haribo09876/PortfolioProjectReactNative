@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 1)',
   },
   addButton: {
-    backgroundColor: 'rgba(75, 127, 247, 1)',
+    backgroundColor: 'rgba(68, 88, 200, 1)',
     width: 360,
     height: 45,
     paddingVertical: 10,

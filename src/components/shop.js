@@ -11,6 +11,8 @@ import {
   Alert,
   Dimensions,
   TouchableWithoutFeedback,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -157,66 +159,60 @@ export default function Shop({
           {Number(itemPrice).toLocaleString()}원
         </Text>
       </View>
+
       <Modal
         animationType="fade"
         transparent={true}
         visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}>
+        onRequestClose={() => setModalVisible(false)}>
         <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
           <View style={styles.modalOverlay}>
-            <View style={styles.modalContent}>
-              <TouchableOpacity
-                onPress={() => setModalVisible(!modalVisible)}
-                style={styles.iconCloseButton}>
-                <MaterialCommunityIcons
-                  name="close-circle-outline"
-                  size={32}
-                  color="#3A3A3A"
-                />
-              </TouchableOpacity>
-              <ScrollView>
-                <Text style={styles.itemTitle}>{itemTitle}</Text>
-                {photo && (
-                  <Image style={styles.shopPhoto} source={{uri: photo}} />
-                )}
-                <Text style={styles.itemPrice}>
-                  {Number(itemPrice).toLocaleString()}원
-                </Text>
-
-                <Text style={styles.itemDetail}>{itemDetail}</Text>
-                <TouchableOpacity
-                  style={styles.purchaseButton}
-                  onPress={purchase}>
-                  <Text style={styles.purchaseText}>구 매</Text>
-                </TouchableOpacity>
-                {currentUser && (
-                  <View>
-                    {currentUser.uid === 'PdWutJuG1yPegHocDTMJVLPu1jr2' && (
-                      <View>
-                        <TouchableOpacity
-                          onPress={deleteShop}
-                          style={styles.deleteButton}>
-                          <MaterialCommunityIcons
-                            name="delete-outline"
-                            size={25}
-                          />
-                        </TouchableOpacity>
+            <TouchableWithoutFeedback onPress={() => {}}>
+              <View style={styles.modalContent}>
+                <ScrollView>
+                  <View style={styles.header}>
+                    <Text style={styles.itemTitle}>{itemTitle}</Text>
+                    <TouchableOpacity
+                      onPress={() => setModalVisible(false)}
+                      style={styles.iconCloseButton}>
+                      <MaterialCommunityIcons
+                        name="close"
+                        size={25}
+                        color="rgba(89, 89, 89, 1)"
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  {photo && (
+                    <Image style={styles.shopPhoto} source={{uri: photo}} />
+                  )}
+                  <Text style={styles.itemPrice}>
+                    {Number(itemPrice).toLocaleString()}원
+                  </Text>
+                  <Text style={styles.itemDetail}>{itemDetail}</Text>
+                  <TouchableOpacity
+                    onPress={purchase}
+                    style={styles.purchaseButton}>
+                    <Text style={styles.purchaseText}>Purchase</Text>
+                  </TouchableOpacity>
+                  {currentUser &&
+                    (currentUser.uid === id ||
+                      currentUser.email === 'admin@gmail.com') && (
+                      <>
                         <TouchableOpacity
                           onPress={() => setEditModalVisible(true)}
                           style={styles.editButton}>
-                          <MaterialCommunityIcons
-                            name="pencil-outline"
-                            size={25}
-                          />
+                          <Text style={styles.editText}>Edit</Text>
                         </TouchableOpacity>
-                      </View>
+                        <TouchableOpacity
+                          onPress={deleteShop}
+                          style={styles.deleteButton}>
+                          <Text style={styles.deleteText}>Delete</Text>
+                        </TouchableOpacity>
+                      </>
                     )}
-                  </View>
-                )}
-              </ScrollView>
-            </View>
+                </ScrollView>
+              </View>
+            </TouchableWithoutFeedback>
           </View>
         </TouchableWithoutFeedback>
       </Modal>
@@ -314,10 +310,11 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   itemPrice: {
-    fontSize: 15,
+    fontSize: 18,
     fontWeight: '400',
     color: 'rgba(52, 52, 52, 1)',
-    paddingRight: 10,
+    marginTop: 10,
+    marginRight: 10,
     textAlign: 'right',
   },
   itemDetail: {
@@ -332,48 +329,55 @@ const styles = StyleSheet.create({
     borderRadius: 20,
   },
   shopPhoto: {
-    width: auth,
+    width: 280,
     height: 400,
     borderRadius: 10,
     marginTop: 10,
   },
   purchaseButton: {
-    width: '100%',
-    backgroundColor: '#3498db',
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
+    backgroundColor: 'rgba(68, 88, 200, 1)',
+    width: 280,
+    height: 40,
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 50,
+    marginTop: 10,
     alignItems: 'center',
-    alignSelf: 'flex-start',
-    marginTop: 5,
   },
   purchaseText: {
     color: 'white',
-    fontSize: 20,
+    fontSize: 15,
+    fontWeight: '600',
+  },
+  editButton: {
+    backgroundColor: 'rgba(242, 242, 242, 1)',
+    width: 280,
+    height: 40,
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 50,
+    marginTop: 10,
+    alignItems: 'center',
+  },
+  editText: {
+    color: 'rgba(89, 89, 89, 1)',
+    fontSize: 15,
+    fontWeight: '600',
   },
   deleteButton: {
-    backgroundColor: '#e74c3c',
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    alignSelf: 'flex-start',
-    marginTop: 5,
+    backgroundColor: 'rgba(240, 68, 82, 1)',
+    width: 280,
+    height: 40,
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 50,
+    marginTop: 10,
+    alignItems: 'center',
   },
   deleteText: {
     color: 'white',
-    fontSize: 14,
-  },
-  editButton: {
-    backgroundColor: '#3498db',
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    alignSelf: 'flex-start',
-    marginTop: 5,
-  },
-  editText: {
-    color: 'white',
-    fontSize: 14,
+    fontSize: 15,
+    fontWeight: '600',
   },
   modalOverlay: {
     flex: 1,
@@ -382,9 +386,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.5)',
   },
   modalContent: {
-    width: '90%',
+    width: 320,
+    height: 520,
     backgroundColor: '#ffffff',
-    borderRadius: 10,
+    borderRadius: 20,
     padding: 20,
     shadowColor: '#000',
     shadowOffset: {
@@ -398,8 +403,8 @@ const styles = StyleSheet.create({
   },
   iconCloseButton: {
     position: 'absolute',
-    top: 15,
-    right: 15,
+    top: 12,
+    right: 10,
   },
   itemInput: {
     height: 50,
