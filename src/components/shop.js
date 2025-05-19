@@ -159,7 +159,6 @@ export default function Shop({
           {Number(itemPrice).toLocaleString()}원
         </Text>
       </View>
-
       <Modal
         animationType="fade"
         transparent={true}

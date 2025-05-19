@@ -173,6 +173,12 @@ export default function Tweet({username, avatar, tweet, photo, id, userId}) {
                 </TouchableOpacity>
                 <ScrollView>
                   <Text style={styles.username}>{username}</Text>
+                  <TextInput
+                    style={styles.textInput}
+                    value={newTweet}
+                    onChangeText={setNewTweet}
+                    multiline
+                  />
                   {imageUri ? (
                     <Image style={styles.photo} source={{uri: imageUri}} />
                   ) : (
@@ -180,12 +186,6 @@ export default function Tweet({username, avatar, tweet, photo, id, userId}) {
                       <Image style={styles.photo} source={{uri: newPhoto}} />
                     )
                   )}
-                  <TextInput
-                    style={styles.textInput}
-                    value={newTweet}
-                    onChangeText={setNewTweet}
-                    multiline
-                  />
                   <TouchableOpacity
                     onPress={onFileChange}
                     style={styles.imageButton}>

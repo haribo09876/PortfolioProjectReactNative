@@ -147,7 +147,6 @@ const Navigator = () => {
           }}
         </Stack.Screen>
       </Stack.Navigator>
-
       <Modal
         animationType="fade"
         transparent={true}
