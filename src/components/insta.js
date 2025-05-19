@@ -10,6 +10,9 @@ import {
   TextInput,
   Alert,
   Dimensions,
+  TouchableWithoutFeedback,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import firestore from '@react-native-firebase/firestore';
@@ -104,56 +107,50 @@ export default function Insta({username, avatar, insta, photo, id, userId}) {
         animationType="fade"
         transparent={true}
         visible={modalVisible}
-        onRequestClose={() => {
-          setModalVisible(!modalVisible);
-        }}>
-        <TouchableOpacity
-          activeOpacity={1}
-          onPressOut={() => setModalVisible(false)}
-          style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <TouchableOpacity
-              onPress={() => setModalVisible(!modalVisible)}
-              style={styles.iconCloseButton}>
-              <MaterialCommunityIcons
-                name="close-circle-outline"
-                size={32}
-                color="#3A3A3A"
-              />
-            </TouchableOpacity>
-            <ScrollView>
-              <MaterialCommunityIcons name="account-circle" size={50} />
-              <Text style={styles.username}>{username}</Text>
-              {photo && <Image style={styles.photo} source={{uri: photo}} />}
-              <Text style={styles.payload}>{insta}</Text>
-              {currentUser && (
-                <View>
-                  {(currentUser.uid === userId ||
-                    currentUser.email === 'admin@gmail.com') && (
-                    <View>
-                      <TouchableOpacity
-                        onPress={deleteInsta}
-                        style={styles.deleteButton}>
-                        <MaterialCommunityIcons
-                          name="delete-outline"
-                          size={25}
-                        />
-                      </TouchableOpacity>
-                      <TouchableOpacity
-                        onPress={() => setEditModalVisible(true)}
-                        style={styles.editButton}>
-                        <MaterialCommunityIcons
-                          name="pencil-outline"
-                          size={25}
-                        />
-                      </TouchableOpacity>
-                    </View>
+        onRequestClose={() => setModalVisible(false)}>
+        <TouchableWithoutFeedback onPress={() => setModalVisible(false)}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback onPress={() => {}}>
+              <View style={styles.modalContent}>
+                <ScrollView>
+                  <View style={styles.header}>
+                    <MaterialCommunityIcons name="account-circle" size={50} />
+                    <Text style={styles.username}>{username}</Text>
+                    <TouchableOpacity
+                      onPress={() => setModalVisible(false)}
+                      style={styles.iconCloseButton}>
+                      <MaterialCommunityIcons
+                        name="close"
+                        size={25}
+                        color="rgba(89, 89, 89, 1)"
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  {photo && (
+                    <Image style={styles.modalPhoto} source={{uri: photo}} />
                   )}
-                </View>
-              )}
-            </ScrollView>
+                  <Text style={styles.payload}>{insta}</Text>
+                  {currentUser &&
+                    (currentUser.uid === userId ||
+                      currentUser.email === 'admin@gmail.com') && (
+                      <>
+                        <TouchableOpacity
+                          onPress={() => setEditModalVisible(true)}
+                          style={styles.editButton}>
+                          <Text style={styles.editText}>Edit</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity
+                          onPress={deleteInsta}
+                          style={styles.deleteButton}>
+                          <Text style={styles.deleteText}>Delete</Text>
+                        </TouchableOpacity>
+                      </>
+                    )}
+                </ScrollView>
+              </View>
+            </TouchableWithoutFeedback>
           </View>
-        </TouchableOpacity>
+        </TouchableWithoutFeedback>
       </Modal>
       <Modal
         animationType="fade"
@@ -214,6 +211,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
     borderColor: '#e0e0e0',
   },
+  header: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 5,
+  },
   avatar: {
     width: 50,
     height: 50,
@@ -227,43 +229,60 @@ const styles = StyleSheet.create({
     fontWeight: 'semibold',
     fontSize: 20,
     color: '#333333',
+    marginLeft: 10,
   },
   payload: {
     marginVertical: 5,
-    fontSize: 16,
-    color: '#666666',
+    fontSize: 15,
+    fontWeight: '400',
+    color: 'rgba(52, 52, 52, 1)',
   },
   photo: {
-    width: '100%',
-    height: 300,
+    width: 330,
+    height: 200,
+    borderRadius: 20,
+    marginTop: 10,
+    marginBottom: 50,
   },
   instaPhoto: {
     width: '100%',
     height: '100%',
   },
+  modalPhoto: {
+    width: 280,
+    height: 280,
+    marginTop: 10,
+    marginBottom: 10,
+  },
+  editButton: {
+    backgroundColor: 'rgba(242, 242, 242, 1)',
+    width: 280,
+    height: 40,
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 50,
+    marginTop: 10,
+    alignItems: 'center',
+  },
+  editText: {
+    color: 'rgba(89, 89, 89, 1)',
+    fontSize: 15,
+    fontWeight: '600',
+  },
   deleteButton: {
-    backgroundColor: '#e74c3c',
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    alignSelf: 'flex-start',
-    marginTop: 5,
+    backgroundColor: 'rgba(240, 68, 82, 1)',
+    width: 280,
+    height: 40,
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 50,
+    marginTop: 10,
+    alignItems: 'center',
   },
   deleteText: {
     color: 'white',
-    fontSize: 14,
-  },
-  editButton: {
-    backgroundColor: '#3498db',
-    borderRadius: 5,
-    paddingHorizontal: 10,
-    paddingVertical: 5,
-    alignSelf: 'flex-start',
-    marginTop: 5,
-  },
-  editText: {
-    color: 'white',
-    fontSize: 14,
+    fontSize: 15,
+    fontWeight: '600',
   },
   modalOverlay: {
     flex: 1,
@@ -272,9 +291,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0,0,0,0.5)',
   },
   modalContent: {
-    width: '90%',
+    width: 320,
+    height: 520,
     backgroundColor: '#ffffff',
-    borderRadius: 10,
+    borderRadius: 20,
     padding: 20,
     shadowColor: '#000',
     shadowOffset: {
@@ -288,8 +308,8 @@ const styles = StyleSheet.create({
   },
   iconCloseButton: {
     position: 'absolute',
-    top: 15,
-    right: 15,
+    top: 12,
+    right: 10,
   },
   textInput: {
     borderColor: '#e0e0e0',

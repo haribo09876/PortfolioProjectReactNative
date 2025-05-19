@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(89, 89, 89, 1)',
   },
   button: {
-    backgroundColor: 'rgba(75, 127, 247, 1)',
+    backgroundColor: 'rgba(68, 88, 200, 1)',
     width: 360,
     paddingVertical: 15,
     paddingHorizontal: 20,

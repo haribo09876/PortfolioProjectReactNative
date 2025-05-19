@@ -254,7 +254,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   editButton: {
-    backgroundColor: 'rgba(75, 127, 247, 1)',
+    backgroundColor: 'rgba(242, 242, 242, 1)',
     width: 280,
     height: 40,
     paddingVertical: 8,
@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   editText: {
-    color: 'white',
+    color: 'rgba(89, 89, 89, 1)',
     fontSize: 15,
     fontWeight: '600',
   },
@@ -283,7 +283,6 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '600',
   },
-
   modalOverlay: {
     flex: 1,
     justifyContent: 'center',
@@ -292,7 +291,7 @@ const styles = StyleSheet.create({
   },
   modalContent: {
     width: 320,
-    height: 510,
+    height: 520,
     backgroundColor: '#ffffff',
     borderRadius: 20,
     padding: 20,
