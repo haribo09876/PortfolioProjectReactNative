@@ -302,7 +302,7 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   postButton: {
-    backgroundColor: 'rgba(18, 172, 120, 1)',
+    backgroundColor: 'rgba(68, 88, 200, 1)',
     width: 280,
     height: 40,
     paddingVertical: 8,
@@ -321,8 +321,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: 280,
-    height: 200,
-    borderRadius: 20,
+    height: 280,
     marginBottom: 10,
   },
 });
