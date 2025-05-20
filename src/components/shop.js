@@ -33,13 +33,14 @@ export default function Shop({
   id,
 }) {
   const currentUser = auth().currentUser;
-  const [modalVisible, setModalVisible] = useState(false);
-  const [editModalVisible, setEditModalVisible] = useState(false);
   const [newItemTitle, setNewItemTitle] = useState(itemTitle);
   const [newItemPrice, setNewItemPrice] = useState(itemPrice);
   const [newItemDetail, setNewItemDetail] = useState(itemDetail);
   const [newPhoto, setNewPhoto] = useState(photo);
   const [imageUri, setImageUri] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [purchaseModalVisible, setPurchaseModalVisible] = useState(false);
+  const [editModalVisible, setEditModalVisible] = useState(false);
   const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
 
   const navigation = useNavigation();
@@ -114,6 +115,15 @@ export default function Shop({
     }
   };
 
+  const closeModal = () => {
+    setNewItemTitle(itemTitle);
+    setNewItemPrice(itemPrice);
+    setNewItemDetail(itemDetail);
+    setImageUri(photo);
+    setNewPhoto(null);
+    setEditModalVisible(false);
+  };
+
   const purchase = async () => {
     try {
       const querySnapshot = await firestore()
@@ -143,7 +153,6 @@ export default function Shop({
         userId: currentUser.uid,
       };
       await moneyRef.set(moneyData);
-      navigation.navigate('CompletionPage');
     } catch (error) {
       console.error('Error purchase:', error);
     }
@@ -190,7 +199,10 @@ export default function Shop({
                   </Text>
                   <Text style={styles.itemDetail}>{itemDetail}</Text>
                   <TouchableOpacity
-                    onPress={purchase}
+                    onPress={async () => {
+                      await purchase();
+                      setPurchaseModalVisible(true);
+                    }}
                     style={styles.purchaseButton}>
                     <Text style={styles.purchaseText}>Purchase</Text>
                   </TouchableOpacity>
@@ -219,61 +231,113 @@ export default function Shop({
       <Modal
         animationType="fade"
         transparent={true}
-        visible={editModalVisible}
-        onRequestClose={() => {
-          setEditModalVisible(!editModalVisible);
+        visible={purchaseModalVisible}
+        onRequestClose={async () => {
+          setPurchaseModalVisible(false);
+          setModalVisible(false);
         }}>
-        <TouchableWithoutFeedback onPress={() => setEditModalVisible(false)}>
+        <TouchableWithoutFeedback
+          onPress={async () => {
+            setPurchaseModalVisible(false);
+            setModalVisible(false);
+          }}>
           <View style={styles.modalOverlay}>
-            <View style={styles.modalContent}>
-              <TouchableOpacity
-                onPress={() => setEditModalVisible(!editModalVisible)}
-                style={styles.iconCloseButton}>
-                <MaterialCommunityIcons
-                  name="close-circle-outline"
-                  size={32}
-                  color="#3A3A3A"
-                />
-              </TouchableOpacity>
-              <ScrollView>
-                <TextInput
-                  style={styles.itemInput}
-                  value={newItemTitle}
-                  onChangeText={setNewItemTitle}
-                  maxLength={50}
-                  multiline
-                />
-                <TextInput
-                  style={styles.itemInput}
-                  value={newItemPrice.toString()}
-                  onChangeText={text => setNewItemPrice(Number(text))}
-                  maxLength={9}
-                  keyboardType="numeric"
-                  multiline
-                />
-                <TextInput
-                  style={styles.textInput}
-                  value={newItemDetail}
-                  onChangeText={setNewItemDetail}
-                  multiline
-                />
-                {imageUri ? (
-                  <Image style={styles.photo} source={{uri: imageUri}} />
-                ) : (
-                  newPhoto && (
-                    <Image style={styles.photo} source={{uri: newPhoto}} />
-                  )
-                )}
+            <TouchableWithoutFeedback>
+              <View style={styles.deleteModalContent}>
+                <Text style={styles.itemTitle}>Purchase item</Text>
+                <Text style={styles.deleteConfirmText}>
+                  Thank you for your purchase!
+                </Text>
                 <TouchableOpacity
-                  onPress={onFileChange}
-                  style={styles.imageButton}>
-                  <Text style={styles.imageButtonText}>Change Photo</Text>
+                  onPress={async () => {
+                    setPurchaseModalVisible(false);
+                    setModalVisible(false);
+                  }}
+                  style={styles.editButton}>
+                  <Text style={styles.editText}>Cancel</Text>
                 </TouchableOpacity>
-                <TouchableOpacity onPress={editShop} style={styles.saveButton}>
-                  <Text style={styles.saveText}>Save</Text>
-                </TouchableOpacity>
-              </ScrollView>
-            </View>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={editModalVisible}
+        onRequestClose={closeModal}>
+        <TouchableWithoutFeedback onPress={closeModal}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback onPress={() => {}}>
+              <View style={styles.editModalContent}>
+                <ScrollView>
+                  <View style={styles.header}>
+                    <Text style={styles.itemTitle}>Edit item</Text>
+                    <TouchableOpacity
+                      onPress={closeModal}
+                      style={styles.iconCloseButton}>
+                      <MaterialCommunityIcons
+                        name="close"
+                        size={25}
+                        color="rgba(89, 89, 89, 1)"
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  <View style={styles.inputContainer}>
+                    <TextInput
+                      style={styles.textItemTitleInput}
+                      value={newItemTitle}
+                      onChangeText={setNewItemTitle}
+                      textAlignVertical="top"
+                      maxLength={50}
+                      multiline
+                    />
+                    <TextInput
+                      style={styles.textItemPriceInput}
+                      value={newItemPrice.toString()}
+                      onChangeText={text => setNewItemPrice(Number(text))}
+                      keyboardType="numeric"
+                      maxLength={9}
+                      multiline
+                    />
+                    <TextInput
+                      style={styles.textItemDetailInput}
+                      value={newItemDetail}
+                      onChangeText={setNewItemDetail}
+                      textAlignVertical="top"
+                      maxLength={500}
+                      multiline
+                    />
+                    {(imageUri || newPhoto) && (
+                      <>
+                        <Image
+                          style={styles.shopPhoto}
+                          source={{uri: imageUri || newPhoto}}
+                        />
+                        <TouchableOpacity
+                          style={styles.editButton}
+                          onPress={() => {
+                            setImageUri(null);
+                            setNewPhoto(null);
+                          }}>
+                          <Text style={styles.editText}>Remove image</Text>
+                        </TouchableOpacity>
+                      </>
+                    )}
+                    <TouchableOpacity
+                      style={styles.editButton}
+                      onPress={onFileChange}>
+                      <Text style={styles.editText}>Add image</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.updateButton}
+                      onPress={editShop}>
+                      <Text style={styles.updateText}>Update</Text>
+                    </TouchableOpacity>
+                  </View>
+                </ScrollView>
+              </View>
+            </TouchableWithoutFeedback>
           </View>
         </TouchableWithoutFeedback>
       </Modal>
@@ -337,9 +401,9 @@ const styles = StyleSheet.create({
   },
   itemTitle: {
     color: 'rgba(52, 52, 52, 1)',
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: '500',
-    marginTop: 15,
+    marginTop: 10,
     marginLeft: 5,
   },
   itemPrice: {
@@ -456,6 +520,13 @@ const styles = StyleSheet.create({
     elevation: 5,
     position: 'relative',
   },
+  editModalContent: {
+    width: 320,
+    height: 600,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 20,
+  },
   deleteModalContent: {
     width: 320,
     height: 320,
@@ -474,26 +545,41 @@ const styles = StyleSheet.create({
   },
   iconCloseButton: {
     position: 'absolute',
-    top: 12,
-    right: 10,
+    top: 5,
+    right: 1,
   },
-  itemInput: {
-    height: 50,
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 30,
-    fontSize: 16,
+  inputContainer: {
+    marginVertical: 10,
   },
-  textInput: {
-    height: 200,
-    borderColor: 'gray',
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
-    marginBottom: 30,
+  textItemTitleInput: {
+    color: 'rgba(52, 52, 52, 1)',
     fontSize: 16,
+    height: 80,
+    borderColor: 'rgba(89, 89, 89, 1)',
+    borderWidth: 1,
+    borderRadius: 20,
+    padding: 10,
+    marginBottom: 10,
+  },
+  textItemPriceInput: {
+    color: 'rgba(52, 52, 52, 1)',
+    fontSize: 16,
+    height: 60,
+    borderColor: 'rgba(89, 89, 89, 1)',
+    borderWidth: 1,
+    borderRadius: 20,
+    padding: 10,
+    marginBottom: 10,
+  },
+  textItemDetailInput: {
+    color: 'rgba(52, 52, 52, 1)',
+    fontSize: 16,
+    height: 150,
+    borderColor: 'rgba(89, 89, 89, 1)',
+    borderWidth: 1,
+    borderRadius: 20,
+    padding: 10,
+    marginBottom: 10,
   },
   imageButton: {
     backgroundColor: '#3498db',

@@ -21,7 +21,6 @@ import HomePage from '../pages/HomePage';
 import TweetPage from '../pages/TweetPage';
 import InstaPage from '../pages/InstaPage';
 import ShopPage from '../pages/ShopPage';
-import CompletionPage from '../pages/CompletionPage';
 import DashboardPage from '../pages/DashboardPage';
 import UserPage from '../pages/UserPage';
 
@@ -112,7 +111,6 @@ const Navigator = () => {
           component={SignupPage}
           options={{title: 'Sign up'}}
         />
-        <Stack.Screen name="CompletionPage" component={CompletionPage} />
         <Stack.Screen name="DashboardPage" component={DashboardPage} />
         <Stack.Screen name="UserPage" component={UserPage} />
         <Stack.Screen
