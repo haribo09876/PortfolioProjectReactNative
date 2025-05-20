@@ -24,11 +24,11 @@ const windowWidth = Dimensions.get('window').width;
 
 export default function Insta({username, avatar, insta, photo, id, userId}) {
   const currentUser = auth().currentUser;
-  const [modalVisible, setModalVisible] = useState(false);
-  const [editModalVisible, setEditModalVisible] = useState(false);
   const [newInsta, setNewInsta] = useState(insta);
   const [newPhoto, setNewPhoto] = useState(photo);
   const [imageUri, setImageUri] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [editModalVisible, setEditModalVisible] = useState(false);
   const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
 
   const deleteInsta = async () => {
@@ -97,6 +97,13 @@ export default function Insta({username, avatar, insta, photo, id, userId}) {
     }
   };
 
+  const closeModal = () => {
+    setNewInsta(insta);
+    setImageUri(photo);
+    setNewPhoto(null);
+    setEditModalVisible(false);
+  };
+
   return (
     <TouchableOpacity
       onPress={() => setModalVisible(true)}
@@ -157,49 +164,66 @@ export default function Insta({username, avatar, insta, photo, id, userId}) {
         animationType="fade"
         transparent={true}
         visible={editModalVisible}
-        onRequestClose={() => {
-          setEditModalVisible(!editModalVisible);
-        }}>
-        <TouchableOpacity
-          activeOpacity={1}
-          onPressOut={() => setEditModalVisible(false)}
-          style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <TouchableOpacity
-              onPress={() => setEditModalVisible(!editModalVisible)}
-              style={styles.iconCloseButton}>
-              <MaterialCommunityIcons
-                name="close-circle-outline"
-                size={32}
-                color="#3A3A3A"
-              />
-            </TouchableOpacity>
-            <ScrollView>
-              <Text style={styles.username}>{username}</Text>
-              {imageUri ? (
-                <Image style={styles.photo} source={{uri: imageUri}} />
-              ) : (
-                newPhoto && (
-                  <Image style={styles.photo} source={{uri: newPhoto}} />
-                )
-              )}
-              <TextInput
-                style={styles.textInput}
-                value={newInsta}
-                onChangeText={setNewInsta}
-                multiline
-              />
-              <TouchableOpacity
-                onPress={onFileChange}
-                style={styles.imageButton}>
-                <Text style={styles.imageButtonText}>Change Photo</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={editInsta} style={styles.saveButton}>
-                <Text style={styles.saveText}>Save</Text>
-              </TouchableOpacity>
-            </ScrollView>
+        onRequestClose={closeModal}>
+        <TouchableWithoutFeedback onPress={closeModal}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback onPress={() => {}}>
+              <View style={styles.editModalContent}>
+                <ScrollView>
+                  <View style={styles.header}>
+                    <Text style={styles.username}>Edit insta</Text>
+                    <TouchableOpacity
+                      onPress={closeModal}
+                      style={styles.iconCloseButton}>
+                      <MaterialCommunityIcons
+                        name="close"
+                        size={25}
+                        color="rgba(89, 89, 89, 1)"
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  <View style={styles.inputContainer}>
+                    {(imageUri || newPhoto) && (
+                      <Image
+                        style={styles.modalPhoto}
+                        source={{uri: imageUri || newPhoto}}
+                      />
+                    )}
+                    <TextInput
+                      style={styles.textInput}
+                      onChangeText={setNewInsta}
+                      value={newInsta}
+                      paddingVertical={20}
+                      textAlignVertical="top"
+                      maxLength={500}
+                      multiline
+                    />
+                    {(imageUri || newPhoto) && (
+                      <TouchableOpacity
+                        style={styles.editButton}
+                        onPress={() => {
+                          setImageUri(null);
+                          setNewPhoto(null);
+                        }}>
+                        <Text style={styles.editText}>Remove image</Text>
+                      </TouchableOpacity>
+                    )}
+                    <TouchableOpacity
+                      style={styles.editButton}
+                      onPress={onFileChange}>
+                      <Text style={styles.editText}>Add image</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.updateButton}
+                      onPress={editInsta}>
+                      <Text style={styles.updateText}>Update</Text>
+                    </TouchableOpacity>
+                  </View>
+                </ScrollView>
+              </View>
+            </TouchableWithoutFeedback>
           </View>
-        </TouchableOpacity>
+        </TouchableWithoutFeedback>
       </Modal>
       <Modal
         animationType="fade"
@@ -362,6 +386,13 @@ const styles = StyleSheet.create({
     elevation: 5,
     position: 'relative',
   },
+  editModalContent: {
+    width: 320,
+    height: 600,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 20,
+  },
   deleteModalContent: {
     width: 320,
     height: 320,
@@ -380,18 +411,20 @@ const styles = StyleSheet.create({
   },
   iconCloseButton: {
     position: 'absolute',
-    top: 12,
-    right: 10,
+    top: 5,
+    right: 1,
+  },
+  inputContainer: {
+    marginVertical: 10,
   },
   textInput: {
-    borderColor: '#e0e0e0',
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
+    color: 'rgba(52, 52, 52, 1)',
     fontSize: 16,
-    marginVertical: 10,
     height: 100,
-    textAlignVertical: 'top',
+    borderColor: 'rgba(89, 89, 89, 1)',
+    borderWidth: 1,
+    borderRadius: 20,
+    padding: 10,
   },
   imageButton: {
     backgroundColor: '#3498db',

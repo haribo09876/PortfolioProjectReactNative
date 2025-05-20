@@ -21,12 +21,12 @@ import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 export default function Tweet({username, avatar, tweet, photo, id, userId}) {
   const currentUser = auth().currentUser;
-  const [modalVisible, setModalVisible] = useState(false);
-  const [editModalVisible, setEditModalVisible] = useState(false);
-  const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
   const [newTweet, setNewTweet] = useState(tweet);
   const [newPhoto, setNewPhoto] = useState(photo);
   const [imageUri, setImageUri] = useState(null);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [editModalVisible, setEditModalVisible] = useState(false);
+  const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
 
   const deleteTweet = async () => {
     try {
@@ -410,7 +410,7 @@ const styles = StyleSheet.create({
   iconCloseButton: {
     position: 'absolute',
     top: 5,
-    right: 10,
+    right: 1,
   },
   inputContainer: {
     marginVertical: 10,
@@ -418,7 +418,7 @@ const styles = StyleSheet.create({
   textInput: {
     color: 'rgba(52, 52, 52, 1)',
     fontSize: 16,
-    height: 100,
+    height: 150,
     borderColor: 'rgba(89, 89, 89, 1)',
     borderWidth: 1,
     borderRadius: 20,

@@ -22,12 +22,12 @@ import ShopTimeline from '../components/shopTimeline';
 
 const ShopPage = () => {
   const [isLoading, setLoading] = useState(false);
+  const [userEmail, setUserEmail] = useState('');
   const [itemTitle, setItemTitle] = useState('');
   const [itemPrice, setItemPrice] = useState('');
   const [itemDetail, setItemDetail] = useState('');
   const [file, setFile] = useState(null);
   const [isModalVisible, setModalVisible] = useState(false);
-  const [userEmail, setUserEmail] = useState('');
 
   useEffect(() => {
     const user = auth().currentUser;
@@ -140,7 +140,6 @@ const ShopPage = () => {
       } else {
         setFile(null);
       }
-
       setItemTitle('');
       setItemPrice('');
       setItemDetail('');
