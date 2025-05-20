@@ -23,10 +23,10 @@ export default function Tweet({username, avatar, tweet, photo, id, userId}) {
   const currentUser = auth().currentUser;
   const [modalVisible, setModalVisible] = useState(false);
   const [editModalVisible, setEditModalVisible] = useState(false);
+  const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
   const [newTweet, setNewTweet] = useState(tweet);
   const [newPhoto, setNewPhoto] = useState(photo);
   const [imageUri, setImageUri] = useState(null);
-  const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
 
   const deleteTweet = async () => {
     try {
@@ -94,6 +94,13 @@ export default function Tweet({username, avatar, tweet, photo, id, userId}) {
     }
   };
 
+  const closeModal = () => {
+    setNewTweet(tweet);
+    setImageUri(photo);
+    setNewPhoto(null);
+    setEditModalVisible(false);
+  };
+
   return (
     <TouchableOpacity
       onPress={() => setModalVisible(true)}
@@ -158,45 +165,61 @@ export default function Tweet({username, avatar, tweet, photo, id, userId}) {
         animationType="fade"
         transparent={true}
         visible={editModalVisible}
-        onRequestClose={() => setEditModalVisible(false)}>
-        <TouchableWithoutFeedback onPress={() => setEditModalVisible(false)}>
+        onRequestClose={closeModal}>
+        <TouchableWithoutFeedback onPress={closeModal}>
           <View style={styles.modalOverlay}>
             <TouchableWithoutFeedback onPress={() => {}}>
-              <View style={styles.modalContent}>
-                <TouchableOpacity
-                  onPress={() => setEditModalVisible(false)}
-                  style={styles.iconCloseButton}>
-                  <MaterialCommunityIcons
-                    name="close"
-                    size={32}
-                    color="#3A3A3A"
-                  />
-                </TouchableOpacity>
+              <View style={styles.editModalContent}>
                 <ScrollView>
-                  <Text style={styles.username}>Edit tweet</Text>
-                  <TextInput
-                    style={styles.textInput}
-                    value={newTweet}
-                    onChangeText={setNewTweet}
-                    multiline
-                  />
-                  {imageUri ? (
-                    <Image style={styles.photo} source={{uri: imageUri}} />
-                  ) : (
-                    newPhoto && (
-                      <Image style={styles.photo} source={{uri: newPhoto}} />
-                    )
-                  )}
-                  <TouchableOpacity
-                    onPress={onFileChange}
-                    style={styles.imageButton}>
-                    <Text style={styles.imageButtonText}>Change Photo</Text>
-                  </TouchableOpacity>
-                  <TouchableOpacity
-                    onPress={editTweet}
-                    style={styles.saveButton}>
-                    <Text style={styles.saveText}>Save</Text>
-                  </TouchableOpacity>
+                  <View style={styles.header}>
+                    <Text style={styles.username}>Edit tweet</Text>
+                    <TouchableOpacity
+                      onPress={closeModal}
+                      style={styles.iconCloseButton}>
+                      <MaterialCommunityIcons
+                        name="close"
+                        size={25}
+                        color="rgba(89, 89, 89, 1)"
+                      />
+                    </TouchableOpacity>
+                  </View>
+                  <View style={styles.inputContainer}>
+                    <TextInput
+                      style={styles.textInput}
+                      onChangeText={setNewTweet}
+                      value={newTweet}
+                      paddingVertical={20}
+                      textAlignVertical="top"
+                      maxLength={500}
+                      multiline
+                    />
+                    {(imageUri || newPhoto) && (
+                      <>
+                        <Image
+                          style={styles.modalPhoto}
+                          source={{uri: imageUri || newPhoto}}
+                        />
+                        <TouchableOpacity
+                          style={styles.editButton}
+                          onPress={() => {
+                            setImageUri(null);
+                            setNewPhoto(null);
+                          }}>
+                          <Text style={styles.editText}>Remove image</Text>
+                        </TouchableOpacity>
+                      </>
+                    )}
+                    <TouchableOpacity
+                      style={styles.editButton}
+                      onPress={onFileChange}>
+                      <Text style={styles.editText}>Add image</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.updateButton}
+                      onPress={editTweet}>
+                      <Text style={styles.updateText}>Update</Text>
+                    </TouchableOpacity>
+                  </View>
                 </ScrollView>
               </View>
             </TouchableWithoutFeedback>
@@ -361,6 +384,13 @@ const styles = StyleSheet.create({
     elevation: 5,
     position: 'relative',
   },
+  editModalContent: {
+    width: 320,
+    height: 600,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 20,
+  },
   deleteModalContent: {
     width: 320,
     height: 320,
@@ -379,18 +409,20 @@ const styles = StyleSheet.create({
   },
   iconCloseButton: {
     position: 'absolute',
-    top: 12,
+    top: 5,
     right: 10,
   },
-  textInput: {
-    borderColor: '#e0e0e0',
-    borderWidth: 1,
-    borderRadius: 5,
-    padding: 10,
-    fontSize: 16,
+  inputContainer: {
     marginVertical: 10,
+  },
+  textInput: {
+    color: 'rgba(52, 52, 52, 1)',
+    fontSize: 16,
     height: 100,
-    textAlignVertical: 'top',
+    borderColor: 'rgba(89, 89, 89, 1)',
+    borderWidth: 1,
+    borderRadius: 20,
+    padding: 10,
   },
   imageButton: {
     backgroundColor: '#3498db',
