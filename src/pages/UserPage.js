@@ -5,6 +5,8 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
+  TouchableWithoutFeedback,
+  Modal,
   ScrollView,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -23,6 +25,7 @@ function UserPage() {
   const navigation = useNavigation();
   const [avatar, setAvatar] = useState(user?.photoURL);
   const [moneys, setMoneys] = useState([]);
+  const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
 
   useEffect(() => {
     if (!user) {
@@ -104,15 +107,7 @@ function UserPage() {
   return (
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
-        {user?.uid === 'PdWutJuG1yPegHocDTMJVLPu1jr2' && (
-          <TouchableOpacity
-            onPress={() => navigation.navigate('DashboardPage')}
-            style={[styles.buttonContainer, styles.iconButton]}>
-            <Icon name="book-outline" size={25} color="rgba(89, 89, 89, 1)" />
-          </TouchableOpacity>
-        )}
-        <Text style={styles.sectionTitle}>My Info</Text>
-        <View style={{flexDirection: 'row', alignItems: 'center'}}>
+        <View style={styles.header}>
           <TouchableOpacity
             style={styles.avatarUpload}
             onPress={onAvatarChange}>
@@ -126,23 +121,72 @@ function UserPage() {
             )}
           </TouchableOpacity>
           <Text style={styles.name}>{user?.displayName ?? 'Anonymous'}</Text>
-          <MaterialCommunityIcons
-            name="pencil-outline"
-            size={25}
-            style={styles.edit}
-          />
+          <Text style={styles.email}>{user?.email ?? ' '}</Text>
           <Text style={styles.money}>
-            {moneys.length > 0 ? moneys[0].money - moneys[0].spend : 'No data'}{' '}
+            {moneys.length > 0
+              ? (moneys[0].money - moneys[0].spend).toLocaleString()
+              : 'No data'}
             원
           </Text>
+          {user?.uid === 'PdWutJuG1yPegHocDTMJVLPu1jr2' && (
+            <TouchableOpacity
+              onPress={() => navigation.navigate('DashboardPage')}
+              style={styles.dashboardButton}>
+              <Text style={styles.dashboardText}>To dashboard</Text>
+            </TouchableOpacity>
+          )}
         </View>
-        <Text style={styles.sectionTitle}>My Instas</Text>
-        <UserInsta />
-        <Text style={styles.sectionTitle}>My Tweets</Text>
-        <UserTweet />
-        <Text style={styles.sectionTitle}>My Sales</Text>
-        <Sales />
+        <View style={styles.content}>
+          <Text style={styles.sectionTitle}>My Tweet</Text>
+          <UserTweet />
+          <Text style={styles.sectionTitle}>My Insta</Text>
+          <UserInsta />
+          <Text style={styles.sectionTitle}>My Purchase</Text>
+          <Sales />
+        </View>
+        <TouchableOpacity
+          // onPress={() => setEditModalVisible(true)}
+          style={styles.editButton}>
+          <Text style={styles.editText}>Edit account</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => setDeleteConfirmVisible(true)}
+          style={styles.deleteButton}>
+          <Text style={styles.deleteText}>Delete account</Text>
+        </TouchableOpacity>
       </ScrollView>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={deleteConfirmVisible}
+        onRequestClose={() => setDeleteConfirmVisible(false)}>
+        <TouchableWithoutFeedback
+          onPress={() => setDeleteConfirmVisible(false)}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={styles.deleteModalContent}>
+                <Text style={styles.username}>Delete account</Text>
+                <Text style={styles.deleteConfirmText}>
+                  Are you sure you want to delete this account?
+                </Text>
+                <TouchableOpacity
+                  onPress={async () => {
+                    await // deleteTweet();
+                    setDeleteConfirmVisible(false);
+                  }}
+                  style={styles.confirmButton}>
+                  <Text style={styles.confirmText}>Confirm</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => setDeleteConfirmVisible(false)}
+                  style={styles.cancelButton}>
+                  <Text style={styles.cancelText}>Cancel</Text>
+                </TouchableOpacity>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
     </View>
   );
 }
@@ -150,14 +194,20 @@ function UserPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'lavender',
-    padding: 20,
+    backgroundColor: 'rgba(255, 255, 255, 1)',
+  },
+  header: {
+    alignItems: 'center',
+    marginBottom: 5,
+  },
+  content: {
+    margin: 20,
   },
   avatarUpload: {
-    width: 65,
-    height: 65,
+    width: 100,
+    height: 100,
     borderRadius: 50,
-    margin: 10,
+    marginVertical: 20,
     backgroundColor: 'gray',
     justifyContent: 'center',
     alignItems: 'center',
@@ -168,28 +218,144 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   avatarIcon: {
-    fontSize: 40,
     color: 'white',
   },
   name: {
+    color: 'rgba(89, 89, 89, 1)',
     fontSize: 25,
     fontWeight: '500',
-    marginLeft: 10,
   },
-  edit: {
-    fontSize: 22,
-    marginLeft: 10,
+  email: {
+    color: 'rgba(176, 176, 176, 1)',
+    fontSize: 15,
+    fontWeight: '500',
+    marginBottom: 5,
   },
   money: {
+    color: 'rgba(89, 89, 89, 1)',
     fontSize: 20,
     fontWeight: '500',
-    marginLeft: 50,
+    textAlign: 'right',
+    width: 320,
   },
   sectionTitle: {
-    fontSize: 25,
-    fontWeight: '400',
-    marginTop: 20,
-    marginBottom: 5,
+    color: 'rgba(89, 89, 89, 1)',
+    fontSize: 20,
+    fontWeight: '500',
+    marginBottom: 10,
+  },
+  dashboardButton: {
+    backgroundColor: 'rgba(68, 88, 200, 1)',
+    width: 360,
+    height: 45,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderRadius: 25,
+    alignItems: 'center',
+    alignSelf: 'center',
+    marginTop: 10,
+  },
+  dashboardText: {
+    color: 'white',
+    fontSize: 15,
+    fontWeight: '500',
+  },
+  editButton: {
+    backgroundColor: 'rgba(242, 242, 242, 1)',
+    width: 360,
+    height: 45,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderRadius: 25,
+    alignItems: 'center',
+    alignSelf: 'center',
+    marginBottom: 10,
+  },
+  editText: {
+    color: 'rgba(89, 89, 89, 1)',
+    fontSize: 15,
+    fontWeight: '500',
+  },
+  deleteButton: {
+    backgroundColor: 'rgba(240, 68, 82, 1)',
+    width: 360,
+    height: 45,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderRadius: 25,
+    alignItems: 'center',
+    alignSelf: 'center',
+    marginBottom: 10,
+  },
+  deleteText: {
+    color: 'white',
+    fontSize: 15,
+    fontWeight: '500',
+  },
+  confirmButton: {
+    backgroundColor: 'rgba(68, 88, 200, 1)',
+    width: 280,
+    height: 40,
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 50,
+    marginTop: 10,
+    alignItems: 'center',
+  },
+  confirmText: {
+    color: 'white',
+    fontSize: 15,
+    fontWeight: '500',
+  },
+  cancelButton: {
+    backgroundColor: 'rgba(242, 242, 242, 1)',
+    width: 280,
+    height: 40,
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 50,
+    marginTop: 10,
+    alignItems: 'center',
+  },
+  cancelText: {
+    color: 'rgba(89, 89, 89, 1)',
+    fontSize: 15,
+    fontWeight: '500',
+  },
+  modalOverlay: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0,0,0,0.5)',
+  },
+  deleteModalContent: {
+    width: 320,
+    height: 320,
+    backgroundColor: '#ffffff',
+    borderRadius: 20,
+    padding: 20,
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    position: 'relative',
+  },
+  username: {
+    color: 'rgba(52, 52, 52, 1)',
+    fontSize: 20,
+    fontWeight: '500',
+    marginLeft: 5,
+  },
+  deleteConfirmText: {
+    color: 'rgba(52, 52, 52, 1)',
+    fontSize: 15,
+    fontWeight: '500',
+    marginLeft: 10,
+    marginVertical: 50,
   },
 });
 
