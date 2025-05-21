@@ -289,12 +289,12 @@ const styles = StyleSheet.create({
   addButtonText: {
     color: 'white',
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: '500',
   },
   title: {
     color: 'rgba(52, 52, 52, 1)',
     fontSize: 20,
-    fontWeight: '600',
+    fontWeight: '500',
   },
   headerRow: {
     flexDirection: 'row',
@@ -364,7 +364,7 @@ const styles = StyleSheet.create({
   imageButtonText: {
     color: 'rgba(89, 89, 89, 1)',
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: '500',
   },
   postButton: {
     backgroundColor: 'rgba(68, 88, 200, 1)',
@@ -379,7 +379,7 @@ const styles = StyleSheet.create({
   postButtonText: {
     color: 'white',
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: '500',
   },
   imagePreview: {
     marginBottom: 10,

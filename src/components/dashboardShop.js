@@ -104,7 +104,7 @@ const DashboardShop = () => {
           width={screenWidth * data.labels.length * 0.4}
           height={360}
           chartConfig={{
-            backgroundColor: '#1cc910',
+            backgroundColor: 'rgba(255, 255, 255, 1)',
             backgroundGradientFrom: '#eff3ff',
             backgroundGradientTo: '#efefef',
             decimalPlaces: 2,

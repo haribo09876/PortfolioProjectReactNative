@@ -94,7 +94,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   customMarker: {
-    backgroundColor: '#2979FF',
+    backgroundColor: 'rgba(255, 255, 255, 1)',
     width: 20,
     height: 20,
     borderRadius: 10,

@@ -6,9 +6,9 @@ function DashboardPage() {
   return (
     <ScrollView>
       <View style={styles.container}>
-        <Text style={styles.sectionTitle}>일자별 매출액</Text>
+        <Text style={styles.sectionTitle}>Sales</Text>
         <DashboardShop />
-        <Text style={styles.sectionTitle}>접속 위치</Text>
+        <Text style={styles.sectionTitle}>Location</Text>
         <DashboardLocation />
       </View>
     </ScrollView>
@@ -18,13 +18,13 @@ function DashboardPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'lavender',
-    padding: 15,
+    backgroundColor: 'rgba(255, 255, 255, 1)',
+    margin: 20,
   },
   sectionTitle: {
-    fontSize: 25,
-    fontWeight: '400',
-    marginTop: 10,
+    color: 'rgba(89, 89, 89, 1)',
+    fontSize: 20,
+    fontWeight: '500',
     marginBottom: 10,
   },
 });

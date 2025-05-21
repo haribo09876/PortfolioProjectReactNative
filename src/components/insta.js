@@ -120,20 +120,20 @@ export default function Insta({username, avatar, insta, photo, id, userId}) {
           <View style={styles.modalOverlay}>
             <TouchableWithoutFeedback onPress={() => {}}>
               <View style={styles.modalContent}>
+                <View style={styles.header}>
+                  <MaterialCommunityIcons name="account-circle" size={50} />
+                  <Text style={styles.username}>{username}</Text>
+                  <TouchableOpacity
+                    onPress={() => setModalVisible(false)}
+                    style={styles.iconCloseButton}>
+                    <MaterialCommunityIcons
+                      name="close"
+                      size={25}
+                      color="rgba(89, 89, 89, 1)"
+                    />
+                  </TouchableOpacity>
+                </View>
                 <ScrollView>
-                  <View style={styles.header}>
-                    <MaterialCommunityIcons name="account-circle" size={50} />
-                    <Text style={styles.username}>{username}</Text>
-                    <TouchableOpacity
-                      onPress={() => setModalVisible(false)}
-                      style={styles.iconCloseButton}>
-                      <MaterialCommunityIcons
-                        name="close"
-                        size={25}
-                        color="rgba(89, 89, 89, 1)"
-                      />
-                    </TouchableOpacity>
-                  </View>
                   {photo && (
                     <Image style={styles.modalPhoto} source={{uri: photo}} />
                   )}
@@ -325,7 +325,7 @@ const styles = StyleSheet.create({
   editText: {
     color: 'rgba(89, 89, 89, 1)',
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: '500',
   },
   updateButton: {
     backgroundColor: 'rgba(68, 88, 200, 1)',
@@ -340,7 +340,7 @@ const styles = StyleSheet.create({
   updateText: {
     color: 'white',
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: '500',
   },
   deleteButton: {
     backgroundColor: 'rgba(240, 68, 82, 1)',
@@ -355,7 +355,7 @@ const styles = StyleSheet.create({
   deleteText: {
     color: 'white',
     fontSize: 15,
-    fontWeight: '600',
+    fontWeight: '500',
   },
   deleteConfirmText: {
     color: 'rgba(52, 52, 52, 1)',
