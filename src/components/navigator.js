@@ -109,10 +109,27 @@ const Navigator = () => {
         <Stack.Screen
           name="SignupPage"
           component={SignupPage}
-          options={{title: 'Sign up'}}
+          options={{
+            title: 'Sign up',
+            headerTitleAlign: 'center',
+          }}
         />
-        <Stack.Screen name="DashboardPage" component={DashboardPage} />
-        <Stack.Screen name="UserPage" component={UserPage} />
+        <Stack.Screen
+          name="UserPage"
+          component={UserPage}
+          options={{
+            title: 'User page',
+            headerTitleAlign: 'center',
+          }}
+        />
+        <Stack.Screen
+          name="DashboardPage"
+          component={DashboardPage}
+          options={{
+            title: 'Dashboard page',
+            headerTitleAlign: 'center',
+          }}
+        />
         <Stack.Screen
           name="MainTabs"
           options={{

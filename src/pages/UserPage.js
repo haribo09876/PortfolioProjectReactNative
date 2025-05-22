@@ -8,6 +8,7 @@ import {
   TouchableWithoutFeedback,
   Modal,
   ScrollView,
+  TextInput,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -25,6 +26,9 @@ function UserPage() {
   const navigation = useNavigation();
   const [avatar, setAvatar] = useState(user?.photoURL);
   const [moneys, setMoneys] = useState([]);
+  const [newUserName, setNewUserName] = useState(user.displayName);
+  const [newPassword, setNewPassword] = useState(user.password);
+  const [editModalVisible, setEditModalVisible] = useState(false);
   const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
 
   useEffect(() => {
@@ -55,6 +59,17 @@ function UserPage() {
 
     return () => moneyData();
   }, [user]);
+
+  const closeModal = () => {
+    // setNewItemTitle(itemTitle);
+    // setNewItemPrice(itemPrice);
+    // setNewItemDetail(itemDetail);
+    // setImageUri(photo);
+    // setNewPhoto(null);
+    setNewUserName(user.displayName);
+    setNewPassword('');
+    setEditModalVisible(false);
+  };
 
   const onAvatarChange = async () => {
     if (!user) {
@@ -108,18 +123,17 @@ function UserPage() {
     <View style={styles.container}>
       <ScrollView showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
-          <TouchableOpacity
-            style={styles.avatarUpload}
-            onPress={onAvatarChange}>
+          <View style={styles.avatarUpload}>
             {avatar ? (
               <Image source={{uri: avatar}} style={styles.avatarImg} />
             ) : (
               <MaterialCommunityIcons
                 name="account-circle"
                 style={styles.avatarIcon}
+                size={100}
               />
             )}
-          </TouchableOpacity>
+          </View>
           <Text style={styles.name}>{user?.displayName ?? 'Anonymous'}</Text>
           <Text style={styles.email}>{user?.email ?? ' '}</Text>
           <Text style={styles.money}>
@@ -145,7 +159,7 @@ function UserPage() {
           <Sales />
         </View>
         <TouchableOpacity
-          // onPress={() => setEditModalVisible(true)}
+          onPress={() => setEditModalVisible(true)}
           style={styles.editButton}>
           <Text style={styles.editText}>Edit account</Text>
         </TouchableOpacity>
@@ -155,6 +169,100 @@ function UserPage() {
           <Text style={styles.deleteText}>Delete account</Text>
         </TouchableOpacity>
       </ScrollView>
+      <Modal
+        animationType="fade"
+        transparent={true}
+        visible={editModalVisible}
+        onRequestClose={closeModal}>
+        <TouchableWithoutFeedback onPress={closeModal}>
+          <View style={styles.modalOverlay}>
+            <TouchableWithoutFeedback>
+              <View style={styles.editModalContent}>
+                <Text style={styles.username}>Edit account</Text>
+                {/* {(imageUri || newPhoto) && (
+                  <>
+                    <Image
+                      style={styles.shopPhoto}
+                      source={{uri: imageUri || newPhoto}}
+                    />
+                    <TouchableOpacity
+                      style={styles.editButton}
+                      onPress={() => {
+                        setImageUri(null);
+                        setNewPhoto(null);
+                      }}>
+                      <Text style={styles.editText}>Remove image</Text>
+                    </TouchableOpacity>
+                  </>
+                )} */}
+                {/* <TouchableOpacity
+                  style={styles.avatarUpload}
+                  onPress={onAvatarChange}>
+                  {avatar ? (
+                    <Image source={{uri: avatar}} style={styles.avatarImg} />
+                  ) : (
+                    <MaterialCommunityIcons
+                      name="account-circle"
+                      style={styles.avatarIcon}
+                    />
+                  )}
+                </TouchableOpacity> */}
+                <TouchableOpacity
+                  style={styles.avatarUpload}
+                  onPress={onAvatarChange}>
+                  {avatar ? (
+                    <Image source={{uri: avatar}} style={styles.avatarImg} />
+                  ) : (
+                    <MaterialCommunityIcons
+                      name="account-circle"
+                      style={styles.avatarIcon}
+                    />
+                  )}
+                </TouchableOpacity>
+                <Text style={styles.userEmailText}>{user?.email ?? ' '}</Text>
+                <TextInput
+                  style={styles.inputBox}
+                  value={newUserName}
+                  onChangeText={setNewUserName}
+                  placeholder="New username"
+                  placeholderTextColor="rgba(89, 89, 89, 1)"
+                />
+                <TextInput
+                  style={styles.inputBox}
+                  value={newPassword}
+                  onChangeText={setNewPassword}
+                  placeholder="New password"
+                  placeholderTextColor="rgba(89, 89, 89, 1)"
+                  secureTextEntry={true}
+                />
+                <TouchableOpacity
+                  // onPress={closeModal}
+                  style={styles.cancelButton}>
+                  <Text style={styles.cancelText}>Remove image</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  // onPress={closeModal}
+                  style={styles.cancelButton}>
+                  <Text style={styles.cancelText}>Add image</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={async () => {
+                    await // editAccount();
+                    setEditModalVisible(false);
+                  }}
+                  style={styles.updateButton}>
+                  <Text style={styles.confirmText}>Update</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={closeModal}
+                  style={styles.cancelButton}>
+                  <Text style={styles.cancelText}>Cancel</Text>
+                </TouchableOpacity>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
       <Modal
         animationType="fade"
         transparent={true}
@@ -292,6 +400,16 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: '500',
   },
+  updateButton: {
+    backgroundColor: 'rgba(68, 88, 200, 1)',
+    width: 280,
+    height: 40,
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 50,
+    marginTop: 10,
+    alignItems: 'center',
+  },
   confirmButton: {
     backgroundColor: 'rgba(68, 88, 200, 1)',
     width: 280,
@@ -328,6 +446,13 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: 'rgba(0,0,0,0.5)',
   },
+  editModalContent: {
+    width: 320,
+    height: 600,
+    backgroundColor: 'white',
+    borderRadius: 20,
+    padding: 20,
+  },
   deleteModalContent: {
     width: 320,
     height: 320,
@@ -349,6 +474,23 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '500',
     marginLeft: 5,
+  },
+  userEmailText: {
+    color: 'rgba(89, 89, 89, 1)',
+    fontSize: 20,
+    fontWeight: '500',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  inputBox: {
+    color: 'rgba(52, 52, 52, 1)',
+    fontSize: 15,
+    height: 50,
+    borderColor: 'rgba(89, 89, 89, 1)',
+    borderWidth: 1,
+    borderRadius: 20,
+    padding: 10,
+    marginBottom: 10,
   },
   deleteConfirmText: {
     color: 'rgba(52, 52, 52, 1)',
