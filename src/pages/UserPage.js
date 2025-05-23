@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -9,6 +9,7 @@ import {
   Modal,
   ScrollView,
   TextInput,
+  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
@@ -30,6 +31,7 @@ function UserPage() {
   const [newPassword, setNewPassword] = useState(user.password);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
+  const navRef = useRef(null);
 
   useEffect(() => {
     if (!user) {
@@ -117,6 +119,17 @@ function UserPage() {
         }
       }
     });
+  };
+
+  const handleAccountDelete = async () => {
+    try {
+      await user.delete();
+      // auth.signOut();
+      setDeleteConfirmVisible(false);
+      navRef.current?.replace('LoginPage');
+    } catch (error) {
+      Alert.alert('Logout error', 'Problem while logout');
+    }
   };
 
   return (
@@ -278,10 +291,7 @@ function UserPage() {
                   Are you sure you want to delete this account?
                 </Text>
                 <TouchableOpacity
-                  onPress={async () => {
-                    await // deleteTweet();
-                    setDeleteConfirmVisible(false);
-                  }}
+                  onPress={handleAccountDelete}
                   style={styles.confirmButton}>
                   <Text style={styles.confirmText}>Confirm</Text>
                 </TouchableOpacity>
@@ -320,6 +330,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
+    alignSelf: 'center',
   },
   avatarImg: {
     width: '100%',
