@@ -326,7 +326,7 @@ const styles = StyleSheet.create({
     height: 100,
     borderRadius: 50,
     marginVertical: 20,
-    backgroundColor: 'gray',
+    backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
     overflow: 'hidden',
@@ -337,7 +337,7 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   avatarIcon: {
-    color: 'white',
+    color: 'gray',
   },
   name: {
     color: 'rgba(89, 89, 89, 1)',
