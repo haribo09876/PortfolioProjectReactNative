@@ -1,20 +1,25 @@
-import {useNavigation} from '@react-navigation/native';
-import {auth} from '../firebase';
 import React, {useState} from 'react';
-import {createUserWithEmailAndPassword, updateProfile} from 'firebase/auth';
-import firestore from '@react-native-firebase/firestore';
 import {
   View,
   Text,
   StyleSheet,
+  Image,
   TextInput,
   TouchableOpacity,
   Alert,
 } from 'react-native';
+import {auth} from '../firebase';
+import storage from '@react-native-firebase/storage';
+import {useNavigation} from '@react-navigation/native';
+import firestore from '@react-native-firebase/firestore';
+import {launchImageLibrary} from 'react-native-image-picker';
+import {createUserWithEmailAndPassword, updateProfile} from 'firebase/auth';
+import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 function SignUpPage() {
+  const user = auth().currentUser;
   const navigation = useNavigation();
-
+  const [avatar, setAvatar] = useState(user?.photoURL);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -50,7 +55,53 @@ function SignUpPage() {
       );
     }
   }
+  const onAvatarChange = async () => {
+    if (!user) {
+      return;
+    }
 
+    const options = {
+      mediaType: 'photo',
+      includeBase64: false,
+      maxHeight: 200,
+      maxWidth: 200,
+    };
+
+    launchImageLibrary(options, async response => {
+      if (response.didCancel) {
+        console.log('User cancelled image picker');
+      } else if (response.errorCode) {
+        console.log('ImagePicker Error: ', response.errorMessage);
+      } else if (response.assets && response.assets.length > 0) {
+        const asset = response.assets[0];
+        const imageResponse = await fetch(asset.uri);
+        const blob = await imageResponse.blob();
+        const storageRef = storage().ref().child(`avatars/${user?.uid}`);
+
+        try {
+          const uploadTask = storageRef.put(blob);
+          uploadTask.on(
+            'state_changed',
+            null,
+            error => {
+              console.error('Error uploading image: ', error);
+            },
+            async () => {
+              try {
+                const downloadURL = await storageRef.getDownloadURL();
+                setAvatar(downloadURL);
+                await auth().currentUser.updateProfile({photoURL: downloadURL});
+              } catch (error) {
+                console.error('Error getting download URL: ', error);
+              }
+            },
+          );
+        } catch (error) {
+          console.error('Error uploading image: ', error);
+        }
+      }
+    });
+  };
   const onSubmit = async () => {
     if (name === '' || email === '' || password === '') {
       Alert.alert('모든 필드를 채워주세요');
@@ -74,6 +125,16 @@ function SignUpPage() {
 
   return (
     <View style={styles.container}>
+      <TouchableOpacity style={styles.avatarUpload} onPress={onAvatarChange}>
+        {avatar ? (
+          <Image source={{uri: avatar}} style={styles.avatarImg} />
+        ) : (
+          <MaterialCommunityIcons
+            name="account-circle"
+            style={styles.avatarIcon}
+          />
+        )}
+      </TouchableOpacity>
       <TextInput
         value={name}
         onChangeText={handleNameChange}
@@ -109,6 +170,24 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 1)',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  avatarUpload: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    marginVertical: 20,
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden',
+    alignSelf: 'center',
+  },
+  avatarImg: {
+    width: '100%',
+    height: '100%',
+  },
+  avatarIcon: {
+    color: 'gray',
   },
   inputBox: {
     width: 360,
