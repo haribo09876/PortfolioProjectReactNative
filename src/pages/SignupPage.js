@@ -8,133 +8,127 @@ import {
   TouchableOpacity,
   Alert,
 } from 'react-native';
-import {auth} from '../firebase';
+import auth from '@react-native-firebase/auth';
 import storage from '@react-native-firebase/storage';
 import {useNavigation} from '@react-navigation/native';
 import firestore from '@react-native-firebase/firestore';
 import {launchImageLibrary} from 'react-native-image-picker';
-import {createUserWithEmailAndPassword, updateProfile} from 'firebase/auth';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 
 function SignUpPage() {
-  const user = auth().currentUser;
   const navigation = useNavigation();
-  const [avatar, setAvatar] = useState(user?.photoURL);
+  const [avatarUri, setAvatarUri] = useState(null);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleNameChange = text => {
-    setName(text);
-  };
+  const handleNameChange = text => setName(text);
+  const handleEmailChange = text => setEmail(text);
+  const handlePasswordChange = text => setPassword(text);
 
-  const handleEmailChange = text => {
-    setEmail(text);
-  };
-
-  const handlePasswordChange = text => {
-    setPassword(text);
-  };
-
-  async function Money() {
+  async function createInitialMoneyData(username, userEmail) {
     try {
       const moneyRef = firestore().collection('moneys').doc();
       const moneyData = {
-        money: Number(1000000),
-        spend: Number(0),
+        money: 1000000,
+        spend: 0,
         createdAt: firestore.FieldValue.serverTimestamp(),
-        username: name,
-        userEmail: email,
+        username,
+        userEmail,
       };
       await moneyRef.set(moneyData);
     } catch (error) {
-      console.error('Money submission error: ', error);
-      Alert.alert(
-        'Submission Error',
-        'There was an error submitting your money.',
-      );
+      console.error('Error adding initial money data:', error);
+      Alert.alert('Error', 'Failed to set up your initial balance.');
     }
   }
-  const onAvatarChange = async () => {
-    if (!user) {
-      return;
-    }
 
+  const onFileChange = async () => {
     const options = {
       mediaType: 'photo',
       includeBase64: false,
       maxHeight: 200,
       maxWidth: 200,
     };
-
     launchImageLibrary(options, async response => {
       if (response.didCancel) {
-        console.log('User cancelled image picker');
+        console.log('Image selection cancelled');
       } else if (response.errorCode) {
-        console.log('ImagePicker Error: ', response.errorMessage);
+        console.error('ImagePicker error:', response.errorMessage);
       } else if (response.assets && response.assets.length > 0) {
-        const asset = response.assets[0];
-        const imageResponse = await fetch(asset.uri);
-        const blob = await imageResponse.blob();
-        const storageRef = storage().ref().child(`avatars/${user?.uid}`);
-
-        try {
-          const uploadTask = storageRef.put(blob);
-          uploadTask.on(
-            'state_changed',
-            null,
-            error => {
-              console.error('Error uploading image: ', error);
-            },
-            async () => {
-              try {
-                const downloadURL = await storageRef.getDownloadURL();
-                setAvatar(downloadURL);
-                await auth().currentUser.updateProfile({photoURL: downloadURL});
-              } catch (error) {
-                console.error('Error getting download URL: ', error);
-              }
-            },
-          );
-        } catch (error) {
-          console.error('Error uploading image: ', error);
-        }
+        const selectedImage = response.assets[0];
+        setAvatarUri(selectedImage.uri);
       }
     });
   };
+
+  const removeImage = () => {
+    setAvatarUri(null);
+  };
+
   const onSubmit = async () => {
-    if (name === '' || email === '' || password === '') {
-      Alert.alert('모든 필드를 채워주세요');
+    if (!name || !email || !password) {
+      Alert.alert('Input Error', 'Please fill out all fields.');
       return;
     }
     try {
-      const credentials = await createUserWithEmailAndPassword(
-        auth,
+      const credentials = await auth().createUserWithEmailAndPassword(
         email,
         password,
       );
-      await updateProfile(credentials.user, {displayName: name});
-      Alert.alert('회원가입에 성공했습니다');
-      Money();
+      const user = credentials.user;
+
+      let uploadedAvatarUrl = null;
+      await auth().currentUser.reload();
+
+      if (avatarUri) {
+        try {
+          const storageRef = storage().ref(`avatars/${user.uid}`);
+          await storageRef.putFile(avatarUri); // putFile 사용
+          uploadedAvatarUrl = await storageRef.getDownloadURL();
+        } catch (uploadError) {
+          console.error('Image upload failed:', uploadError);
+          Alert.alert('Upload Error', 'Failed to upload profile image.');
+        }
+      }
+
+      await user.updateProfile({
+        displayName: name,
+        photoURL: uploadedAvatarUrl,
+      });
+
+      await createInitialMoneyData(name, email);
+
+      Alert.alert('Success', 'You have successfully signed up.');
       navigation.navigate('LoginPage');
     } catch (error) {
-      console.error('Firebase 에러:', error);
-      Alert.alert('회원가입에 실패했습니다. 다시 시도해주세요');
+      console.error('Signup error:', error);
+      Alert.alert('Signup Failed', error.message || 'Please try again.');
     }
   };
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={styles.avatarUpload} onPress={onAvatarChange}>
-        {avatar ? (
-          <Image source={{uri: avatar}} style={styles.avatarImg} />
-        ) : (
+      {avatarUri ? (
+        <View style={styles.imagePreview}>
+          <Image source={{uri: avatarUri}} style={styles.avatarImg} />
+          <TouchableOpacity style={styles.imageButton} onPress={removeImage}>
+            <Text style={styles.imageButtonText}>Remove image</Text>
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <TouchableOpacity style={styles.avatarUpload} onPress={onFileChange}>
           <MaterialCommunityIcons
             name="account-circle"
             style={styles.avatarIcon}
           />
-        )}
-      </TouchableOpacity>
+        </TouchableOpacity>
+      )}
+      {!avatarUri && (
+        <TouchableOpacity style={styles.imageButton} onPress={onFileChange}>
+          <Text style={styles.imageButtonText}>Add image</Text>
+        </TouchableOpacity>
+      )}
       <TextInput
         value={name}
         onChangeText={handleNameChange}
@@ -148,6 +142,7 @@ function SignUpPage() {
         placeholder="Email"
         placeholderTextColor="rgba(89, 89, 89, 1)"
         style={styles.inputBox}
+        keyboardType="email-address"
       />
       <TextInput
         value={password}
@@ -167,7 +162,7 @@ function SignUpPage() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 1)',
+    backgroundColor: 'white',
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -183,11 +178,32 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   avatarImg: {
-    width: '100%',
-    height: '100%',
+    width: 100,
+    height: 100,
+    borderRadius: 50,
   },
   avatarIcon: {
+    fontSize: 100,
     color: 'gray',
+  },
+  imagePreview: {
+    marginBottom: 10,
+    alignItems: 'center',
+  },
+  imageButton: {
+    backgroundColor: '#f2f2f2',
+    width: 280,
+    height: 40,
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    borderRadius: 50,
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  imageButtonText: {
+    color: '#595959',
+    fontSize: 15,
+    fontWeight: '500',
   },
   inputBox: {
     width: 360,
@@ -199,10 +215,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     marginVertical: 10,
     borderWidth: 1,
-    borderColor: 'rgba(89, 89, 89, 1)',
+    borderColor: '#595959',
   },
   button: {
-    backgroundColor: 'rgba(68, 88, 200, 1)',
+    backgroundColor: '#4458C8',
     width: 360,
     paddingVertical: 15,
     paddingHorizontal: 20,
