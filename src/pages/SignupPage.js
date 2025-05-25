@@ -84,7 +84,7 @@ function SignUpPage() {
       if (avatarUri) {
         try {
           const storageRef = storage().ref(`avatars/${user.uid}`);
-          await storageRef.putFile(avatarUri); // putFile 사용
+          await storageRef.putFile(avatarUri);
           uploadedAvatarUrl = await storageRef.getDownloadURL();
         } catch (uploadError) {
           console.error('Image upload failed:', uploadError);
@@ -112,9 +112,6 @@ function SignUpPage() {
       {avatarUri ? (
         <View style={styles.imagePreview}>
           <Image source={{uri: avatarUri}} style={styles.avatarImg} />
-          <TouchableOpacity style={styles.imageButton} onPress={removeImage}>
-            <Text style={styles.imageButtonText}>Remove image</Text>
-          </TouchableOpacity>
         </View>
       ) : (
         <TouchableOpacity style={styles.avatarUpload} onPress={onFileChange}>
@@ -122,11 +119,6 @@ function SignUpPage() {
             name="account-circle"
             style={styles.avatarIcon}
           />
-        </TouchableOpacity>
-      )}
-      {!avatarUri && (
-        <TouchableOpacity style={styles.imageButton} onPress={onFileChange}>
-          <Text style={styles.imageButtonText}>Add image</Text>
         </TouchableOpacity>
       )}
       <TextInput
@@ -152,6 +144,14 @@ function SignUpPage() {
         style={styles.inputBox}
         secureTextEntry={true}
       />
+      {avatarUri && (
+        <TouchableOpacity style={styles.imageButton} onPress={removeImage}>
+          <Text style={styles.imageButtonText}>Remove image</Text>
+        </TouchableOpacity>
+      )}
+      <TouchableOpacity style={styles.imageButton} onPress={onFileChange}>
+        <Text style={styles.imageButtonText}>Add image</Text>
+      </TouchableOpacity>
       <TouchableOpacity style={styles.button} onPress={onSubmit}>
         <Text style={styles.buttonText}>Sign up</Text>
       </TouchableOpacity>
@@ -164,7 +164,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: 'white',
     alignItems: 'center',
-    justifyContent: 'center',
   },
   avatarUpload: {
     width: 100,
@@ -187,21 +186,23 @@ const styles = StyleSheet.create({
     color: 'gray',
   },
   imagePreview: {
+    marginTop: 20,
     marginBottom: 10,
     alignItems: 'center',
   },
   imageButton: {
-    backgroundColor: '#f2f2f2',
-    width: 280,
-    height: 40,
-    paddingVertical: 8,
-    paddingHorizontal: 20,
-    borderRadius: 50,
+    backgroundColor: 'rgba(242, 242, 242, 1)',
+    width: 360,
+    height: 45,
+    paddingVertical: 10,
+    paddingHorizontal: 10,
+    borderRadius: 25,
     alignItems: 'center',
+    alignSelf: 'center',
     marginBottom: 10,
   },
   imageButtonText: {
-    color: '#595959',
+    color: 'rgba(89, 89, 89, 1)',
     fontSize: 15,
     fontWeight: '500',
   },
@@ -223,7 +224,6 @@ const styles = StyleSheet.create({
     paddingVertical: 15,
     paddingHorizontal: 20,
     borderRadius: 25,
-    marginTop: 100,
     alignItems: 'center',
   },
   buttonText: {
