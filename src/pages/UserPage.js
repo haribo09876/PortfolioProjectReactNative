@@ -1,4 +1,4 @@
-import React, {useState, useEffect, useRef} from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   View,
   Text,
@@ -31,7 +31,6 @@ function UserPage() {
   const [newPassword, setNewPassword] = useState(user.password);
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
-  const navRef = useRef(null);
 
   useEffect(() => {
     if (!user) {
@@ -123,10 +122,9 @@ function UserPage() {
 
   const handleAccountDelete = async () => {
     try {
-      await user.delete();
-      // auth.signOut();
-      setDeleteConfirmVisible(false);
-      navRef.current?.replace('LoginPage');
+      await setDeleteConfirmVisible(false);
+      user.delete();
+      navigation.navigate('LoginPage');
     } catch (error) {
       Alert.alert('Logout error', 'Problem while logout');
     }
