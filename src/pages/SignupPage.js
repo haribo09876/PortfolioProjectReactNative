@@ -114,12 +114,10 @@ function SignUpPage() {
           <Image source={{uri: avatar}} style={styles.avatarImg} />
         </View>
       ) : (
-        <TouchableOpacity style={styles.avatarUpload} onPress={onFileChange}>
-          <MaterialCommunityIcons
-            name="account-circle"
-            style={styles.avatarIcon}
-          />
-        </TouchableOpacity>
+        <MaterialCommunityIcons
+          name="account-circle"
+          style={styles.avatarIcon}
+        />
       )}
       <TextInput
         value={name}

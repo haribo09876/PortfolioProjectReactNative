@@ -235,7 +235,7 @@ function UserPage() {
             <TouchableWithoutFeedback>
               <View style={styles.editModalContent}>
                 <Text style={styles.username}>Edit account</Text>
-                <TouchableOpacity style={styles.avatarUpload}>
+                <View style={styles.avatarUpload}>
                   {avatar ? (
                     <Image source={{uri: avatar}} style={styles.avatarImg} />
                   ) : (
@@ -245,8 +245,7 @@ function UserPage() {
                       size={100}
                     />
                   )}
-                </TouchableOpacity>
-                <Text style={styles.userEmailText}>{user?.email ?? ' '}</Text>
+                </View>
                 <TextInput
                   style={styles.inputBox}
                   value={newUserName}
@@ -270,14 +269,16 @@ function UserPage() {
                   placeholderTextColor="rgba(89, 89, 89, 1)"
                   secureTextEntry={true}
                 />
+                {avatar && (
+                  <TouchableOpacity
+                    style={styles.cancelButton}
+                    onPress={removeImage}>
+                    <Text style={styles.cancelText}>Remove image</Text>
+                  </TouchableOpacity>
+                )}
                 <TouchableOpacity
-                  onPress={removeImage}
-                  style={styles.cancelButton}>
-                  <Text style={styles.cancelText}>Remove image</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  onPress={onFileChange}
-                  style={styles.cancelButton}>
+                  style={styles.cancelButton}
+                  onPress={onFileChange}>
                   <Text style={styles.cancelText}>Add image</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
@@ -507,13 +508,6 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: '500',
     marginLeft: 5,
-  },
-  userEmailText: {
-    color: 'rgba(89, 89, 89, 1)',
-    fontSize: 20,
-    fontWeight: '500',
-    marginBottom: 20,
-    textAlign: 'center',
   },
   inputBox: {
     color: 'rgba(52, 52, 52, 1)',
