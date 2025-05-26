@@ -11,7 +11,6 @@ import {
   TextInput,
   Alert,
 } from 'react-native';
-import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {useNavigation} from '@react-navigation/native';
@@ -28,7 +27,8 @@ function UserPage() {
   const [avatar, setAvatar] = useState(user?.photoURL);
   const [moneys, setMoneys] = useState([]);
   const [newUserName, setNewUserName] = useState(user.displayName);
-  const [newPassword, setNewPassword] = useState(user.password);
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
 
@@ -62,62 +62,107 @@ function UserPage() {
   }, [user]);
 
   const closeModal = () => {
-    // setNewItemTitle(itemTitle);
-    // setNewItemPrice(itemPrice);
-    // setNewItemDetail(itemDetail);
-    // setImageUri(photo);
-    // setNewPhoto(null);
     setNewUserName(user.displayName);
+    setAvatar(user.photoURL);
     setNewPassword('');
+    setCurrentPassword('');
     setEditModalVisible(false);
   };
 
-  const onAvatarChange = async () => {
-    if (!user) {
-      return;
-    }
-
+  const onFileChange = async () => {
     const options = {
       mediaType: 'photo',
       includeBase64: false,
       maxHeight: 200,
       maxWidth: 200,
     };
-
     launchImageLibrary(options, async response => {
       if (response.didCancel) {
-        console.log('User cancelled image picker');
+        console.log('Image selection cancelled');
       } else if (response.errorCode) {
-        console.log('ImagePicker Error: ', response.errorMessage);
+        console.error('ImagePicker error:', response.errorMessage);
       } else if (response.assets && response.assets.length > 0) {
-        const asset = response.assets[0];
-        const imageResponse = await fetch(asset.uri);
-        const blob = await imageResponse.blob();
-        const storageRef = storage().ref().child(`avatars/${user?.uid}`);
-
-        try {
-          const uploadTask = storageRef.put(blob);
-          uploadTask.on(
-            'state_changed',
-            null,
-            error => {
-              console.error('Error uploading image: ', error);
-            },
-            async () => {
-              try {
-                const downloadURL = await storageRef.getDownloadURL();
-                setAvatar(downloadURL);
-                await auth().currentUser.updateProfile({photoURL: downloadURL});
-              } catch (error) {
-                console.error('Error getting download URL: ', error);
-              }
-            },
-          );
-        } catch (error) {
-          console.error('Error uploading image: ', error);
-        }
+        const selectedImage = response.assets[0];
+        setAvatar(selectedImage.uri);
       }
     });
+  };
+
+  const removeImage = () => {
+    setAvatar(null);
+  };
+
+  const editAccount = async () => {
+    if (
+      newUserName === user.displayName &&
+      newPassword === '' &&
+      avatar === user.photoURL
+    ) {
+      Alert.alert('No changes', 'There are no changes to update.');
+      return;
+    }
+
+    try {
+      let uploadedAvatarURL = null;
+
+      if (avatar && avatar !== user.photoURL) {
+        const storageRef = storage().ref(`avatars/${user.uid}`);
+        await storageRef.putFile(avatar);
+        uploadedAvatarURL = await storageRef.getDownloadURL();
+      } else if (!avatar) {
+        uploadedAvatarURL = null;
+      }
+
+      const profileUpdates = {};
+      if (newUserName !== user.displayName) {
+        profileUpdates.displayName = newUserName;
+      }
+      if (avatar !== user.photoURL) {
+        profileUpdates.photoURL = uploadedAvatarURL;
+      }
+
+      if (Object.keys(profileUpdates).length > 0) {
+        await user.updateProfile(profileUpdates);
+      }
+
+      if (newPassword !== '') {
+        if (currentPassword === '') {
+          Alert.alert(
+            'Current password required',
+            'Please enter your current password to change your password.',
+          );
+          return;
+        }
+
+        const credential = auth.EmailAuthProvider.credential(
+          user.email,
+          currentPassword,
+        );
+
+        await user.reauthenticateWithCredential(credential);
+        await user.updatePassword(newPassword);
+      }
+
+      await firestore()
+        .collection('users')
+        .doc(user.uid)
+        .set(
+          {
+            username: newUserName,
+            photoURL: uploadedAvatarURL !== null ? uploadedAvatarURL : null,
+          },
+          {merge: true},
+        );
+
+      setNewUserName(user.displayName);
+      setNewPassword('');
+      setCurrentPassword('');
+      setEditModalVisible(false);
+      Alert.alert('Success', 'Account updated successfully.');
+    } catch (error) {
+      console.error('Edit account error:', error);
+      Alert.alert('Error', error.message || 'Failed to update account.');
+    }
   };
 
   const handleAccountDelete = async () => {
@@ -190,43 +235,14 @@ function UserPage() {
             <TouchableWithoutFeedback>
               <View style={styles.editModalContent}>
                 <Text style={styles.username}>Edit account</Text>
-                {/* {(imageUri || newPhoto) && (
-                  <>
-                    <Image
-                      style={styles.shopPhoto}
-                      source={{uri: imageUri || newPhoto}}
-                    />
-                    <TouchableOpacity
-                      style={styles.editButton}
-                      onPress={() => {
-                        setImageUri(null);
-                        setNewPhoto(null);
-                      }}>
-                      <Text style={styles.editText}>Remove image</Text>
-                    </TouchableOpacity>
-                  </>
-                )} */}
-                {/* <TouchableOpacity
-                  style={styles.avatarUpload}
-                  onPress={onAvatarChange}>
+                <TouchableOpacity style={styles.avatarUpload}>
                   {avatar ? (
                     <Image source={{uri: avatar}} style={styles.avatarImg} />
                   ) : (
                     <MaterialCommunityIcons
                       name="account-circle"
                       style={styles.avatarIcon}
-                    />
-                  )}
-                </TouchableOpacity> */}
-                <TouchableOpacity
-                  style={styles.avatarUpload}
-                  onPress={onAvatarChange}>
-                  {avatar ? (
-                    <Image source={{uri: avatar}} style={styles.avatarImg} />
-                  ) : (
-                    <MaterialCommunityIcons
-                      name="account-circle"
-                      style={styles.avatarIcon}
+                      size={100}
                     />
                   )}
                 </TouchableOpacity>
@@ -240,6 +256,14 @@ function UserPage() {
                 />
                 <TextInput
                   style={styles.inputBox}
+                  value={currentPassword}
+                  onChangeText={setCurrentPassword}
+                  placeholder="Current password"
+                  placeholderTextColor="rgba(89, 89, 89, 1)"
+                  secureTextEntry={true}
+                />
+                <TextInput
+                  style={styles.inputBox}
                   value={newPassword}
                   onChangeText={setNewPassword}
                   placeholder="New password"
@@ -247,18 +271,18 @@ function UserPage() {
                   secureTextEntry={true}
                 />
                 <TouchableOpacity
-                  // onPress={closeModal}
+                  onPress={removeImage}
                   style={styles.cancelButton}>
                   <Text style={styles.cancelText}>Remove image</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                  // onPress={closeModal}
+                  onPress={onFileChange}
                   style={styles.cancelButton}>
                   <Text style={styles.cancelText}>Add image</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   onPress={async () => {
-                    await // editAccount();
+                    await editAccount();
                     setEditModalVisible(false);
                   }}
                   style={styles.updateButton}>
