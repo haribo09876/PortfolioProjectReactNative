@@ -60,7 +60,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
-    padding: 10,
+    marginHorizontal: 10,
   },
   scrollView: {
     flex: 1,
@@ -70,9 +70,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingVertical: 10,
-    paddingHorizontal: 15,
-    borderTopWidth: 0.5,
-    borderBottomWidth: 0.5,
+    paddingHorizontal: 5,
+    borderTopWidth: 0.2,
+    borderBottomWidth: 0.2,
     borderColor: 'rgba(176, 176, 176, 1)',
   },
   itemTitle: {

@@ -194,6 +194,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'white',
+    marginHorizontal: 10,
   },
   addButton: {
     alignSelf: 'flex-end',
