@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {StyleSheet, Text, View} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 
@@ -44,14 +44,14 @@ export default function Sales() {
 
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.scrollView}>
-        {sales.map(item => (
-          <View key={item.id} style={styles.itemContainer}>
-            <Text style={styles.itemTitle}>{item.itemTitle}</Text>
-            <Text style={styles.itemPrice}>{item.itemPrice} 원</Text>
-          </View>
-        ))}
-      </ScrollView>
+      {sales.map(item => (
+        <View key={item.id} style={styles.itemContainer}>
+          <Text style={styles.itemTitle}>{item.itemTitle}</Text>
+          <Text style={styles.itemPrice}>
+            {item.itemPrice.toLocaleString()} 원
+          </Text>
+        </View>
+      ))}
     </View>
   );
 }
@@ -71,15 +71,18 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingVertical: 10,
     paddingHorizontal: 15,
-    borderBottomWidth: 1,
-    borderBottomColor: '#CED0CE',
+    borderTopWidth: 0.5,
+    borderBottomWidth: 0.5,
+    borderColor: 'rgba(176, 176, 176, 1)',
   },
   itemTitle: {
-    fontSize: 18,
-    fontWeight: 'bold',
+    color: 'rgba(89, 89, 89, 1)',
+    fontSize: 15,
+    fontWeight: '500',
   },
   itemPrice: {
-    fontSize: 18,
-    color: '#1DA1F2',
+    color: 'rgba(68, 88, 200, 1)',
+    fontSize: 15,
+    fontWeight: '500',
   },
 });
