@@ -17,7 +17,7 @@ import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityI
 
 function SignUpPage() {
   const navigation = useNavigation();
-  const [avatarUri, setAvatarUri] = useState(null);
+  const [avatar, setAvatar] = useState(null);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -57,13 +57,13 @@ function SignUpPage() {
         console.error('ImagePicker error:', response.errorMessage);
       } else if (response.assets && response.assets.length > 0) {
         const selectedImage = response.assets[0];
-        setAvatarUri(selectedImage.uri);
+        setAvatar(selectedImage.uri);
       }
     });
   };
 
   const removeImage = () => {
-    setAvatarUri(null);
+    setAvatar(null);
   };
 
   const onSubmit = async () => {
@@ -78,14 +78,14 @@ function SignUpPage() {
       );
       const user = credentials.user;
 
-      let uploadedAvatarUrl = null;
+      let uploadedAvatar = null;
       await auth().currentUser.reload();
 
-      if (avatarUri) {
+      if (avatar) {
         try {
           const storageRef = storage().ref(`avatars/${user.uid}`);
-          await storageRef.putFile(avatarUri);
-          uploadedAvatarUrl = await storageRef.getDownloadURL();
+          await storageRef.putFile(avatar);
+          uploadedAvatar = await storageRef.getDownloadURL();
         } catch (uploadError) {
           console.error('Image upload failed:', uploadError);
           Alert.alert('Upload Error', 'Failed to upload profile image.');
@@ -94,7 +94,7 @@ function SignUpPage() {
 
       await user.updateProfile({
         displayName: name,
-        photoURL: uploadedAvatarUrl,
+        photoURL: uploadedAvatar,
       });
 
       await createInitialMoneyData(name, email);
@@ -109,9 +109,9 @@ function SignUpPage() {
 
   return (
     <View style={styles.container}>
-      {avatarUri ? (
+      {avatar ? (
         <View style={styles.imagePreview}>
-          <Image source={{uri: avatarUri}} style={styles.avatarImg} />
+          <Image source={{uri: avatar}} style={styles.avatarImg} />
         </View>
       ) : (
         <TouchableOpacity style={styles.avatarUpload} onPress={onFileChange}>
@@ -144,7 +144,7 @@ function SignUpPage() {
         style={styles.inputBox}
         secureTextEntry={true}
       />
-      {avatarUri && (
+      {avatar && (
         <TouchableOpacity style={styles.imageButton} onPress={removeImage}>
           <Text style={styles.imageButtonText}>Remove image</Text>
         </TouchableOpacity>
