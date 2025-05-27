@@ -116,7 +116,6 @@ const UserTweet = () => {
           },
         );
       }
-
       setTweet('');
       setModalVisible(false);
     } catch (error) {

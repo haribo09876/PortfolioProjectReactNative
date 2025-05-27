@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {ScrollView, StyleSheet} from 'react-native';
+import {ScrollView, View, StyleSheet} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import Tweet from './tweet';
 import auth from '@react-native-firebase/auth';
@@ -34,9 +34,11 @@ export default function UserTweetTimeline() {
   }, []);
 
   return (
-    <ScrollView contentContainerStyle={styles.wrapper}>
+    <ScrollView contentContainerStyle={styles.wrapper} horizontal={true}>
       {tweets.map(tweet => (
-        <Tweet key={tweet.id} {...tweet} />
+        <View key={tweet.id} style={styles.tweetWrapper}>
+          <Tweet {...tweet} />
+        </View>
       ))}
     </ScrollView>
   );
@@ -45,5 +47,9 @@ export default function UserTweetTimeline() {
 const styles = StyleSheet.create({
   wrapper: {
     padding: 5,
+  },
+  tweetWrapper: {
+    transform: [{scale: 0.8}],
+    margin: -40,
   },
 });
