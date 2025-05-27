@@ -121,7 +121,6 @@ const InstaPage = () => {
       } else {
         setFile(null);
       }
-
       setInsta('');
       setModalVisible(false);
     } catch (error) {

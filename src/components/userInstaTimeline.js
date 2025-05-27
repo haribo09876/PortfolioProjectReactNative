@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {ScrollView, StyleSheet} from 'react-native';
+import {ScrollView, View, StyleSheet} from 'react-native';
 import firestore from '@react-native-firebase/firestore';
 import Insta from './insta';
 import auth from '@react-native-firebase/auth';
@@ -36,8 +36,17 @@ export default function UserInstaTimeline() {
   return (
     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
       {instas.map(insta => (
-        <Insta key={insta.id} {...insta} />
+        <View key={insta.id} style={styles.instaWrapper}>
+          <Insta {...insta} />
+        </View>
       ))}
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  instaWrapper: {
+    transform: [{scale: 0.9}],
+    margin: -5,
+  },
+});
