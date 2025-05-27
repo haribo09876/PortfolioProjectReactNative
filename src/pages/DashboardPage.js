@@ -1,6 +1,6 @@
 import {View, Text, StyleSheet, ScrollView} from 'react-native';
-import DashboardShop from '../components/dashboardShop';
 import DashboardLocation from '../components/dashboardLocation';
+import DashboardShop from '../components/dashboardShop';
 
 function DashboardPage() {
   return (
@@ -25,7 +25,7 @@ const styles = StyleSheet.create({
     color: 'rgba(89, 89, 89, 1)',
     fontSize: 20,
     fontWeight: '500',
-    marginBottom: 10,
+    marginBottom: 20,
   },
 });
 
