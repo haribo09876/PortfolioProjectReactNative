@@ -6,10 +6,10 @@ function DashboardPage() {
   return (
     <ScrollView>
       <View style={styles.container}>
-        <Text style={styles.sectionTitle}>Location</Text>
-        <DashboardLocation />
         <Text style={styles.sectionTitle}>Sales</Text>
         <DashboardShop />
+        <Text style={styles.sectionTitle}>Location</Text>
+        <DashboardLocation />
       </View>
     </ScrollView>
   );
