@@ -39,7 +39,7 @@
     "react-native-reanimated": "^3.11.0",
     "react-native-safe-area-context": "^4.10.5",
     "react-native-screens": "^3.32.0",
-    "react-native-svg": "^15.3.0",
+    "react-native-svg": "^15.12.0",
     "react-native-tab-view": "^3.5.2",
     "react-native-vector-icons": "^10.1.0",
     "react-native-vpn": "^1.0.1",
