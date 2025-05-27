@@ -384,6 +384,7 @@ const styles = StyleSheet.create({
     color: 'rgba(89, 89, 89, 1)',
     fontSize: 20,
     fontWeight: '500',
+    marginTop: 30,
     marginBottom: 10,
   },
   dashboardButton: {
