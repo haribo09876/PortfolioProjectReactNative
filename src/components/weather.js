@@ -19,13 +19,14 @@ const API_KEY = '174580b1f4ee4ec1e406e56c83717aed';
 const windowWidth = Dimensions.get('window').width;
 
 const icons = {
-  Clouds: 'weather-cloudy',
-  Clear: 'weather-sunny',
-  Atmosphere: 'weather-fog',
+  Mist: 'weather-fog',
   Haze: 'weather-hazy',
   Snow: 'weather-snowy',
+  Clear: 'weather-sunny',
   Rain: 'weather-pouring',
+  Clouds: 'weather-cloudy',
   Drizzle: 'weather-rainy',
+  Atmosphere: 'weather-fog',
   Thunderstorm: 'weather-lightning-rainy',
 };
 
