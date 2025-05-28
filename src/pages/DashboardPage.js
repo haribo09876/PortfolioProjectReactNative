@@ -19,7 +19,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: 'rgba(255, 255, 255, 1)',
-    margin: 20,
+    padding: 20,
   },
   sectionTitle: {
     color: 'rgba(89, 89, 89, 1)',

@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
   Text,
 } from 'react-native';
-import {StackedBarChart, PieChart} from 'react-native-chart-kit';
+import {PieChart} from 'react-native-chart-kit';
 import firestore from '@react-native-firebase/firestore';
 
 const screenWidth = Dimensions.get('window').width;
@@ -22,7 +22,6 @@ const DashboardShop = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [totalSales, setTotalSales] = useState(0);
-  const [topItems, setTopItems] = useState([]);
   const [pieData, setPieData] = useState([]);
 
   useEffect(() => {
@@ -46,41 +45,41 @@ const DashboardShop = () => {
           groupedData[date][itemTitle] =
             (groupedData[date][itemTitle] || 0) + itemPrice;
         }
+
         const labels = Object.keys(groupedData).sort();
+
         const legend = Array.from(
           new Set(Object.values(groupedData).flatMap(obj => Object.keys(obj))),
         );
+
         const chartData = labels.map(date =>
           legend.map(title => groupedData[date][title] || 0),
         );
+
         const pieColors = [
-          '#3366FF',
-          '#FF9900',
-          '#109618',
-          '#990099',
-          '#FF3366',
-          '#66FF33',
+          '#4e79a7',
+          '#f28e2b',
+          '#e15759',
+          '#76b7b2',
+          '#59a14f',
+          '#edc949',
         ];
+
         const pie = Object.entries(itemTotals).map(([title, amount], idx) => ({
           name: title,
           amount,
           color: pieColors[idx % pieColors.length],
-          legendFontColor: '#000',
-          legendFontSize: 14,
+          legendFontColor: '#333',
+          legendFontSize: 13,
         }));
-
-        const sortedItems = Object.entries(itemTotals)
-          .sort((a, b) => b[1] - a[1])
-          .map(([title, amount]) => ({title, amount}));
 
         setData({labels, legend, data: chartData, barColors: pieColors});
         setTotalSales(total);
-        setTopItems(sortedItems.slice(0, 5));
         setPieData(pie);
         setLoading(false);
       } catch (error) {
         console.error('Error fetching data:', error);
-        setError('Failed to fetch data.');
+        setError('데이터를 불러오는 데 실패했습니다.');
         setLoading(false);
       }
     };
@@ -91,7 +90,7 @@ const DashboardShop = () => {
   if (loading) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator size="large" color="#0000ff" />
+        <ActivityIndicator size="large" color="#4e79a7" />
       </View>
     );
   }
@@ -104,47 +103,85 @@ const DashboardShop = () => {
     );
   }
 
+  // 누적 최대값 (날짜별 총 매출액) 구하기
+  const maxTotalPerDay = Math.max(
+    ...data.data.map(dayData => dayData.reduce((a, b) => a + b, 0)),
+  );
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.card}>
-        <Text style={styles.cardTitle}>Total sales revenue</Text>
+        <Text style={styles.cardTitle}>총 매출액</Text>
         <Text style={styles.cardValue}>{totalSales.toLocaleString()} 원</Text>
       </View>
+
       <View style={styles.card}>
-        <Text style={styles.cardTitle}>Top 5 items by revenue</Text>
-        {topItems.map((item, index) => (
-          <Text key={index} style={styles.itemText}>
-            {index + 1}. {item.title} : {item.amount.toLocaleString()}원
-          </Text>
-        ))}
+        <Text style={styles.cardTitle}>
+          일자별 아이템별 매출 현황 (Stacked Bar Chart)
+        </Text>
+        {data.labels.map((date, dateIdx) => {
+          const dayData = data.data[dateIdx];
+          const dayTotal = dayData.reduce((a, b) => a + b, 0);
+
+          return (
+            <View key={dateIdx} style={styles.barRow}>
+              <Text style={styles.barDate}>{date}</Text>
+              <View style={styles.barGroup}>
+                {/* 누적 막대 표시 */}
+                <View style={styles.stackedBar}>
+                  {dayData.map((amount, idx) => {
+                    if (amount === 0) return null;
+                    const widthPercent = (amount / maxTotalPerDay) * 100;
+                    return (
+                      <View
+                        key={idx}
+                        style={{
+                          width: `${widthPercent}%`,
+                          backgroundColor:
+                            data.barColors[idx % data.barColors.length],
+                          height: 24,
+                          borderTopLeftRadius: idx === 0 ? 12 : 0,
+                          borderBottomLeftRadius: idx === 0 ? 12 : 0,
+                          borderTopRightRadius:
+                            idx === dayData.length - 1 ? 12 : 0,
+                          borderBottomRightRadius:
+                            idx === dayData.length - 1 ? 12 : 0,
+                        }}
+                      />
+                    );
+                  })}
+                </View>
+                {/* 아이템별 비율 텍스트 */}
+                <View style={styles.percentageLabels}>
+                  {dayData.map((amount, idx) => {
+                    if (amount === 0) return null;
+                    const percent = ((amount / dayTotal) * 100).toFixed(1);
+                    return (
+                      <Text
+                        key={idx}
+                        style={[
+                          styles.percentageLabel,
+                          {color: data.barColors[idx % data.barColors.length]},
+                        ]}>
+                        {data.legend[idx]}: {percent}%
+                      </Text>
+                    );
+                  })}
+                </View>
+              </View>
+            </View>
+          );
+        })}
       </View>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        <StackedBarChart
-          data={{
-            labels: data.labels,
-            legend: data.legend,
-            data: data.data,
-            barColors: data.barColors,
-          }}
-          width={screenWidth * data.labels.length * 0.4}
-          height={360}
-          chartConfig={{
-            backgroundColor: '#fff',
-            backgroundGradientFrom: '#f0f0f0',
-            backgroundGradientTo: '#dfe6e9',
-            decimalPlaces: 0,
-            color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-            labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
-          }}
-          style={{marginVertical: 8, borderRadius: 16}}
-        />
-      </ScrollView>
+
       <View style={styles.card}>
-        <Text style={styles.cardTitle}>Sales Ratio by Item</Text>
+        <Text style={styles.cardTitle}>
+          아이템별 전체 매출 비율 (Pie Chart)
+        </Text>
         <PieChart
           data={pieData}
-          width={screenWidth - 32}
-          height={220}
+          width={screenWidth - 48}
+          height={200}
           chartConfig={{
             color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
           }}
@@ -152,7 +189,18 @@ const DashboardShop = () => {
           backgroundColor="transparent"
           paddingLeft="10"
           absolute
+          hasLegend={false}
         />
+        <View style={styles.customLegendContainer}>
+          {pieData.map((slice, idx) => (
+            <View key={idx} style={styles.legendItem}>
+              <View
+                style={[styles.legendColorBox, {backgroundColor: slice.color}]}
+              />
+              <Text style={styles.legendText}>{slice.name}</Text>
+            </View>
+          ))}
+        </View>
       </View>
     </ScrollView>
   );
@@ -161,9 +209,6 @@ const DashboardShop = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 20,
-    paddingHorizontal: 16,
-    backgroundColor: '#f8f9fa',
   },
   center: {
     flex: 1,
@@ -177,24 +222,76 @@ const styles = StyleSheet.create({
   },
   card: {
     backgroundColor: '#fff',
-    borderRadius: 12,
-    padding: 16,
-    marginVertical: 10,
-    elevation: 2,
+    borderRadius: 16,
+    padding: 20,
+    marginVertical: 14,
+    elevation: 3,
+    shadowColor: '#000',
+    shadowOpacity: 0.05,
+    shadowRadius: 10,
   },
   cardTitle: {
-    fontSize: 18,
-    fontWeight: '600',
-    marginBottom: 6,
+    fontSize: 20,
+    fontWeight: '700',
+    marginBottom: 12,
+    color: '#222',
   },
   cardValue: {
-    fontSize: 22,
+    fontSize: 26,
     fontWeight: 'bold',
-    color: '#3366FF',
+    color: '#4e79a7',
+    textAlign: 'center',
   },
-  itemText: {
-    fontSize: 16,
-    marginVertical: 2,
+  stackedBar: {
+    flexDirection: 'row',
+    width: '100%',
+    height: 24,
+    borderRadius: 12,
+    overflow: 'hidden',
+  },
+  barRow: {
+    marginBottom: 22,
+  },
+  barDate: {
+    fontWeight: '600',
+    fontSize: 14,
+    marginBottom: 6,
+    color: '#555',
+  },
+  barGroup: {
+    marginLeft: 6,
+  },
+  percentageLabels: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginTop: 6,
+    gap: 12,
+  },
+  percentageLabel: {
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  customLegendContainer: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginTop: 16,
+    justifyContent: 'center',
+  },
+  legendItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 16,
+    marginBottom: 8,
+  },
+  legendColorBox: {
+    width: 18,
+    height: 18,
+    borderRadius: 5,
+    marginRight: 8,
+  },
+  legendText: {
+    fontSize: 15,
+    color: '#444',
   },
 });
 
