@@ -103,8 +103,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   mapContainer: {
-    width: 340,
-    height: 250,
+    width: 320,
+    height: 220,
     borderRadius: 20,
     overflow: 'hidden',
     position: 'relative',

@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
   },
   addButton: {
     backgroundColor: 'rgba(68, 88, 200, 1)',
-    width: 360,
+    width: 340,
     height: 45,
     paddingVertical: 10,
     paddingHorizontal: 10,
