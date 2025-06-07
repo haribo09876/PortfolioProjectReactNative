@@ -190,7 +190,7 @@ const styles = StyleSheet.create({
   },
   imageButton: {
     backgroundColor: 'rgba(242, 242, 242, 1)',
-    width: 360,
+    width: 340,
     height: 45,
     paddingVertical: 10,
     paddingHorizontal: 10,
@@ -205,7 +205,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   inputBox: {
-    width: 360,
+    width: 340,
     backgroundColor: 'white',
     borderRadius: 20,
     fontSize: 15,
@@ -218,7 +218,7 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: '#4458C8',
-    width: 360,
+    width: 340,
     paddingVertical: 15,
     paddingHorizontal: 20,
     borderRadius: 25,

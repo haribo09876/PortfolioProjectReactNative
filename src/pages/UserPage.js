@@ -389,7 +389,7 @@ const styles = StyleSheet.create({
   },
   dashboardButton: {
     backgroundColor: 'rgba(68, 88, 200, 1)',
-    width: 360,
+    width: 340,
     height: 45,
     paddingVertical: 10,
     paddingHorizontal: 10,
@@ -405,7 +405,7 @@ const styles = StyleSheet.create({
   },
   editButton: {
     backgroundColor: 'rgba(242, 242, 242, 1)',
-    width: 360,
+    width: 340,
     height: 45,
     paddingVertical: 10,
     paddingHorizontal: 10,
@@ -421,7 +421,7 @@ const styles = StyleSheet.create({
   },
   deleteButton: {
     backgroundColor: 'rgba(240, 68, 82, 1)',
-    width: 360,
+    width: 340,
     height: 45,
     paddingVertical: 10,
     paddingHorizontal: 10,

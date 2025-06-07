@@ -96,7 +96,7 @@ const styles = StyleSheet.create({
     marginBottom: 40,
   },
   inputBox: {
-    width: 360,
+    width: 340,
     backgroundColor: '#ffffff',
     borderRadius: 20,
     fontSize: 15,
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: 'rgba(68, 88, 200, 1)',
-    width: 360,
+    width: 340,
     paddingVertical: 15,
     paddingHorizontal: 20,
     borderRadius: 25,
@@ -123,7 +123,7 @@ const styles = StyleSheet.create({
   },
   googleButton: {
     backgroundColor: 'rgba(18, 172, 120, 1)',
-    width: 360,
+    width: 340,
     paddingVertical: 15,
     paddingHorizontal: 20,
     borderRadius: 50,
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
   },
   signupButton: {
     backgroundColor: 'rgba(242, 242, 242, 1)',
-    width: 360,
+    width: 340,
     paddingVertical: 15,
     paddingHorizontal: 20,
     borderRadius: 50,
