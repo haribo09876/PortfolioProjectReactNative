@@ -168,6 +168,6 @@ npm run dev
 
 - **Project Duration**: 2025.01 ~ 2025.02
 - **Workflow**: 3인 팀 협업 (GitHub flow 기반)
-- **Contact**: kimplanner@example.com
+- **Contact**: haribo09876@gmail.com
 
 ---
