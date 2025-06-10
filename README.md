@@ -49,13 +49,15 @@ portfolioprojectReactNative는는 SNS, 쇼핑채널을 포함한 **생활 플랫
 ---
 
 ## 📁 프로젝트 구조
-
-```
-/client         # 프론트엔드 소스코드
-/server         # 백엔드 소스코드
-/design         # 와이어프레임, UX 플로우 등 기획자료
-README.md
-```
+```bash
+📁 MyApp/
+ ┣ 📂android/
+ ┣ 📂ios/
+ ┣ 📂lib/
+ ┣ 📜.gitignore
+ ┣ 📜README.md
+ ┣ 📜.env.example
+ ┣ 📜myapp-v1.0.0.apk ← GitHub Release에 업로드 (또는 링크로 제공)
 
 ---
 
