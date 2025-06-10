@@ -49,7 +49,8 @@ portfolioprojectReactNative는는 SNS, 쇼핑채널을 포함한 **생활 플랫
 ---
 
 ## 📁 프로젝트 구조
-```bash
+
+```
 📁 MyApp/
  ┣ 📂android/
  ┣ 📂ios/
@@ -58,6 +59,7 @@ portfolioprojectReactNative는는 SNS, 쇼핑채널을 포함한 **생활 플랫
  ┣ 📜README.md
  ┣ 📜.env.example
  ┣ 📜myapp-v1.0.0.apk ← GitHub Release에 업로드 (또는 링크로 제공)
+```
 
 ---
 
