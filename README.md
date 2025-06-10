@@ -41,10 +41,8 @@ portfolioprojectReactNative는는 SNS, 쇼핑채널을 포함한 **생활 플랫
 ### 🛠 협업 & 디자인
 
 - GitHub
-- Notion
 - Figma
-- Slack
-- Postman (API 테스트)
+- Photoshop
 
 ---
 
