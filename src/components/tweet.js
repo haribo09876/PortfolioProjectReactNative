@@ -298,7 +298,7 @@ const styles = StyleSheet.create({
     color: 'rgba(52, 52, 52, 1)',
   },
   photo: {
-    width: 330,
+    width: 310,
     height: 200,
     borderRadius: 20,
     marginTop: 10,
