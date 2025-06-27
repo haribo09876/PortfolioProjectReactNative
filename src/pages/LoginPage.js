@@ -1,14 +1,14 @@
-import {useNavigation} from '@react-navigation/native';
-import React, {useEffect, useState} from 'react';
 import {
   View,
   Text,
-  StyleSheet,
-  TextInput,
-  TouchableOpacity,
   Alert,
+  TextInput,
+  StyleSheet,
+  TouchableOpacity,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
+import React, {useEffect, useState} from 'react';
+import {useNavigation} from '@react-navigation/native';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
 
 function LoginPage() {

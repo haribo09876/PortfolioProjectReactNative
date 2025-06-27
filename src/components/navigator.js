@@ -1,18 +1,17 @@
-import React, {useState, useEffect, useRef} from 'react';
 import {
   View,
+  Text,
+  Modal,
+  Alert,
   StyleSheet,
   TouchableOpacity,
-  Modal,
-  Text,
   TouchableWithoutFeedback,
-  Alert,
 } from 'react-native';
+import auth from '@react-native-firebase/auth';
+import React, {useState, useEffect, useRef} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
-import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
-import {onAuthStateChanged} from 'firebase/auth';
-import {auth} from '../firebase';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
 import IntroPage from '../pages/IntroPage';
 import LoginPage from '../pages/LoginPage';
 import SignupPage from '../pages/SignupPage';
@@ -68,18 +67,18 @@ const Navigator = () => {
   const navRef = useRef(null);
 
   useEffect(() => {
-    const subscriber = onAuthStateChanged(auth, user => {
+    const subscriber = auth().onAuthStateChanged(user => {
       setIsLoggedIn(!!user);
       if (initializing) {
         setInitializing(false);
       }
     });
     return subscriber;
-  }, []);
+  }, [initializing]);
 
   const handleLogout = async () => {
     try {
-      await auth.signOut();
+      await auth().signOut();
       setModalVisible(false);
       navRef.current?.replace('LoginPage');
     } catch (error) {
