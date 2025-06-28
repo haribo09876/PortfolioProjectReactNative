@@ -1,35 +1,55 @@
 import React, {useEffect, useState} from 'react';
-import {FlatList, Dimensions} from 'react-native';
+import {FlatList} from 'react-native';
+import auth from '@react-native-firebase/auth';
 import firestore from '@react-native-firebase/firestore';
 import Insta from './insta';
 
 export default function InstaTimeline() {
   const [instas, setInstas] = useState([]);
-  const windowWidth = Dimensions.get('window').width;
-  const totalContentWidth = 360;
-  const horizontalPadding = (windowWidth - totalContentWidth) / 2;
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
-    const unsubscribe = firestore()
+    const unsubscribeAuth = auth().onAuthStateChanged(u => {
+      setUser(u);
+      if (!u) {
+        setInstas([]);
+      }
+    });
+    return () => unsubscribeAuth();
+  }, []);
+
+  useEffect(() => {
+    if (!user) return;
+
+    const unsubscribeFirestore = firestore()
       .collection('instas')
       .orderBy('createdAt', 'desc')
-      .onSnapshot(querySnapshot => {
-        const updatedInstas = querySnapshot.docs.map(doc => {
-          const {insta, createdAt, userId, username, photo} = doc.data();
-          return {
-            insta,
-            createdAt: createdAt ? createdAt.toDate() : new Date(),
-            userId,
-            username,
-            photo,
-            id: doc.id,
-          };
-        });
-        setInstas(updatedInstas);
-      });
-
-    return () => unsubscribe();
-  }, []);
+      .onSnapshot(
+        querySnapshot => {
+          if (!querySnapshot || !querySnapshot.docs) {
+            setInstas([]);
+            return;
+          }
+          const updatedInstas = querySnapshot.docs.map(doc => {
+            const {insta, createdAt, userId, username, photo} = doc.data();
+            return {
+              insta,
+              createdAt: createdAt ? createdAt.toDate() : new Date(),
+              userId,
+              username,
+              photo,
+              id: doc.id,
+            };
+          });
+          setInstas(updatedInstas);
+        },
+        error => {
+          console.error('Firestore snapshot error: ', error);
+          setInstas([]);
+        },
+      );
+    return () => unsubscribeFirestore();
+  }, [user]);
 
   const renderItem = ({item}) => <Insta key={item.id} {...item} />;
 
@@ -39,9 +59,6 @@ export default function InstaTimeline() {
       renderItem={renderItem}
       keyExtractor={item => item.id}
       numColumns={3}
-      contentContainerStyle={{
-        paddingHorizontal: horizontalPadding,
-      }}
     />
   );
 }
