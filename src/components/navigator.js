@@ -1,3 +1,4 @@
+import React, {useState, useEffect, useRef} from 'react';
 import {
   View,
   Text,
@@ -8,7 +9,6 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import auth from '@react-native-firebase/auth';
-import React, {useState, useEffect, useRef} from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import {createMaterialTopTabNavigator} from '@react-navigation/material-top-tabs';
