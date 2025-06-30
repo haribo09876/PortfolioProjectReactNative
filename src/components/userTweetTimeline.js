@@ -35,11 +35,17 @@ export default function UserTweetTimeline() {
 
   return (
     <ScrollView contentContainerStyle={styles.wrapper} horizontal={true}>
-      {tweets.map(tweet => (
-        <View key={tweet.id} style={styles.tweetWrapper}>
-          <Tweet {...tweet} />
-        </View>
-      ))}
+      {tweets.map(tweet => {
+        const preview =
+          tweet.tweet.length > 30
+            ? tweet.tweet.slice(0, 30) + '...'
+            : tweet.tweet;
+        return (
+          <View key={tweet.id} style={styles.tweetWrapper}>
+            <Tweet {...tweet} tweet={preview} />
+          </View>
+        );
+      })}
     </ScrollView>
   );
 }
