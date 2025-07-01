@@ -71,7 +71,7 @@ export default function DashboardLocation() {
           initialRegion={region}
           region={region}
           onRegionChangeComplete={setRegion}>
-          <UrlTile urlTemplate="http://tile.openstreetmap.org/{z}/{x}/{y}.png" />
+          <UrlTile urlTemplate="https://tile.openstreetmap.org/{z}/{x}/{y}.png" />
           {locations.map((location, index) => (
             <Marker
               key={index}
