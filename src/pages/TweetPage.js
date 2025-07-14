@@ -27,10 +27,11 @@ const TweetPage = () => {
   const [isModalVisible, setModalVisible] = useState(false);
 
   const onChange = text => {
-    setTweet(text);
+    setTweet(text); // Update tweet content (트윗 내용 갱신)
   };
 
   const handleImageResult = response => {
+    // Handle image picker result (이미지 선택 결과 처리)
     if (response.didCancel) {
       console.log('User cancelled image picker');
     } else if (response.errorCode) {
@@ -40,18 +41,20 @@ const TweetPage = () => {
       if (selectedAsset.uri) {
         const fileSizeInMB = selectedAsset.fileSize / (1024 * 1024);
         if (fileSizeInMB > 3) {
+          // Enforce file size limit (파일 크기 제한)
           Alert.alert(
             'File size error',
             'The selected image exceeds the 3MB size limit.',
           );
         } else {
-          setFile(selectedAsset);
+          setFile(selectedAsset); // Save valid image file (유효한 이미지 파일 저장)
         }
       }
     }
   };
 
   const onFileChange = () => {
+    // Prompt for image source selection (이미지 소스 선택 알림)
     Alert.alert(
       'Select Image Source',
       'Choose an option',
@@ -63,14 +66,14 @@ const TweetPage = () => {
               mediaType: 'photo',
               cameraType: 'back',
             });
-            handleImageResult(result);
+            handleImageResult(result); // Handle captured image (촬영된 이미지 처리)
           },
         },
         {
           text: 'Choose from Library',
           onPress: async () => {
             const result = await launchImageLibrary({mediaType: 'photo'});
-            handleImageResult(result);
+            handleImageResult(result); // Handle selected image (선택된 이미지 처리)
           },
         },
       ],
@@ -79,33 +82,36 @@ const TweetPage = () => {
   };
 
   const clearFile = () => {
-    setFile(null);
+    setFile(null); // Reset selected file (선택된 파일 초기화)
   };
 
   const onSubmit = async () => {
+    // Submit tweet (트윗 전송 처리)
     const user = auth().currentUser;
     if (!user || isLoading || tweet === '' || tweet.length > 500) {
-      return;
+      return; // Validation check (검증 검사)
     }
 
     try {
-      setLoading(true);
-      const tweetRef = firestore().collection('tweets').doc();
+      setLoading(true); // Begin loading state (로딩 상태 시작)
+      const tweetRef = firestore().collection('tweets').doc(); // Generate tweet document ref (트윗 문서 참조 생성)
       const tweetData = {
         tweet,
-        createdAt: firestore.FieldValue.serverTimestamp(),
+        createdAt: firestore.FieldValue.serverTimestamp(), // Server-side timestamp (서버 타임스탬프)
         username: user.displayName || 'Anonymous',
         userId: user.uid,
       };
-      await tweetRef.set(tweetData);
+      await tweetRef.set(tweetData); // Save tweet metadata (트윗 메타데이터 저장)
 
       if (file) {
-        const storageRef = storage().ref(`tweets/${user.uid}/${tweetRef.id}`);
-        const uploadTask = storageRef.putFile(file.uri);
+        // If image is attached (이미지가 첨부된 경우)
+        const storageRef = storage().ref(`tweets/${user.uid}/${tweetRef.id}`); // Define storage path (스토리지 경로 정의)
+        const uploadTask = storageRef.putFile(file.uri); // Upload image (이미지 업로드)
         uploadTask.on(
           'state_changed',
-          snapshot => {},
+          snapshot => {}, // Optional progress handler (선택적 진행 핸들러)
           error => {
+            // Handle upload error (업로드 에러 처리)
             console.error('Image upload error: ', error);
             Alert.alert(
               'Upload Error',
@@ -113,33 +119,36 @@ const TweetPage = () => {
             );
           },
           async () => {
-            const url = await storageRef.getDownloadURL();
-            await tweetRef.update({photo: url});
+            // On successful upload (업로드 성공 시)
+            const url = await storageRef.getDownloadURL(); // Get image URL (이미지 URL 획득)
+            await tweetRef.update({photo: url}); // Update tweet with image URL (이미지 URL 포함 트윗 갱신)
             setFile(null);
           },
         );
       } else {
-        setFile(null);
+        setFile(null); // No image, just clear state (이미지 없을 경우 상태 초기화)
       }
 
-      setTweet('');
-      setModalVisible(false);
+      setTweet(''); // Reset tweet input (트윗 입력 초기화)
+      setModalVisible(false); // Close modal (모달 닫기)
     } catch (error) {
+      // Submission error handler (트윗 전송 에러 처리)
       console.error('Tweet submission error: ', error);
       Alert.alert(
         'Submission Error',
         'There was an error submitting your tweet.',
       );
     } finally {
-      setLoading(false);
+      setLoading(false); // End loading state (로딩 상태 종료)
     }
   };
 
   const openModal = () => {
-    setModalVisible(true);
+    setModalVisible(true); // Show modal (모달 표시)
   };
 
   const closeModal = () => {
+    // Reset modal states (모달 상태 초기화)
     setTweet('');
     setFile(null);
     setModalVisible(false);
@@ -214,7 +223,7 @@ const TweetPage = () => {
           </View>
         </TouchableWithoutFeedback>
       </Modal>
-      <TweetTimeline />
+      <TweetTimeline /> {/* Render tweet feed (트윗 타임라인 렌더링) */}
       <TouchableOpacity style={styles.addButton} onPress={openModal}>
         <Text style={styles.addButtonText}>Add tweet</Text>
       </TouchableOpacity>
