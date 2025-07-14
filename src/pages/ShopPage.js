@@ -13,6 +13,7 @@ import {
   Text,
   ScrollView,
 } from 'react-native';
+import {ADMIN_EMAIL} from '@env';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 import firestore from '@react-native-firebase/firestore';
 import storage from '@react-native-firebase/storage';
@@ -262,7 +263,7 @@ const ShopPage = () => {
         </TouchableWithoutFeedback>
       </Modal>
       <ShopTimeline />
-      {userEmail === 'admin@gmail.com' && (
+      {userEmail === ADMIN_EMAIL && (
         <TouchableOpacity style={styles.addButton} onPress={openModal}>
           <Text style={styles.addButtonText}>Add item</Text>
         </TouchableOpacity>

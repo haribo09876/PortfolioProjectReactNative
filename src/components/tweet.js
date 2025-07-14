@@ -13,6 +13,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import {ADMIN_EMAIL} from '@env';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
@@ -141,7 +142,7 @@ export default function Tweet({username, avatar, tweet, photo, id, userId}) {
                   )}
                   {currentUser &&
                     (currentUser.uid === userId ||
-                      currentUser.email === 'admin@gmail.com') && (
+                      currentUser.email === ADMIN_EMAIL) && (
                       <>
                         <TouchableOpacity
                           onPress={() => setEditModalVisible(true)}

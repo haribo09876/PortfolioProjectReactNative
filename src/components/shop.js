@@ -14,6 +14,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import {ADMIN_EMAIL} from '@env';
 import {useNavigation} from '@react-navigation/native';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import firestore from '@react-native-firebase/firestore';
@@ -208,7 +209,7 @@ export default function Shop({
                   </TouchableOpacity>
                   {currentUser &&
                     (currentUser.uid === id ||
-                      currentUser.email === 'admin@gmail.com') && (
+                      currentUser.email === ADMIN_EMAIL) && (
                       <>
                         <TouchableOpacity
                           onPress={() => setEditModalVisible(true)}

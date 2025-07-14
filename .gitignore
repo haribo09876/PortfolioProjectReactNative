@@ -72,3 +72,15 @@ yarn-error.log
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+# Firebase 민감 파일
+android/app/google-services.json
+ios/**/GoogleService-Info.plist
+
+# 추가 환경 변수 파일
+.env
+.env.*
+.env.local
+
+# 로그 파일
+*.log

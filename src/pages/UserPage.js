@@ -11,6 +11,7 @@ import {
   TextInput,
   Alert,
 } from 'react-native';
+import {ADMIN_UID} from '@env';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {useNavigation} from '@react-navigation/native';
@@ -198,7 +199,7 @@ function UserPage() {
               : 'No data'}
             원
           </Text>
-          {user?.uid === 'PdWutJuG1yPegHocDTMJVLPu1jr2' && (
+          {user?.uid === ADMIN_UID && (
             <TouchableOpacity
               onPress={() => navigation.navigate('DashboardPage')}
               style={styles.dashboardButton}>

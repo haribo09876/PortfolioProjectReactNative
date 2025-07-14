@@ -7,6 +7,7 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
+import {GOOGLE_SIGNIN_WEB_CLIENT_ID} from '@env';
 import auth from '@react-native-firebase/auth';
 import {useNavigation} from '@react-navigation/native';
 import {GoogleSignin} from '@react-native-google-signin/google-signin';
@@ -29,8 +30,7 @@ function LoginPage() {
 
   useEffect(() => {
     GoogleSignin.configure({
-      webClientId:
-        '204317415777-us0l59aof8r9399s22gn77qt64r7q1mi.apps.googleusercontent.com',
+      webClientId: GOOGLE_SIGNIN_WEB_CLIENT_ID,
     });
   }, []);
 
