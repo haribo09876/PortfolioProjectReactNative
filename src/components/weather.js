@@ -10,14 +10,13 @@ import {
   ActivityIndicator,
   Alert,
 } from 'react-native';
+import {WEATHER_API_KEY} from '@env';
 import Geolocation from 'react-native-geolocation-service';
 import firestore from '@react-native-firebase/firestore';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
 
-const API_KEY = '174580b1f4ee4ec1e406e56c83717aed';
 const windowWidth = Dimensions.get('window').width;
-
 const icons = {
   Mist: 'weather-fog',
   Haze: 'weather-hazy',
@@ -90,8 +89,8 @@ export default function Weather() {
   }, [locationPermission, locationSaved]);
 
   const fetchWeather = async (latitude, longitude) => {
-    const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${API_KEY}`;
-    const urlCurrent = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${API_KEY}`;
+    const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${WEATHER_API_KEY}`;
+    const urlCurrent = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${WEATHER_API_KEY}`;
 
     try {
       const [response, responseCurrent] = await Promise.all([

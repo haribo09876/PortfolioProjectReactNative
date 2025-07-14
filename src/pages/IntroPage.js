@@ -8,7 +8,9 @@ function IntroPage() {
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Welcome to PPRN</Text>
-      <Text style={styles.semiTitle}>Welcome to PPRN</Text>
+      <Text style={styles.semiTitle}>
+        Portfolio Project with React Native and Firebase
+      </Text>
       <TouchableOpacity
         style={styles.button}
         onPress={() => navigation.navigate('LoginPage')}>
