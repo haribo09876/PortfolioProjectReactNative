@@ -23,14 +23,14 @@ export default function UserTweetTimeline() {
               userId,
               username,
               photo,
-              id: doc.id,
+              id: doc.id, // Unique document ID (문서 고유 ID)
             };
           });
-          setTweets(updatedTweets);
+          setTweets(updatedTweets); // Update tweet state (트윗 상태 업데이트)
         }
       });
 
-    return () => unsubscribe();
+    return () => unsubscribe(); // Cleanup listener on unmount (컴포넌트 해제 시 리스너 정리)
   }, []);
 
   return (
@@ -38,11 +38,12 @@ export default function UserTweetTimeline() {
       {tweets.map(tweet => {
         const preview =
           tweet.tweet.length > 30
-            ? tweet.tweet.slice(0, 30) + '...'
+            ? tweet.tweet.slice(0, 30) + '...' // Truncate long tweets for preview (긴 트윗은 미리보기용으로 자르기)
             : tweet.tweet;
         return (
           <View key={tweet.id} style={styles.tweetWrapper}>
-            <Tweet {...tweet} tweet={preview} />
+            <Tweet {...tweet} tweet={preview} />{' '}
+            {/* Render tweet component with preview (미리보기 포함 트윗 컴포넌트 렌더링) */}
           </View>
         );
       })}

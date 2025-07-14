@@ -29,25 +29,27 @@ export default function Tweet({username, avatar, tweet, photo, id, userId}) {
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
 
+  // Delete tweet document and associated image from Firebase (파이어베이스에서 트윗 문서 및 이미지 삭제)
   const deleteTweet = async () => {
     try {
-      await firestore().collection('tweets').doc(id).delete();
+      await firestore().collection('tweets').doc(id).delete(); // Remove Firestore doc (파이어스토어 문서 삭제)
       if (photo) {
-        const storageRef = storage().refFromURL(photo);
-        await storageRef.delete();
+        const storageRef = storage().refFromURL(photo); // Reference to stored image (스토리지 이미지 참조)
+        await storageRef.delete(); // Delete image file (이미지 파일 삭제)
       }
     } catch (error) {
       console.error('Error deleting tweet:', error);
     }
   };
 
+  // Update tweet content and upload new photo if selected (트윗 내용 업데이트 및 새 사진 업로드)
   const editTweet = async () => {
     try {
       let updatedPhoto = newPhoto;
       if (imageUri) {
         const reference = storage().ref(`/tweets/${currentUser.uid}/${id}`);
-        await reference.putFile(imageUri);
-        updatedPhoto = await reference.getDownloadURL();
+        await reference.putFile(imageUri); // Upload image file (이미지 파일 업로드)
+        updatedPhoto = await reference.getDownloadURL(); // Get downloadable URL (다운로드 가능한 URL 획득)
       }
 
       await firestore().collection('tweets').doc(id).update({
@@ -62,6 +64,7 @@ export default function Tweet({username, avatar, tweet, photo, id, userId}) {
     }
   };
 
+  // Present options to capture or select image (이미지 촬영 또는 선택 옵션 표시)
   const onFileChange = () => {
     Alert.alert(
       'Select Image Source',
@@ -89,22 +92,24 @@ export default function Tweet({username, avatar, tweet, photo, id, userId}) {
     );
   };
 
+  // Handle result from image picker and update URI state (이미지 선택 결과 처리 및 URI 상태 업데이트)
   const handleImageResult = result => {
     if (result.assets && result.assets.length > 0) {
-      setImageUri(result.assets[0].uri);
+      setImageUri(result.assets[0].uri); // Set selected image URI (선택된 이미지 URI 설정)
     }
   };
 
+  // Reset editing state and close edit modal (편집 상태 초기화 및 편집 모달 닫기)
   const closeModal = () => {
-    setNewTweet(tweet);
-    setImageUri(photo);
-    setNewPhoto(null);
+    setNewTweet(tweet); // Revert tweet text (트윗 텍스트 복원)
+    setImageUri(photo); // Reset image URI to original photo (이미지 URI 초기화)
+    setNewPhoto(null); // Clear new photo state (새 사진 상태 초기화)
     setEditModalVisible(false);
   };
 
   return (
     <TouchableOpacity
-      onPress={() => setModalVisible(true)}
+      onPress={() => setModalVisible(true)} // Open tweet detail modal on press (트윗 클릭 시 상세 모달 오픈)
       style={styles.wrapper}>
       <View style={styles.header}>
         <MaterialCommunityIcons name="account-circle" size={50} />
@@ -140,17 +145,18 @@ export default function Tweet({username, avatar, tweet, photo, id, userId}) {
                   {photo && (
                     <Image style={styles.modalPhoto} source={{uri: photo}} />
                   )}
+                  {/* Conditional rendering for owner/admin controls (작성자/관리자만 편집/삭제 가능) */}
                   {currentUser &&
                     (currentUser.uid === userId ||
                       currentUser.email === ADMIN_EMAIL) && (
                       <>
                         <TouchableOpacity
-                          onPress={() => setEditModalVisible(true)}
+                          onPress={() => setEditModalVisible(true)} // Open edit modal (편집 모달 오픈)
                           style={styles.editButton}>
                           <Text style={styles.editText}>Edit</Text>
                         </TouchableOpacity>
                         <TouchableOpacity
-                          onPress={() => setDeleteConfirmVisible(true)}
+                          onPress={() => setDeleteConfirmVisible(true)} // Open delete confirm modal (삭제 확인 모달 오픈)
                           style={styles.deleteButton}>
                           <Text style={styles.deleteText}>Delete</Text>
                         </TouchableOpacity>
@@ -162,6 +168,7 @@ export default function Tweet({username, avatar, tweet, photo, id, userId}) {
           </View>
         </TouchableWithoutFeedback>
       </Modal>
+      {/* Edit Tweet Modal */}
       <Modal
         animationType="fade"
         transparent={true}
@@ -203,7 +210,7 @@ export default function Tweet({username, avatar, tweet, photo, id, userId}) {
                         <TouchableOpacity
                           style={styles.editButton}
                           onPress={() => {
-                            setImageUri(null);
+                            setImageUri(null); // Remove image (이미지 제거)
                             setNewPhoto(null);
                           }}>
                           <Text style={styles.editText}>Remove image</Text>
@@ -227,6 +234,7 @@ export default function Tweet({username, avatar, tweet, photo, id, userId}) {
           </View>
         </TouchableWithoutFeedback>
       </Modal>
+      {/* Delete Confirmation Modal */}
       <Modal
         animationType="fade"
         transparent={true}
@@ -243,7 +251,7 @@ export default function Tweet({username, avatar, tweet, photo, id, userId}) {
                 </Text>
                 <TouchableOpacity
                   onPress={async () => {
-                    await deleteTweet();
+                    await deleteTweet(); // Execute tweet deletion (트윗 삭제 실행)
                     setDeleteConfirmVisible(false);
                     setModalVisible(false);
                   }}

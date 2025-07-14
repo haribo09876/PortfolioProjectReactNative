@@ -4,14 +4,15 @@ import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 
 export default function Sales() {
-  const [sales, setSales] = useState([]);
-  const user = auth().currentUser;
+  const [sales, setSales] = useState([]); // State for storing sales data (판매 데이터 상태 저장용)
+  const user = auth().currentUser; // Get current authenticated user (현재 로그인된 사용자 객체)
 
   useEffect(() => {
     if (!user) {
-      return;
+      return; // Exit if no authenticated user (인증된 사용자가 없으면 종료)
     }
 
+    // Subscribe to real-time updates on user's sales (해당 사용자의 판매 데이터 실시간 구독)
     const unsubscribe = firestore()
       .collection('sales')
       .where('userId', '==', user.uid)
@@ -19,6 +20,7 @@ export default function Sales() {
       .onSnapshot(
         querySnapshot => {
           if (querySnapshot) {
+            // Map Firestore docs to local state format (Firestore 문서 데이터를 상태 형식으로 매핑)
             const salesData = querySnapshot.docs.map(doc => {
               const {itemId, createdAt, itemPrice, itemTitle, userId} =
                 doc.data();
@@ -28,10 +30,10 @@ export default function Sales() {
                 itemPrice,
                 itemTitle,
                 userId,
-                id: doc.id,
+                id: doc.id, // Firestore document ID (문서 고유 ID)
               };
             });
-            setSales(salesData);
+            setSales(salesData); // Update sales state (판매 상태 업데이트)
           }
         },
         error => {
@@ -39,8 +41,8 @@ export default function Sales() {
         },
       );
 
-    return () => unsubscribe();
-  }, [user]);
+    return () => unsubscribe(); // Cleanup listener on unmount (컴포넌트 언마운트 시 리스너 정리)
+  }, [user]); // Re-run when user changes (user 변경 시 재실행)
 
   return (
     <View style={styles.container}>

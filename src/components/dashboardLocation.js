@@ -5,6 +5,8 @@ import MapView, {UrlTile, Marker} from '@milad445/react-native-osmdroid';
 
 export default function DashboardLocation() {
   const [locations, setLocations] = useState([]);
+
+  // Initial map viewport region (초기 맵 뷰포트 영역 설정)
   const [region, setRegion] = useState({
     latitude: 37.524134,
     longitude: 126.985,
@@ -13,13 +15,18 @@ export default function DashboardLocation() {
   });
 
   useEffect(() => {
+    // Fetch location documents from Firestore on component mount (컴포넌트 마운트 시 Firestore에서 위치 데이터 조회)
     const fetchData = async () => {
       try {
         const salesSnapshot = await firestore().collection('locations').get();
         const salesData = salesSnapshot.docs.map(doc => doc.data());
+
+        // Filter documents with valid location and timestamp (유효한 위치 및 타임스탬프 필터링)
         const validData = salesData.filter(
           loc => loc.createdAt && loc.latitude && loc.longitude,
         );
+
+        // Format each valid location entry (유효한 위치 데이터를 포맷팅)
         const locationsArray = validData.map(loc => {
           const date = loc.createdAt.toDate().toISOString().split('T')[0];
           return {
@@ -41,6 +48,7 @@ export default function DashboardLocation() {
     fetchData();
   }, []);
 
+  // Zoom-in by reducing latitude/longitude delta (delta 값을 줄여 줌인)
   const zoomIn = () => {
     const newLatitudeDelta = Math.max(region.latitudeDelta / 2, 0.002);
     const newLongitudeDelta = Math.max(region.longitudeDelta / 2, 0.002);
@@ -52,6 +60,7 @@ export default function DashboardLocation() {
     }));
   };
 
+  // Zoom-out by increasing latitude/longitude delta (delta 값을 늘려 줌아웃)
   const zoomOut = () => {
     const newLatitudeDelta = Math.min(region.latitudeDelta * 2, 1.0);
     const newLongitudeDelta = Math.min(region.longitudeDelta * 2, 1.0);
@@ -70,8 +79,11 @@ export default function DashboardLocation() {
           style={styles.map}
           initialRegion={region}
           region={region}
-          onRegionChangeComplete={setRegion}>
+          onRegionChangeComplete={setRegion} // Sync region state when map movement ends (맵 이동 후 region 상태 동기화)
+        >
+          {/* Use OpenStreetMap tile layer (OSM 타일 레이어 사용) */}
           <UrlTile urlTemplate="https://tile.openstreetmap.org/{z}/{x}/{y}.png" />
+          {/* Render markers for each location entry (각 위치 항목에 대해 마커 렌더링) */}
           {locations.map((location, index) => (
             <Marker
               key={index}
@@ -83,6 +95,7 @@ export default function DashboardLocation() {
             </Marker>
           ))}
         </MapView>
+        {/* Zoom controls UI (줌 조절 버튼 UI) */}
         <View style={styles.zoomControls}>
           <TouchableOpacity onPress={zoomIn} style={styles.zoomButton}>
             <Text style={styles.zoomText}>＋</Text>

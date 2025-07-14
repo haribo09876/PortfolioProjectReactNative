@@ -46,25 +46,27 @@ export default function Shop({
 
   const navigation = useNavigation();
 
+  // Delete shop document and its image from Firebase (Firebase에서 상품 문서 및 이미지 삭제)
   const deleteShop = async () => {
     try {
       await firestore().collection('shops').doc(id).delete();
       if (photo) {
         const storageRef = storage().refFromURL(photo);
-        await storageRef.delete();
+        await storageRef.delete(); // Remove image from storage (스토리지에서 이미지 삭제)
       }
     } catch (error) {
       console.error('Error deleting shop:', error);
     }
   };
 
+  // Update shop item data including image upload (상품 정보 및 이미지 업데이트)
   const editShop = async () => {
     try {
       let updatedPhoto = newPhoto;
       if (imageUri) {
         const reference = storage().ref(`/shops/${currentUser.uid}/${id}`);
         await reference.putFile(imageUri);
-        updatedPhoto = await reference.getDownloadURL();
+        updatedPhoto = await reference.getDownloadURL(); // Get download URL after upload (업로드 후 다운로드 URL 가져오기)
       }
       await firestore()
         .collection('shops')
@@ -83,6 +85,7 @@ export default function Shop({
     }
   };
 
+  // Launch image picker modal (이미지 선택 모달 띄우기)
   const onFileChange = () => {
     Alert.alert(
       'Select Image Source',
@@ -110,12 +113,14 @@ export default function Shop({
     );
   };
 
+  // Handle result from image picker (이미지 결과 처리)
   const handleImageResult = result => {
     if (result.assets && result.assets.length > 0) {
       setImageUri(result.assets[0].uri);
     }
   };
 
+  // Reset edit modal to original data (수정 모달 초기화)
   const closeModal = () => {
     setNewItemTitle(itemTitle);
     setNewItemPrice(itemPrice);
@@ -125,6 +130,7 @@ export default function Shop({
     setEditModalVisible(false);
   };
 
+  // Process purchase: update spend log and sales history (구매 처리: 지출 및 판매 이력 업데이트)
   const purchase = async () => {
     try {
       const querySnapshot = await firestore()
@@ -170,6 +176,7 @@ export default function Shop({
           {Number(itemPrice).toLocaleString()}원
         </Text>
       </View>
+      {/* Shop Detail Modal (상품 상세 모달) */}
       <Modal
         animationType="fade"
         transparent={true}
@@ -229,6 +236,7 @@ export default function Shop({
           </View>
         </TouchableWithoutFeedback>
       </Modal>
+      {/* Purchase Confirmation Modal (구매 확인 모달) */}
       <Modal
         animationType="fade"
         transparent={true}
@@ -262,6 +270,7 @@ export default function Shop({
           </View>
         </TouchableWithoutFeedback>
       </Modal>
+      {/* Edit Item Modal (상품 수정 모달) */}
       <Modal
         animationType="fade"
         transparent={true}
@@ -342,6 +351,7 @@ export default function Shop({
           </View>
         </TouchableWithoutFeedback>
       </Modal>
+      {/* Delete Confirmation Modal (삭제 확인 모달) */}
       <Modal
         animationType="fade"
         transparent={true}

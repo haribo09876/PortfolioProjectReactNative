@@ -32,25 +32,29 @@ export default function Insta({username, avatar, insta, photo, id, userId}) {
   const [editModalVisible, setEditModalVisible] = useState(false);
   const [deleteConfirmVisible, setDeleteConfirmVisible] = useState(false);
 
+  // Delete post from Firestore and associated image from Storage (Firestore 문서 및 이미지 삭제)
   const deleteInsta = async () => {
     try {
       await firestore().collection('instas').doc(id).delete();
       if (photo) {
         const storageRef = storage().refFromURL(photo);
-        await storageRef.delete();
+        await storageRef.delete(); // Delete associated image file (이미지 파일 삭제)
       }
     } catch (error) {
       console.error('Error deleting insta:', error);
     }
   };
 
+  // Update post text and image in Firestore (본문 및 이미지 업데이트)
   const editInsta = async () => {
     try {
       let updatedPhoto = newPhoto;
+
+      // If a new image is selected, upload and get URL (새 이미지 선택 시 업로드 및 URL 획득)
       if (imageUri) {
         const reference = storage().ref(`/instas/${currentUser.uid}/${id}`);
-        await reference.putFile(imageUri);
-        updatedPhoto = await reference.getDownloadURL();
+        await reference.putFile(imageUri); // Upload local file (로컬 파일 업로드)
+        updatedPhoto = await reference.getDownloadURL(); // Get public URL (공개 URL 획득)
       }
 
       await firestore().collection('instas').doc(id).update({
@@ -65,6 +69,7 @@ export default function Insta({username, avatar, insta, photo, id, userId}) {
     }
   };
 
+  // Trigger image picker dialog (이미지 선택 다이얼로그 표시)
   const onFileChange = () => {
     Alert.alert(
       'Select Image Source',
@@ -92,12 +97,14 @@ export default function Insta({username, avatar, insta, photo, id, userId}) {
     );
   };
 
+  // Handle selected image result from picker (이미지 선택 결과 처리)
   const handleImageResult = result => {
     if (result.assets && result.assets.length > 0) {
       setImageUri(result.assets[0].uri);
     }
   };
 
+  // Reset state and close edit modal (수정 모달 초기화 및 종료)
   const closeModal = () => {
     setNewInsta(insta);
     setImageUri(photo);
@@ -112,6 +119,7 @@ export default function Insta({username, avatar, insta, photo, id, userId}) {
       <View style={styles.content}>
         {photo && <Image style={styles.instaPhoto} source={{uri: photo}} />}
       </View>
+      {/* Main Detail Modal (메인 상세 모달) */}
       <Modal
         animationType="fade"
         transparent={true}
@@ -139,6 +147,7 @@ export default function Insta({username, avatar, insta, photo, id, userId}) {
                     <Image style={styles.modalPhoto} source={{uri: photo}} />
                   )}
                   <Text style={styles.payload}>{insta}</Text>
+                  {/* Conditional admin/owner controls (관리자 또는 작성자 전용 제어) */}
                   {currentUser &&
                     (currentUser.uid === userId ||
                       currentUser.email === ADMIN_EMAIL) && (
@@ -161,6 +170,7 @@ export default function Insta({username, avatar, insta, photo, id, userId}) {
           </View>
         </TouchableWithoutFeedback>
       </Modal>
+      {/* Edit Modal (수정 모달) */}
       <Modal
         animationType="fade"
         transparent={true}
@@ -226,6 +236,7 @@ export default function Insta({username, avatar, insta, photo, id, userId}) {
           </View>
         </TouchableWithoutFeedback>
       </Modal>
+      {/* Delete Confirmation Modal (삭제 확인 모달) */}
       <Modal
         animationType="fade"
         transparent={true}

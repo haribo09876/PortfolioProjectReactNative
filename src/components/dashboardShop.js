@@ -35,10 +35,11 @@ const DashboardShop = () => {
   });
   const [pieData, setPieData] = useState([]);
 
+  // Linear regression for predicting next total sales (단순 선형 회귀를 통한 다음 판매량 예측)
   const predictNextSales = (labels, data) => {
     const totals = data.map(day => day.reduce((a, b) => a + b, 0));
     const n = totals.length;
-    if (n < 2) return null;
+    if (n < 2) return null; // Not enough data points (데이터 포인트 부족)
 
     let sumX = 0,
       sumY = 0,
@@ -52,18 +53,18 @@ const DashboardShop = () => {
     }
     const slope = (n * sumXY - sumX * sumY) / (n * sumXX - sumX * sumX);
     const intercept = (sumY - slope * sumX) / n;
-    return Math.round(slope * n + intercept);
+    return Math.round(slope * n + intercept); // Predicted value for next index (다음 시점의 예측값 반환)
   };
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const snapshot = await firestore().collection('sales').get();
+        const snapshot = await firestore().collection('sales').get(); // Fetch sales data from Firestore (파이어스토어에서 판매 데이터 가져오기)
         const sales = snapshot.docs.map(doc => doc.data());
 
         let total = 0;
-        const itemTotals = {};
-        const grouped = {};
+        const itemTotals = {}; // Cumulative total by item (항목별 누적 합계)
+        const grouped = {}; // Group by date (날짜별 그룹화)
 
         for (const sale of sales) {
           const date = sale.createdAt.toDate().toISOString().split('T')[0];
@@ -77,10 +78,10 @@ const DashboardShop = () => {
           grouped[date][title] = (grouped[date][title] || 0) + price;
         }
 
-        const labels = Object.keys(grouped).sort().reverse();
+        const labels = Object.keys(grouped).sort().reverse(); // Descending date order (최신순 정렬)
         const legend = Array.from(
           new Set(Object.values(grouped).flatMap(o => Object.keys(o))),
-        );
+        ); // Matrix: [date][itemPrice] (날짜별 항목 가격 매트릭스)
 
         const data = labels.map(date =>
           legend.map(title => grouped[date][title] || 0),
@@ -94,7 +95,7 @@ const DashboardShop = () => {
           legendFontSize: 13,
         }));
 
-        const predicted = predictNextSales(labels, data);
+        const predicted = predictNextSales(labels, data); // Predict next day sales (다음 판매 예측)
 
         setBarData({labels, legend, data});
         setPieData(pie);
@@ -107,13 +108,14 @@ const DashboardShop = () => {
         setLoading(false);
       }
     };
-    fetchData();
+    fetchData(); // Initial data load on mount (마운트 시 데이터 로딩)
   }, []);
 
   if (loading) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator size="large" color="#3B82F6" />
+        <ActivityIndicator size="large" color="#3B82F6" />{' '}
+        {/* Loading spinner (로딩 스피너) */}
       </View>
     );
   }
@@ -121,14 +123,15 @@ const DashboardShop = () => {
   if (error) {
     return (
       <View style={styles.center}>
-        <Text style={styles.errorText}>{error}</Text>
+        <Text style={styles.errorText}>{error}</Text>{' '}
+        {/* Error message (에러 메시지 출력) */}
       </View>
     );
   }
 
   const maxPerDay = Math.max(
     ...barData.data.map(day => day.reduce((a, b) => a + b, 0)),
-  );
+  ); // Maximum sales in a day (일 최대 판매량 계산)
 
   return (
     <ScrollView style={styles.container}>
@@ -151,14 +154,14 @@ const DashboardShop = () => {
           <Text style={styles.sectionTitle}>Daily sales</Text>
           {barData.labels.map((date, idx) => {
             const values = barData.data[idx];
-            const dayTotal = values.reduce((a, b) => a + b, 0);
+            const dayTotal = values.reduce((a, b) => a + b, 0); // Total per date (해당 날짜의 총합)
             return (
               <View key={idx} style={styles.barRow}>
                 <Text style={styles.barDate}>{date}</Text>
                 <View style={styles.stackedBar}>
                   {values.map((v, i) => {
                     if (v === 0) return null;
-                    const widthPercent = (v / maxPerDay) * 100;
+                    const widthPercent = (v / maxPerDay) * 100; // Relative width by item (항목별 상대 너비 계산)
                     return (
                       <View
                         key={i}
@@ -188,7 +191,7 @@ const DashboardShop = () => {
             backgroundColor="transparent"
             paddingLeft={`${calculatedPadding}`}
             absolute
-            hasLegend={false}
+            hasLegend={false} // Custom legend used (커스텀 범례 사용)
           />
           <View style={styles.customLegendContainer}>
             {pieData.map((slice, idx) => (

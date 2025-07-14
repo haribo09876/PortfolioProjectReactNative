@@ -31,24 +31,29 @@ const ShopPage = () => {
   const [isModalVisible, setModalVisible] = useState(false);
 
   useEffect(() => {
+    // Get current authenticated user (현재 로그인한 사용자 정보 가져오기)
     const user = auth().currentUser;
     if (user) {
       setUserEmail(user.email);
     }
   }, []);
 
+  // Title input handler (상품 제목 입력 핸들러)
   const onChangeItemTitle = text => {
     setItemTitle(text);
   };
 
+  // Price input handler (상품 가격 입력 핸들러)
   const onChangeItemPrice = text => {
     setItemPrice(Number(text));
   };
 
+  // Detail input handler (상품 상세 설명 입력 핸들러)
   const onChangeItemDetail = text => {
     setItemDetail(text);
   };
 
+  // Handle image picker response (이미지 선택 결과 처리)
   const handleImageResult = response => {
     if (response.didCancel) {
       console.log('User cancelled image picker');
@@ -70,6 +75,7 @@ const ShopPage = () => {
     }
   };
 
+  // Trigger image selection (이미지 선택 트리거)
   const onFileChange = () => {
     Alert.alert(
       'Select Image Source',
@@ -97,10 +103,12 @@ const ShopPage = () => {
     );
   };
 
+  // Clear selected image (선택한 이미지 제거)
   const clearFile = () => {
     setFile(null);
   };
 
+  // Submit post to Firestore and optionally upload image (Firestore에 게시물 등록 및 이미지 업로드)
   const onSubmit = async () => {
     const user = auth().currentUser;
     if (!user || isLoading || itemTitle === '' || itemTitle.length > 500) {
@@ -108,7 +116,7 @@ const ShopPage = () => {
     }
     try {
       setLoading(true);
-      const shopRef = firestore().collection('shops').doc();
+      const shopRef = firestore().collection('shops').doc(); // Create new doc ref (새 문서 참조 생성)
       const shopData = {
         itemTitle,
         itemPrice,
@@ -117,14 +125,14 @@ const ShopPage = () => {
         username: user.displayName || 'Anonymous',
         userId: user.uid,
       };
-      await shopRef.set(shopData);
+      await shopRef.set(shopData); // Save item data (상품 정보 저장)
 
       if (file) {
-        const storageRef = storage().ref(`shops/${user.uid}/${shopRef.id}`);
-        const uploadTask = storageRef.putFile(file.uri);
+        const storageRef = storage().ref(`shops/${user.uid}/${shopRef.id}`); // Storage path per user/item (사용자/아이템 경로)
+        const uploadTask = storageRef.putFile(file.uri); // Upload image file (이미지 업로드)
         uploadTask.on(
           'state_changed',
-          snapshot => {},
+          snapshot => {}, // Optional: monitor progress (선택사항: 진행률 모니터링)
           error => {
             console.error('Image upload error: ', error);
             Alert.alert(
@@ -133,8 +141,8 @@ const ShopPage = () => {
             );
           },
           async () => {
-            const url = await storageRef.getDownloadURL();
-            await shopRef.update({photo: url});
+            const url = await storageRef.getDownloadURL(); // Get image URL (이미지 URL 가져오기)
+            await shopRef.update({photo: url}); // Update document with image URL (문서에 이미지 URL 추가)
             setFile(null);
           },
         );
@@ -144,7 +152,7 @@ const ShopPage = () => {
       setItemTitle('');
       setItemPrice('');
       setItemDetail('');
-      setModalVisible(false);
+      setModalVisible(false); // Close modal after submission (제출 후 모달 닫기)
     } catch (error) {
       console.error('Shop submission error: ', error);
       Alert.alert(
@@ -156,10 +164,12 @@ const ShopPage = () => {
     }
   };
 
+  // Open modal (모달 열기)
   const openModal = () => {
     setModalVisible(true);
   };
 
+  // Close modal and reset form (모달 닫고 폼 초기화)
   const closeModal = () => {
     setItemTitle('');
     setItemPrice('');
@@ -170,6 +180,7 @@ const ShopPage = () => {
 
   return (
     <View style={styles.container}>
+      {/* Item post modal (상품 등록 모달) */}
       <Modal
         animationType="fade"
         transparent={true}
@@ -225,6 +236,7 @@ const ShopPage = () => {
                       maxLength={500}
                       multiline
                     />
+                    {/* Preview selected image (선택 이미지 미리보기) */}
                     {file && (
                       <View style={styles.imagePreview}>
                         <Image source={{uri: file.uri}} style={styles.image} />
@@ -262,7 +274,9 @@ const ShopPage = () => {
           </View>
         </TouchableWithoutFeedback>
       </Modal>
+      {/* Render shop timeline (상점 타임라인 렌더링) */}
       <ShopTimeline />
+      {/* Admin-only "Add item" button (관리자 전용 아이템 추가 버튼) */}
       {userEmail === ADMIN_EMAIL && (
         <TouchableOpacity style={styles.addButton} onPress={openModal}>
           <Text style={styles.addButtonText}>Add item</Text>

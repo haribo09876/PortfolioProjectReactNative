@@ -104,7 +104,6 @@ const TweetPage = () => {
       await tweetRef.set(tweetData); // Save tweet metadata (트윗 메타데이터 저장)
 
       if (file) {
-        // If image is attached (이미지가 첨부된 경우)
         const storageRef = storage().ref(`tweets/${user.uid}/${tweetRef.id}`); // Define storage path (스토리지 경로 정의)
         const uploadTask = storageRef.putFile(file.uri); // Upload image (이미지 업로드)
         uploadTask.on(
@@ -223,7 +222,8 @@ const TweetPage = () => {
           </View>
         </TouchableWithoutFeedback>
       </Modal>
-      <TweetTimeline /> {/* Render tweet feed (트윗 타임라인 렌더링) */}
+      {/* Render tweet feed (트윗 타임라인 렌더링) */}
+      <TweetTimeline />
       <TouchableOpacity style={styles.addButton} onPress={openModal}>
         <Text style={styles.addButtonText}>Add tweet</Text>
       </TouchableOpacity>

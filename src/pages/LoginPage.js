@@ -17,6 +17,7 @@ function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  // Handle email/password authentication (이메일/비밀번호 로그인 처리)
   const handleLogin = () => {
     auth()
       .signInWithEmailAndPassword(email, password)
@@ -28,20 +29,22 @@ function LoginPage() {
       });
   };
 
+  // Configure Google Sign-In on component mount (Google 로그인 초기 설정)
   useEffect(() => {
     GoogleSignin.configure({
-      webClientId: GOOGLE_SIGNIN_WEB_CLIENT_ID,
+      webClientId: GOOGLE_SIGNIN_WEB_CLIENT_ID, // OAuth 클라이언트 ID (웹용) 설정
     });
   }, []);
 
+  // Handle Google OAuth authentication (Google OAuth 인증 처리)
   const handleGoogleLogin = async () => {
     try {
-      await GoogleSignin.hasPlayServices();
-      const userInfo = await GoogleSignin.signIn();
+      await GoogleSignin.hasPlayServices(); // Google Play 서비스 사용 가능 여부 확인
+      const userInfo = await GoogleSignin.signIn(); // 사용자 Google 계정 로그인
       const googleCredential = auth.GoogleAuthProvider.credential(
-        userInfo.idToken,
+        userInfo.idToken, // Firebase 인증용 자격 증명 생성
       );
-      await auth().signInWithCredential(googleCredential);
+      await auth().signInWithCredential(googleCredential); // Firebase 인증 완료
       navigation.navigate('MainTabs');
     } catch (error) {
       console.error('Google sign in error:', error);
@@ -57,7 +60,7 @@ function LoginPage() {
         placeholder="Email"
         placeholderTextColor="rgba(89, 89, 89, 1)"
         value={email}
-        onChangeText={setEmail}
+        onChangeText={setEmail} // 입력값 상태 업데이트
       />
       <TextInput
         secureTextEntry={true}
@@ -65,7 +68,7 @@ function LoginPage() {
         placeholder="Password"
         placeholderTextColor="rgba(89, 89, 89, 1)"
         value={password}
-        onChangeText={setPassword}
+        onChangeText={setPassword} // 입력값 상태 업데이트
       />
       <TouchableOpacity style={styles.button} onPress={handleLogin}>
         <Text style={styles.buttonText}>Log in</Text>

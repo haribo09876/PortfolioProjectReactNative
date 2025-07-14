@@ -25,10 +25,12 @@ const UserInsta = () => {
   const [file, setFile] = useState(null);
   const [isModalVisible, setModalVisible] = useState(false);
 
+  // Update text input state on user input (사용자 입력에 따른 텍스트 상태 업데이트)
   const onChange = text => {
     setInsta(text);
   };
 
+  // Handle image picker response including validation (이미지 선택 응답 처리 및 유효성 검사)
   const handleImageResult = response => {
     if (response.didCancel) {
       console.log('User cancelled image picker');
@@ -44,12 +46,13 @@ const UserInsta = () => {
             'The selected image exceeds the 3MB size limit.',
           );
         } else {
-          setFile(selectedAsset);
+          setFile(selectedAsset); // Set selected image to state (선택한 이미지 상태 저장)
         }
       }
     }
   };
 
+  // Prompt user to select image source: camera or library (이미지 소스 선택 대화상자: 카메라 또는 갤러리)
   const onFileChange = () => {
     Alert.alert(
       'Select Image Source',
@@ -77,10 +80,12 @@ const UserInsta = () => {
     );
   };
 
+  // Clear selected image from state (선택한 이미지 초기화)
   const clearFile = () => {
     setFile(null);
   };
 
+  // Submit new insta post with optional image upload (새 인스타 게시물 제출 및 이미지 업로드 처리)
   const onSubmit = async () => {
     const user = auth().currentUser;
     if (!user || isLoading || insta === '' || insta.length > 180) return;
@@ -95,11 +100,12 @@ const UserInsta = () => {
         userId: user.uid,
         modifiedAt: firestore.FieldValue.serverTimestamp(),
       };
-      await instaRef.set(instaData);
+      await instaRef.set(instaData); // Create new document in Firestore (Firestore에 새 문서 생성)
 
       if (file) {
         const storageRef = storage().ref(`instas/${user.uid}/${instaRef.id}`);
         const uploadTask = storageRef.putFile(file.uri);
+        // Monitor upload state and handle errors (업로드 상태 모니터링 및 에러 처리)
         uploadTask.on(
           'state_changed',
           snapshot => {},
@@ -111,14 +117,14 @@ const UserInsta = () => {
             );
           },
           async () => {
-            const url = await storageRef.getDownloadURL();
-            await instaRef.update({photo: url});
+            const url = await storageRef.getDownloadURL(); // Get image URL from storage (스토리지에서 이미지 URL 획득)
+            await instaRef.update({photo: url}); // Update Firestore doc with image URL (Firestore 문서에 이미지 URL 업데이트)
             setFile(null);
           },
         );
       }
 
-      setInsta('');
+      setInsta(''); // Reset text input after submission (제출 후 텍스트 입력 초기화)
       setModalVisible(false);
     } catch (error) {
       console.error('Insta submission error: ', error);
@@ -127,7 +133,7 @@ const UserInsta = () => {
         'There was an error submitting your insta.',
       );
     } finally {
-      setLoading(false);
+      setLoading(false); // Reset loading state (로딩 상태 해제)
     }
   };
 

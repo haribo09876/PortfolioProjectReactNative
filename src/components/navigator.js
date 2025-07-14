@@ -61,56 +61,62 @@ const MainTabs = () => (
 );
 
 const Navigator = () => {
+  // User authentication state management (사용자 인증 상태 관리)
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // Loading state for auth initialization (인증 초기화 로딩 상태)
   const [initializing, setInitializing] = useState(true);
+  // Modal visibility state for logout confirmation (로그아웃 확인 모달 가시성 상태)
   const [modalVisible, setModalVisible] = useState(false);
+  // Navigation ref for programmatic navigation control (프로그래매틱 내비게이션 제어용 참조)
   const navRef = useRef(null);
 
   useEffect(() => {
+    // Firebase auth listener for realtime auth state updates (Firebase 인증 상태 실시간 구독)
     const subscriber = auth().onAuthStateChanged(user => {
-      setIsLoggedIn(!!user);
+      setIsLoggedIn(!!user); // Boolean casting user object (user 객체를 불리언으로 변환)
       if (initializing) {
-        setInitializing(false);
+        setInitializing(false); // Disable loading once initialized (초기화 완료 시 로딩 종료)
       }
     });
-    return subscriber;
+    return subscriber; // Cleanup subscription on unmount (언마운트 시 구독 해제)
   }, [initializing]);
 
+  // Sign out function with error handling (로그아웃 함수 및 에러 핸들링)
   const handleLogout = async () => {
     try {
       await auth().signOut();
       setModalVisible(false);
-      navRef.current?.replace('LoginPage');
+      navRef.current?.replace('LoginPage'); // Navigate to LoginPage after logout (로그아웃 후 로그인 페이지로 이동)
     } catch (error) {
-      Alert.alert('Logout error', 'Problem while logout');
+      Alert.alert('Logout error', 'Problem while logout'); // Display alert on logout failure (로그아웃 실패 시 알림)
     }
   };
 
-  if (initializing) return <LoadingScreen />;
+  if (initializing) return <LoadingScreen />; // Show loading screen while auth initializing (인증 초기화 중 로딩 화면 표시)
 
   return (
     <>
       <Stack.Navigator
-        initialRouteName={isLoggedIn ? 'MainTabs' : 'IntroPage'}
+        initialRouteName={isLoggedIn ? 'MainTabs' : 'IntroPage'} // Conditional initial route based on login state (로그인 상태에 따른 초기 화면 분기)
         screenOptions={{
           headerStyle: {backgroundColor: 'white'},
         }}>
         <Stack.Screen
           name="IntroPage"
           component={IntroPage}
-          options={{headerShown: false}}
+          options={{headerShown: false}} // Hide header for intro (인트로 페이지 헤더 숨김)
         />
         <Stack.Screen
           name="LoginPage"
           component={LoginPage}
-          options={{headerShown: false}}
+          options={{headerShown: false}} // Hide header for login (로그인 페이지 헤더 숨김)
         />
         <Stack.Screen
           name="SignupPage"
           component={SignupPage}
           options={{
             title: 'Sign up',
-            headerTitleAlign: 'center',
+            headerTitleAlign: 'center', // Center-align header title (헤더 제목 중앙 정렬)
           }}
         />
         <Stack.Screen
@@ -132,12 +138,13 @@ const Navigator = () => {
         <Stack.Screen
           name="MainTabs"
           options={{
-            headerTitle: 'PPRN',
+            headerTitle: 'PPRN', // App title in header (앱 제목 표시)
             headerTitleAlign: 'center',
-            headerTitleStyle: {fontSize: 25},
-            headerLeft: null,
+            headerTitleStyle: {fontSize: 25}, // Large font for header title (헤더 제목 폰트 크기)
+            headerLeft: null, // Remove back button (뒤로가기 버튼 제거)
             headerRight: () => (
               <View style={styles.headerButtonsContainer}>
+                {/* Navigate to UserPage */}
                 <TouchableOpacity
                   onPress={() => navRef.current?.navigate('UserPage')}
                   style={[styles.buttonContainer, styles.iconButton]}>
@@ -147,6 +154,7 @@ const Navigator = () => {
                     color="rgba(89, 89, 89, 1)"
                   />
                 </TouchableOpacity>
+                {/* Trigger logout modal */}
                 <TouchableOpacity
                   onPress={() => setModalVisible(true)}
                   style={styles.buttonContainer}>
@@ -155,12 +163,14 @@ const Navigator = () => {
               </View>
             ),
           }}>
+          {/* Assign navigation ref and render MainTabs */}
           {props => {
             navRef.current = props.navigation;
             return <MainTabs {...props} />;
           }}
         </Stack.Screen>
       </Stack.Navigator>
+      {/* Logout confirmation modal overlay */}
       <Modal
         animationType="fade"
         transparent={true}
@@ -176,11 +186,13 @@ const Navigator = () => {
                 <Text style={styles.confirmText}>
                   Are you sure you want to log out?
                 </Text>
+                {/* Confirm logout button */}
                 <TouchableOpacity
                   style={styles.confirmButton}
                   onPress={handleLogout}>
                   <Text style={styles.confirmButtonText}>Log out</Text>
                 </TouchableOpacity>
+                {/* Cancel logout button */}
                 <TouchableOpacity
                   style={styles.cancelButton}
                   onPress={() => setModalVisible(false)}>
