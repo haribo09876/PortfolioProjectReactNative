@@ -10,6 +10,7 @@ import {
   FIREBASE_APP_ID,
 } from '@env';
 
+// Firebase configuration object using .env variables (환경 변수 기반 Firebase 설정 객체)
 const firebaseConfig = {
   apiKey: FIREBASE_API_KEY,
   authDomain: FIREBASE_AUTH_DOMAIN,
@@ -19,8 +20,11 @@ const firebaseConfig = {
   appId: FIREBASE_APP_ID,
 };
 
+// Initialize Firebase App instance (Firebase 앱 인스턴스 초기화)
 const app = initializeApp(firebaseConfig);
-
+// Export initialized app (초기화된 앱 객체 내보내기)
 export {app};
+// Export Firebase Cloud Storage instance (스토리지 인스턴스 내보내기)
 export const storage = getStorage(app);
+// Export Firestore database instance (Firestore 인스턴스 내보내기)
 export const db = getFirestore(app);

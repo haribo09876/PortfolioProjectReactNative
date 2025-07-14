@@ -37,7 +37,7 @@ function UserPage() {
     if (!user) {
       return;
     }
-
+    // Subscribe to Firestore changes for user's money records (파이어스토어 사용자 재무 데이터 구독)
     const moneyData = firestore()
       .collection('moneys')
       .where('userEmail', '==', user.email)
@@ -59,10 +59,11 @@ function UserPage() {
         }
       });
 
-    return () => moneyData();
+    return () => moneyData(); // Cleanup listener (리스너 정리)
   }, [user]);
 
   const closeModal = () => {
+    // Reset modal state to default values (모달 상태 초기화)
     setNewUserName(user.displayName);
     setAvatar(user.photoURL);
     setNewPassword('');
@@ -71,6 +72,7 @@ function UserPage() {
   };
 
   const onFileChange = async () => {
+    // Open image picker and set selected image as avatar (이미지 선택 후 아바타 설정)
     const options = {
       mediaType: 'photo',
       includeBase64: false,
@@ -90,10 +92,12 @@ function UserPage() {
   };
 
   const removeImage = () => {
+    // Remove avatar image from state (프로필 이미지 제거)
     setAvatar(null);
   };
 
   const editAccount = async () => {
+    // Prevent update if no changes detected (변경 사항 없으면 업데이트 중단)
     if (
       newUserName === user.displayName &&
       newPassword === '' &&
@@ -105,7 +109,7 @@ function UserPage() {
 
     try {
       let uploadedAvatarURL = null;
-
+      // Upload new avatar to Firebase Storage (새 프로필 이미지 스토리지 업로드)
       if (avatar && avatar !== user.photoURL) {
         const storageRef = storage().ref(`avatars/${user.uid}`);
         await storageRef.putFile(avatar);
@@ -113,7 +117,7 @@ function UserPage() {
       } else if (!avatar) {
         uploadedAvatarURL = null;
       }
-
+      // Prepare profile update object (프로필 업데이트 객체 준비)
       const profileUpdates = {};
       if (newUserName !== user.displayName) {
         profileUpdates.displayName = newUserName;
@@ -121,11 +125,11 @@ function UserPage() {
       if (avatar !== user.photoURL) {
         profileUpdates.photoURL = uploadedAvatarURL;
       }
-
+      // Update Firebase Authentication profile (Firebase 인증 프로필 업데이트)
       if (Object.keys(profileUpdates).length > 0) {
         await user.updateProfile(profileUpdates);
       }
-
+      // Update password with re-authentication (재인증 후 비밀번호 변경)
       if (newPassword !== '') {
         if (currentPassword === '') {
           Alert.alert(
@@ -143,7 +147,7 @@ function UserPage() {
         await user.reauthenticateWithCredential(credential);
         await user.updatePassword(newPassword);
       }
-
+      // Sync user profile with Firestore (Firestore 사용자 정보 동기화)
       await firestore()
         .collection('users')
         .doc(user.uid)
@@ -154,7 +158,7 @@ function UserPage() {
           },
           {merge: true},
         );
-
+      // Reset modal state after successful update (성공 시 상태 초기화)
       setNewUserName(user.displayName);
       setNewPassword('');
       setCurrentPassword('');
@@ -167,6 +171,7 @@ function UserPage() {
   };
 
   const handleAccountDelete = async () => {
+    // Delete user account from Firebase (Firebase 사용자 계정 삭제)
     try {
       await setDeleteConfirmVisible(false);
       user.delete();
@@ -226,6 +231,7 @@ function UserPage() {
           <Text style={styles.deleteText}>Delete account</Text>
         </TouchableOpacity>
       </ScrollView>
+      {/* Edit Modal (프로필 수정 모달) */}
       <Modal
         animationType="fade"
         transparent={true}
@@ -300,6 +306,7 @@ function UserPage() {
           </View>
         </TouchableWithoutFeedback>
       </Modal>
+      {/* Delete Confirmation Modal (계정 삭제 확인 모달) */}
       <Modal
         animationType="fade"
         transparent={true}

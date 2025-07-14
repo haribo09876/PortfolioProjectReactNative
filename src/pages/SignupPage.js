@@ -22,13 +22,15 @@ function SignUpPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
+  // Input 필드 변경 핸들러
   const handleNameChange = text => setName(text);
   const handleEmailChange = text => setEmail(text);
   const handlePasswordChange = text => setPassword(text);
 
+  // 초기 자산 데이터 Firestore에 저장 (계정 생성 시 호출)
   async function createInitialMoneyData(username, userEmail) {
     try {
-      const moneyRef = firestore().collection('moneys').doc();
+      const moneyRef = firestore().collection('moneys').doc(); // 신규 문서 참조 생성
       const moneyData = {
         money: 1000000,
         spend: 0,
@@ -36,13 +38,13 @@ function SignUpPage() {
         username,
         userEmail,
       };
-      await moneyRef.set(moneyData);
+      await moneyRef.set(moneyData); // 데이터 저장
     } catch (error) {
       console.error('Error adding initial money data:', error);
       Alert.alert('Error', 'Failed to set up your initial balance.');
     }
   }
-
+  // 이미지 선택 핸들러 (라이브러리에서 이미지 선택 후 avatar URI 업데이트)
   const onFileChange = async () => {
     const options = {
       mediaType: 'photo',
@@ -61,11 +63,11 @@ function SignUpPage() {
       }
     });
   };
-
+  // 이미지 제거 핸들러
   const removeImage = () => {
     setAvatar(null);
   };
-
+  // 회원가입 로직 처리 (Firebase 인증 및 Storage/Firestore 연동)
   const onSubmit = async () => {
     if (!name || !email || !password) {
       Alert.alert('Input Error', 'Please fill out all fields.');
@@ -75,17 +77,17 @@ function SignUpPage() {
       const credentials = await auth().createUserWithEmailAndPassword(
         email,
         password,
-      );
+      ); // Firebase Auth 계정 생성
       const user = credentials.user;
 
       let uploadedAvatar = null;
-      await auth().currentUser.reload();
+      await auth().currentUser.reload(); // 사용자 정보 최신화
 
       if (avatar) {
         try {
-          const storageRef = storage().ref(`avatars/${user.uid}`);
-          await storageRef.putFile(avatar);
-          uploadedAvatar = await storageRef.getDownloadURL();
+          const storageRef = storage().ref(`avatars/${user.uid}`); // Firebase Storage 경로 설정
+          await storageRef.putFile(avatar); // 이미지 업로드
+          uploadedAvatar = await storageRef.getDownloadURL(); // 다운로드 URL 획득
         } catch (uploadError) {
           console.error('Image upload failed:', uploadError);
           Alert.alert('Upload Error', 'Failed to upload profile image.');
@@ -94,10 +96,10 @@ function SignUpPage() {
 
       await user.updateProfile({
         displayName: name,
-        photoURL: uploadedAvatar,
+        photoURL: uploadedAvatar, // 프로필 이미지 URL 업데이트
       });
 
-      await createInitialMoneyData(name, email);
+      await createInitialMoneyData(name, email); // 초기 자산 데이터 생성
 
       Alert.alert('Success', 'You have successfully signed up.');
       navigation.navigate('LoginPage');
