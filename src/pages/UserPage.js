@@ -37,6 +37,7 @@ function UserPage() {
     if (!user) {
       return;
     }
+
     // Subscribe to Firestore changes for user's money records (파이어스토어 사용자 재무 데이터 구독)
     const moneyData = firestore()
       .collection('moneys')
@@ -109,6 +110,7 @@ function UserPage() {
 
     try {
       let uploadedAvatarURL = null;
+
       // Upload new avatar to Firebase Storage (새 프로필 이미지 스토리지 업로드)
       if (avatar && avatar !== user.photoURL) {
         const storageRef = storage().ref(`avatars/${user.uid}`);
@@ -117,6 +119,7 @@ function UserPage() {
       } else if (!avatar) {
         uploadedAvatarURL = null;
       }
+
       // Prepare profile update object (프로필 업데이트 객체 준비)
       const profileUpdates = {};
       if (newUserName !== user.displayName) {
@@ -125,10 +128,12 @@ function UserPage() {
       if (avatar !== user.photoURL) {
         profileUpdates.photoURL = uploadedAvatarURL;
       }
+
       // Update Firebase Authentication profile (Firebase 인증 프로필 업데이트)
       if (Object.keys(profileUpdates).length > 0) {
         await user.updateProfile(profileUpdates);
       }
+
       // Update password with re-authentication (재인증 후 비밀번호 변경)
       if (newPassword !== '') {
         if (currentPassword === '') {
@@ -147,6 +152,7 @@ function UserPage() {
         await user.reauthenticateWithCredential(credential);
         await user.updatePassword(newPassword);
       }
+
       // Sync user profile with Firestore (Firestore 사용자 정보 동기화)
       await firestore()
         .collection('users')
@@ -158,6 +164,7 @@ function UserPage() {
           },
           {merge: true},
         );
+
       // Reset modal state after successful update (성공 시 상태 초기화)
       setNewUserName(user.displayName);
       setNewPassword('');

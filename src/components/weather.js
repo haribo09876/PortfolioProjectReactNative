@@ -17,6 +17,8 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import axios from 'axios';
 
 const windowWidth = Dimensions.get('window').width;
+
+// Weather condition icon mapping (날씨 조건에 따른 아이콘 매핑)
 const icons = {
   Mist: 'weather-fog',
   Haze: 'weather-hazy',
@@ -38,6 +40,7 @@ export default function Weather() {
   const [locationSaved, setLocationSaved] = useState(false);
 
   useEffect(() => {
+    // Request geolocation permission on Android (Android 위치 권한 요청)
     const requestLocationPermission = async () => {
       if (Platform.OS === 'android') {
         try {
@@ -47,7 +50,7 @@ export default function Weather() {
           if (granted === PermissionsAndroid.RESULTS.GRANTED) {
             setLocationPermission(true);
           } else {
-            handleLocationError("Can't find location");
+            handleLocationError("Can't find location"); // Permission denied (권한 거부 시)
           }
         } catch (error) {
           console.error('Error requesting location permission: ', error);
@@ -62,11 +65,12 @@ export default function Weather() {
   }, []);
 
   useEffect(() => {
+    // Fetch weather only once when permission is granted (권한 승인 시 날씨 데이터 요청)
     if (locationPermission && !locationSaved) {
       const watchId = Geolocation.watchPosition(
         position => {
           const {latitude, longitude} = position.coords;
-          fetchWeather(latitude, longitude);
+          fetchWeather(latitude, longitude); // Fetch weather data (날씨 데이터 요청)
         },
         error => {
           console.error('Error getting location: ', error);
@@ -81,13 +85,14 @@ export default function Weather() {
       );
 
       return () => {
-        Geolocation.clearWatch(watchId);
+        Geolocation.clearWatch(watchId); // Clear watch on unmount (컴포넌트 종료 시 위치 추적 해제)
       };
     } else {
       handleLocationError("Can't find location");
     }
   }, [locationPermission, locationSaved]);
 
+  // Fetch weather data from OpenWeatherMap (OpenWeatherMap API 호출)
   const fetchWeather = async (latitude, longitude) => {
     const url = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&appid=${WEATHER_API_KEY}`;
     const urlCurrent = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${WEATHER_API_KEY}`;
@@ -109,6 +114,7 @@ export default function Weather() {
     }
   };
 
+  // Save location info to Firestore (Firestore에 위치 정보 저장)
   const saveLocationToFirestore = async (city, latitude, longitude) => {
     const locationRef = firestore().collection('locations').doc();
     const locationData = {
@@ -126,8 +132,9 @@ export default function Weather() {
     }
   };
 
+  // Handle geolocation failure (위치 정보 오류 처리)
   const handleLocationError = errorMessage => {
-    setCity(city);
+    setCity(city); // Keep current city label (현재 도시 유지)
     setLocationPermission(false);
   };
 
@@ -142,7 +149,8 @@ export default function Weather() {
         />
         <Text style={styles.currentWeather}>{currentWeather}</Text>
         <Text style={styles.currentWeather}>
-          {parseFloat(currentTemp - 273).toFixed(1)} &#8451;
+          {parseFloat(currentTemp - 273).toFixed(1)} &#8451;{' '}
+          {/* Kelvin → Celsius (켈빈 → 섭씨 변환) */}
         </Text>
       </View>
       <ScrollView
@@ -176,7 +184,7 @@ export default function Weather() {
                 </Text>
                 <Text style={styles.description}>
                   {new Date(
-                    new Date(day.dt_txt).getTime() + 9 * 60 * 60 * 1000,
+                    new Date(day.dt_txt).getTime() + 9 * 60 * 60 * 1000, // UTC → KST (UTC 기준 시간에 9시간 추가)
                   ).getHours()}
                   시
                 </Text>

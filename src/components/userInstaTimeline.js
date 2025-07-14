@@ -23,14 +23,14 @@ export default function UserInstaTimeline() {
               userId,
               username,
               photo,
-              id: doc.id,
+              id: doc.id, // Include document ID as unique key (문서 ID를 고유 키로 포함)
             };
           });
-          setInstas(updatedInstas);
+          setInstas(updatedInstas); // Update state with new data (상태에 새 데이터 업데이트)
         }
       });
 
-    return () => unsubscribe();
+    return () => unsubscribe(); // Cleanup listener on unmount (컴포넌트 언마운트 시 리스너 해제)
   }, []);
 
   return (
@@ -38,6 +38,7 @@ export default function UserInstaTimeline() {
       {instas.map(insta => (
         <View key={insta.id} style={styles.instaWrapper}>
           <Insta {...insta} />
+          {/* Spread insta props to child component (insta props를 자식 컴포넌트로 전달) */}
         </View>
       ))}
     </ScrollView>

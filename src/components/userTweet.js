@@ -25,12 +25,13 @@ const UserTweet = () => {
   const [isModalVisible, setModalVisible] = useState(false);
 
   const onChange = text => {
-    setTweet(text);
+    setTweet(text); // Update tweet content (트윗 내용 갱신)
   };
 
+  // Handle image picker result (이미지 선택 결과 처리)
   const handleImageResult = response => {
     if (response.didCancel) {
-      console.log('User cancelled image picker');
+      console.log('User cancelled image picker'); // User cancelled (사용자 취소)
     } else if (response.errorCode) {
       Alert.alert('ImagePicker Error', response.errorMessage);
     } else {
@@ -43,12 +44,13 @@ const UserTweet = () => {
             'The selected image exceeds the 3MB size limit.',
           );
         } else {
-          setFile(selectedAsset);
+          setFile(selectedAsset); // Valid image (유효한 이미지)
         }
       }
     }
   };
 
+  // Trigger image picker (이미지 선택창 실행)
   const onFileChange = () => {
     Alert.alert(
       'Select Image Source',
@@ -72,36 +74,37 @@ const UserTweet = () => {
           },
         },
       ],
-      {cancelable: true},
+      {cancelable: true}, // Dismissable modal (취소 가능)
     );
   };
 
   const clearFile = () => {
-    setFile(null);
+    setFile(null); // Remove selected image (이미지 제거)
   };
 
+  // Handle tweet submission with optional image upload (트윗 및 이미지 업로드 처리)
   const onSubmit = async () => {
-    const user = auth().currentUser;
+    const user = auth().currentUser; // Get current user (현재 로그인 사용자)
     if (!user || isLoading || tweet === '' || tweet.length > 180) return;
 
     try {
       setLoading(true);
-      const tweetRef = firestore().collection('tweets').doc();
+      const tweetRef = firestore().collection('tweets').doc(); // Generate tweet document (트윗 문서 생성)
       const tweetData = {
         tweet,
         createdAt: firestore.FieldValue.serverTimestamp(),
-        username: user.displayName || 'Anonymous',
+        username: user.displayName || 'Anonymous', // Fallback username (기본 사용자 이름)
         userId: user.uid,
         modifiedAt: firestore.FieldValue.serverTimestamp(),
       };
-      await tweetRef.set(tweetData);
+      await tweetRef.set(tweetData); // Store tweet in Firestore (트윗 저장)
 
       if (file) {
-        const storageRef = storage().ref(`tweets/${user.uid}/${tweetRef.id}`);
-        const uploadTask = storageRef.putFile(file.uri);
+        const storageRef = storage().ref(`tweets/${user.uid}/${tweetRef.id}`); // Image path in Firebase Storage (이미지 저장 경로)
+        const uploadTask = storageRef.putFile(file.uri); // Upload image file (이미지 업로드)
         uploadTask.on(
           'state_changed',
-          snapshot => {},
+          snapshot => {}, // No progress callback (진행 콜백 없음)
           error => {
             console.error('Image upload error: ', error);
             Alert.alert(
@@ -110,13 +113,13 @@ const UserTweet = () => {
             );
           },
           async () => {
-            const url = await storageRef.getDownloadURL();
-            await tweetRef.update({photo: url});
-            setFile(null);
+            const url = await storageRef.getDownloadURL(); // Get image URL (이미지 URL 가져오기)
+            await tweetRef.update({photo: url}); // Attach URL to tweet (트윗에 URL 연결)
+            setFile(null); // Reset file state (파일 상태 초기화)
           },
         );
       }
-      setTweet('');
+      setTweet(''); // Clear input (입력 초기화)
       setModalVisible(false);
     } catch (error) {
       console.error('Tweet submission error: ', error);
@@ -125,7 +128,7 @@ const UserTweet = () => {
         'There was an error submitting your tweet.',
       );
     } finally {
-      setLoading(false);
+      setLoading(false); // End submission (제출 종료)
     }
   };
 
@@ -172,7 +175,7 @@ const UserTweet = () => {
                   <Button
                     title={isLoading ? 'Posting...' : 'Post Tweet'}
                     onPress={onSubmit}
-                    disabled={!tweet || isLoading}
+                    disabled={!tweet || isLoading} // Disable if empty or loading (빈 입력 또는 로딩 중 비활성화)
                   />
                 </View>
                 {isLoading && (
@@ -184,6 +187,7 @@ const UserTweet = () => {
         </View>
       </Modal>
       <UserTweetTimeline />
+      {/* Display tweet list (트윗 타임라인 표시) */}
     </View>
   );
 };

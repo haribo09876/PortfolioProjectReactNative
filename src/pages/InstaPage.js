@@ -26,10 +26,12 @@ const InstaPage = () => {
   const [file, setFile] = useState(null);
   const [isModalVisible, setModalVisible] = useState(false);
 
+  // Text input handler (텍스트 입력 핸들러)
   const onChange = text => {
     setInsta(text);
   };
 
+  // Handle image selection result (이미지 선택 결과 처리)
   const handleImageResult = response => {
     if (response.didCancel) {
       console.log('User cancelled image picker');
@@ -51,6 +53,7 @@ const InstaPage = () => {
     }
   };
 
+  // Launch image picker (이미지 선택 소스 선택 팝업)
   const onFileChange = () => {
     Alert.alert(
       'Select Image Source',
@@ -63,14 +66,14 @@ const InstaPage = () => {
               mediaType: 'photo',
               cameraType: 'back',
             });
-            handleImageResult(result);
+            handleImageResult(result); // Handle camera result (카메라 결과 처리)
           },
         },
         {
           text: 'Choose from Library',
           onPress: async () => {
             const result = await launchImageLibrary({mediaType: 'photo'});
-            handleImageResult(result);
+            handleImageResult(result); // Handle gallery result (갤러리 결과 처리)
           },
         },
       ],
@@ -78,10 +81,12 @@ const InstaPage = () => {
     );
   };
 
+  // Clear selected image (선택된 이미지 제거)
   const clearFile = () => {
     setFile(null);
   };
 
+  // Upload post to Firestore (게시글 업로드 로직)
   const onSubmit = async () => {
     const user = auth().currentUser;
     if (!user || isLoading || insta === '' || insta.length > 500) {
@@ -90,21 +95,21 @@ const InstaPage = () => {
 
     try {
       setLoading(true);
-      const instaRef = firestore().collection('instas').doc();
+      const instaRef = firestore().collection('instas').doc(); // Create Firestore document reference (문서 레퍼런스 생성)
       const instaData = {
         insta,
         createdAt: firestore.FieldValue.serverTimestamp(),
         username: user.displayName || 'Anonymous',
         userId: user.uid,
       };
-      await instaRef.set(instaData);
+      await instaRef.set(instaData); // Save text data (텍스트 데이터 저장)
 
       if (file) {
-        const storageRef = storage().ref(`instas/${user.uid}/${instaRef.id}`);
-        const uploadTask = storageRef.putFile(file.uri);
+        const storageRef = storage().ref(`instas/${user.uid}/${instaRef.id}`); // Firebase Storage path (스토리지 경로)
+        const uploadTask = storageRef.putFile(file.uri); // Start file upload (파일 업로드 시작)
         uploadTask.on(
           'state_changed',
-          snapshot => {},
+          snapshot => {}, // Optional progress callback (옵션: 업로드 상태 콜백)
           error => {
             console.error('Image upload error: ', error);
             Alert.alert(
@@ -113,8 +118,8 @@ const InstaPage = () => {
             );
           },
           async () => {
-            const url = await storageRef.getDownloadURL();
-            await instaRef.update({photo: url});
+            const url = await storageRef.getDownloadURL(); // Get download URL (이미지 다운로드 URL 가져오기)
+            await instaRef.update({photo: url}); // Update Firestore with image URL (파이어스토어 문서에 이미지 URL 저장)
             setFile(null);
           },
         );
@@ -134,10 +139,12 @@ const InstaPage = () => {
     }
   };
 
+  // Open modal (모달 열기)
   const openModal = () => {
     setModalVisible(true);
   };
 
+  // Close modal and reset form (모달 닫기 및 초기화)
   const closeModal = () => {
     setInsta('');
     setFile(null);
@@ -217,6 +224,7 @@ const InstaPage = () => {
           </View>
         </TouchableWithoutFeedback>
       </Modal>
+      {/* Timeline feed (게시글 타임라인 피드) */}
       <InstaTimeline />
       <TouchableOpacity style={styles.addButton} onPress={openModal}>
         <Text style={styles.addButtonText}>Add insta</Text>

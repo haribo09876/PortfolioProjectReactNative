@@ -3,7 +3,7 @@ import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 
 function IntroPage() {
-  const navigation = useNavigation();
+  const navigation = useNavigation(); // Navigation object (네비게이션 객체)
 
   return (
     <View style={styles.container}>
@@ -14,6 +14,7 @@ function IntroPage() {
       <TouchableOpacity
         style={styles.button}
         onPress={() => navigation.navigate('LoginPage')}>
+        {/* Navigate to LoginPage screen (로그인 페이지로 이동) */}
         <Text style={styles.buttonText}>Get started</Text>
       </TouchableOpacity>
     </View>
