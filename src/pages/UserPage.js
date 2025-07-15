@@ -206,7 +206,7 @@ function UserPage() {
           <Text style={styles.name}>{user?.displayName ?? 'Anonymous'}</Text>
           <Text style={styles.email}>{user?.email ?? ' '}</Text>
           <View>
-            <Text>
+            <Text style={styles.money}>
               {moneys.length > 0
                 ? `${(moneys[0].money - moneys[0].spend).toLocaleString()}원`
                 : 'No data'}
