@@ -114,7 +114,7 @@ const DashboardShop = () => {
   if (loading) {
     return (
       <View style={styles.center}>
-        <ActivityIndicator size="large" color="#3B82F6" />{' '}
+        <ActivityIndicator size="large" color="#3B82F6" />
         {/* Loading spinner (로딩 스피너) */}
       </View>
     );
@@ -123,7 +123,7 @@ const DashboardShop = () => {
   if (error) {
     return (
       <View style={styles.center}>
-        <Text style={styles.errorText}>{error}</Text>{' '}
+        <Text style={styles.errorText}>{error}</Text>
         {/* Error message (에러 메시지 출력) */}
       </View>
     );

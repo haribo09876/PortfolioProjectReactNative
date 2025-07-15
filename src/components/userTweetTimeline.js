@@ -42,7 +42,7 @@ export default function UserTweetTimeline() {
             : tweet.tweet;
         return (
           <View key={tweet.id} style={styles.tweetWrapper}>
-            <Tweet {...tweet} tweet={preview} />{' '}
+            <Tweet {...tweet} tweet={preview} />
             {/* Render tweet component with preview (미리보기 포함 트윗 컴포넌트 렌더링) */}
           </View>
         );

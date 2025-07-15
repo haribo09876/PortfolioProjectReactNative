@@ -205,12 +205,13 @@ function UserPage() {
           </View>
           <Text style={styles.name}>{user?.displayName ?? 'Anonymous'}</Text>
           <Text style={styles.email}>{user?.email ?? ' '}</Text>
-          <Text style={styles.money}>
-            {moneys.length > 0
-              ? (moneys[0].money - moneys[0].spend).toLocaleString()
-              : 'No data'}
-            원
-          </Text>
+          <View>
+            <Text>
+              {moneys.length > 0
+                ? `${(moneys[0].money - moneys[0].spend).toLocaleString()}원`
+                : 'No data'}
+            </Text>
+          </View>
           {user?.uid === ADMIN_UID && (
             <TouchableOpacity
               onPress={() => navigation.navigate('DashboardPage')}
