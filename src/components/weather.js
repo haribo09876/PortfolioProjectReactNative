@@ -149,7 +149,7 @@ export default function Weather() {
         />
         <Text style={styles.currentWeather}>{currentWeather}</Text>
         <Text style={styles.currentWeather}>
-          {parseFloat(currentTemp - 273).toFixed(1)} &#8451;{' '}
+          {parseFloat(currentTemp - 273).toFixed(1)} &#8451;
           {/* Kelvin → Celsius (켈빈 → 섭씨 변환) */}
         </Text>
       </View>
