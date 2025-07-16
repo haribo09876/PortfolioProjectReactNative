@@ -23,7 +23,15 @@ import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
 const windowWidth = Dimensions.get('window').width;
 
-export default function Insta({username, avatar, insta, photo, id, userId}) {
+export default function Insta({
+  username,
+  avatar,
+  insta,
+  photo,
+  id,
+  userId,
+  onDelete,
+}) {
   const currentUser = auth().currentUser;
   const [newInsta, setNewInsta] = useState(insta);
   const [newPhoto, setNewPhoto] = useState(photo);
@@ -254,6 +262,7 @@ export default function Insta({username, avatar, insta, photo, id, userId}) {
                 <TouchableOpacity
                   onPress={async () => {
                     await deleteInsta();
+                    if (onDelete) onDelete(id);
                     setDeleteConfirmVisible(false);
                     setModalVisible(false);
                   }}

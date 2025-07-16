@@ -20,7 +20,15 @@ import auth from '@react-native-firebase/auth';
 import storage from '@react-native-firebase/storage';
 import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
 
-export default function Tweet({username, avatar, tweet, photo, id, userId}) {
+export default function Tweet({
+  username,
+  avatar,
+  tweet,
+  photo,
+  id,
+  userId,
+  onDelete,
+}) {
   const currentUser = auth().currentUser;
   const [newTweet, setNewTweet] = useState(tweet);
   const [newPhoto, setNewPhoto] = useState(photo);
@@ -252,6 +260,7 @@ export default function Tweet({username, avatar, tweet, photo, id, userId}) {
                 <TouchableOpacity
                   onPress={async () => {
                     await deleteTweet(); // Execute tweet deletion (트윗 삭제 실행)
+                    if (onDelete) onDelete(id);
                     setDeleteConfirmVisible(false);
                     setModalVisible(false);
                   }}

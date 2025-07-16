@@ -33,6 +33,11 @@ export default function UserTweetTimeline() {
     return () => unsubscribe(); // Cleanup listener on unmount (컴포넌트 해제 시 리스너 정리)
   }, []);
 
+  // 삭제 시 호출될 함수 (삭제된 tweet id를 받아서 state에서 제거)
+  const handleDelete = deletedId => {
+    setTweets(prev => prev.filter(tweet => tweet.id !== deletedId));
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.wrapper} horizontal={true}>
       {tweets.map(tweet => {
@@ -42,7 +47,7 @@ export default function UserTweetTimeline() {
             : tweet.tweet;
         return (
           <View key={tweet.id} style={styles.tweetWrapper}>
-            <Tweet {...tweet} tweet={preview} />
+            <Tweet {...tweet} tweet={preview} onDelete={handleDelete} />
             {/* Render tweet component with preview (미리보기 포함 트윗 컴포넌트 렌더링) */}
           </View>
         );
