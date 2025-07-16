@@ -27,6 +27,7 @@ export default function Tweet({
   photo,
   id,
   userId,
+  onEdit,
   onDelete,
 }) {
   const currentUser = auth().currentUser;
@@ -67,6 +68,9 @@ export default function Tweet({
       });
       setEditModalVisible(false);
       setModalVisible(false);
+      if (onEdit) {
+        onEdit(id, newTweet, updatedPhoto);
+      }
     } catch (error) {
       console.error('Error updating tweet:', error);
     }
