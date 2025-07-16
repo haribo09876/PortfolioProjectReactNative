@@ -33,11 +33,16 @@ export default function UserInstaTimeline() {
     return () => unsubscribe(); // Cleanup listener on unmount (컴포넌트 언마운트 시 리스너 해제)
   }, []);
 
+  // 삭제 시 호출될 함수 (삭제된 insta id를 받아서 state에서 제거)
+  const handleDelete = deletedId => {
+    setInstas(prev => prev.filter(insta => insta.id !== deletedId));
+  };
+
   return (
     <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
       {instas.map(insta => (
         <View key={insta.id} style={styles.instaWrapper}>
-          <Insta {...insta} />
+          <Insta {...insta} onDelete={handleDelete} />
           {/* Spread insta props to child component (insta props를 자식 컴포넌트로 전달) */}
         </View>
       ))}
