@@ -30,6 +30,7 @@ export default function Insta({
   photo,
   id,
   userId,
+  onEdit,
   onDelete,
 }) {
   const currentUser = auth().currentUser;
@@ -72,6 +73,9 @@ export default function Insta({
       });
       setEditModalVisible(false);
       setModalVisible(false);
+      if (onEdit) {
+        onEdit(id, newInsta, updatedPhoto);
+      }
     } catch (error) {
       console.error('Error updating insta:', error);
     }
