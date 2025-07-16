@@ -3,7 +3,7 @@
 Social and shopping mobile application
 (소셜과 쇼핑 기능을 갖춘 모바일 어플리케이션)
 
-## 📌 Project Overview
+## 📌 Project Overview (프로젝트 개요)
 
 PortfolioProjectReactNative는 소셜미디어와 쇼핑 기능을 포함한 **생활 플랫폼 모바일 애플리케이션**입니다.  
 유저 정보, 소셜미디어 정보, 구매 패턴 등을 확인하고, 머신러닝 등의 데이터 분석 기능을 지원합니다.
@@ -13,7 +13,7 @@ PortfolioProjectReactNative는 소셜미디어와 쇼핑 기능을 포함한 **�
 
 ---
 
-## 🖥 Main Features
+## 🖥 Main Features (주요 기능)
 
 - 팀 생성 및 멤버 초대 (이메일 기반)
 - 월간/주간/일간 보기 제공하는 캘린더 UI
