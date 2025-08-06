@@ -1,0 +1,1297 @@
+{
+  "$schema": "https://raw.githubusercontent.com/dineug/erd-editor/main/json-schema/schema.json",
+  "version": "3.0.0",
+  "settings": {
+    "width": 2000,
+    "height": 2000,
+    "scrollTop": 0,
+    "scrollLeft": 0,
+    "zoomLevel": 1,
+    "show": 431,
+    "database": 4,
+    "databaseName": "",
+    "canvasType": "ERD",
+    "language": 1,
+    "tableNameCase": 4,
+    "columnNameCase": 2,
+    "bracketType": 1,
+    "relationshipDataTypeSync": true,
+    "relationshipOptimization": false,
+    "columnOrder": [
+      1,
+      2,
+      4,
+      8,
+      16,
+      32,
+      64
+    ],
+    "maxWidthComment": -1,
+    "ignoreSaveSettings": 0
+  },
+  "doc": {
+    "tableIds": [
+      "users",
+      "instas",
+      "tweets",
+      "locations",
+      "shops",
+      "sales",
+      "money"
+    ],
+    "relationshipIds": [
+      "r1",
+      "r2",
+      "r3",
+      "r4",
+      "r5",
+      "r6"
+    ],
+    "indexIds": [],
+    "memoIds": []
+  },
+  "collections": {
+    "tableEntities": {
+      "users": {
+        "id": "users",
+        "name": "Users",
+        "comment": "",
+        "columnIds": [
+          "userId",
+          "username",
+          "photoURL"
+        ],
+        "seqColumnIds": [],
+        "ui": {
+          "x": 100,
+          "y": 100,
+          "zIndex": 2,
+          "widthName": 60,
+          "widthComment": 60,
+          "color": ""
+        },
+        "meta": {
+          "updateAt": 1754479989018,
+          "createAt": 1754479989018
+        }
+      },
+      "instas": {
+        "id": "instas",
+        "name": "Instas",
+        "comment": "",
+        "columnIds": [
+          "instaId",
+          "insta",
+          "photo",
+          "createdAt",
+          "modifiedAt",
+          "userId",
+          "username"
+        ],
+        "seqColumnIds": [],
+        "ui": {
+          "x": 715.1905,
+          "y": 603.9687,
+          "zIndex": 2,
+          "widthName": 60,
+          "widthComment": 60,
+          "color": ""
+        },
+        "meta": {
+          "updateAt": 1754482067423,
+          "createAt": 1754479989018
+        }
+      },
+      "tweets": {
+        "id": "tweets",
+        "name": "Tweets",
+        "comment": "",
+        "columnIds": [
+          "tweetId",
+          "tweet",
+          "photo",
+          "createdAt",
+          "modifiedAt",
+          "userId",
+          "username"
+        ],
+        "seqColumnIds": [],
+        "ui": {
+          "x": 706.7892,
+          "y": 357.2351,
+          "zIndex": 2,
+          "widthName": 60,
+          "widthComment": 60,
+          "color": ""
+        },
+        "meta": {
+          "updateAt": 1754482516495,
+          "createAt": 1754479989018
+        }
+      },
+      "locations": {
+        "id": "locations",
+        "name": "Locations",
+        "comment": "",
+        "columnIds": [
+          "locationId",
+          "city",
+          "latitude",
+          "longitude",
+          "createdAt"
+        ],
+        "seqColumnIds": [],
+        "ui": {
+          "x": 715.6227,
+          "y": 852.8046,
+          "zIndex": 2,
+          "widthName": 60,
+          "widthComment": 60,
+          "color": ""
+        },
+        "meta": {
+          "updateAt": 1754482510745,
+          "createAt": 1754479989018
+        }
+      },
+      "shops": {
+        "id": "shops",
+        "name": "Shops",
+        "comment": "",
+        "columnIds": [
+          "shopId",
+          "itemTitle",
+          "itemDetail",
+          "itemPrice",
+          "photo",
+          "createdAt",
+          "userId",
+          "username"
+        ],
+        "seqColumnIds": [
+          "hwTGZaBUh1t346ntkJUkM"
+        ],
+        "ui": {
+          "x": 45.4819,
+          "y": 550.1062,
+          "zIndex": 2,
+          "widthName": 60,
+          "widthComment": 60,
+          "color": ""
+        },
+        "meta": {
+          "updateAt": 1754482378423,
+          "createAt": 1754479989018
+        }
+      },
+      "sales": {
+        "id": "sales",
+        "name": "Sales",
+        "comment": "",
+        "columnIds": [
+          "saleId",
+          "itemId",
+          "itemTitle",
+          "itemPrice",
+          "createdAt",
+          "userId"
+        ],
+        "seqColumnIds": [],
+        "ui": {
+          "x": 273.1799,
+          "y": 831.4593,
+          "zIndex": 2,
+          "widthName": 60,
+          "widthComment": 60,
+          "color": ""
+        },
+        "meta": {
+          "updateAt": 1754482501356,
+          "createAt": 1754479989018
+        }
+      },
+      "money": {
+        "id": "money",
+        "name": "Money",
+        "comment": "",
+        "columnIds": [
+          "moneyId",
+          "money",
+          "spend",
+          "createdAt",
+          "modifiedAt",
+          "userEmail",
+          "username"
+        ],
+        "seqColumnIds": [],
+        "ui": {
+          "x": 711.8361,
+          "y": 107.0469,
+          "zIndex": 2,
+          "widthName": 60,
+          "widthComment": 60,
+          "color": ""
+        },
+        "meta": {
+          "updateAt": 1754482054765,
+          "createAt": 1754479989018
+        }
+      }
+    },
+    "tableColumnEntities": {
+      "userId": {
+        "id": "userId",
+        "tableId": "users",
+        "name": "userId",
+        "comment": "",
+        "dataType": "VARCHAR(36)",
+        "default": "",
+        "options": 10,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 75,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989018,
+          "createAt": 1754479989018
+        }
+      },
+      "username": {
+        "id": "username",
+        "tableId": "users",
+        "name": "username",
+        "comment": "",
+        "dataType": "VARCHAR(100)",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 81,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989018,
+          "createAt": 1754479989018
+        }
+      },
+      "photoURL": {
+        "id": "photoURL",
+        "tableId": "users",
+        "name": "photoURL",
+        "comment": "",
+        "dataType": "VARCHAR(255)",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 81,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989018,
+          "createAt": 1754479989018
+        }
+      },
+      "instaId": {
+        "id": "instaId",
+        "tableId": "instas",
+        "name": "instaId",
+        "comment": "",
+        "dataType": "VARCHAR(36)",
+        "default": "",
+        "options": 10,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 75,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989018,
+          "createAt": 1754479989018
+        }
+      },
+      "insta": {
+        "id": "insta",
+        "tableId": "instas",
+        "name": "insta",
+        "comment": "",
+        "dataType": "VARCHAR(255)",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 81,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989018,
+          "createAt": 1754479989018
+        }
+      },
+      "photo": {
+        "id": "photo",
+        "tableId": "instas",
+        "name": "photo",
+        "comment": "",
+        "dataType": "VARCHAR(255)",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 81,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989018,
+          "createAt": 1754479989018
+        }
+      },
+      "createdAt": {
+        "id": "createdAt",
+        "tableId": "instas",
+        "name": "createdAt",
+        "comment": "",
+        "dataType": "TIMESTAMP",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 65,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "modifiedAt": {
+        "id": "modifiedAt",
+        "tableId": "instas",
+        "name": "modifiedAt",
+        "comment": "",
+        "dataType": "TIMESTAMP",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 61,
+          "widthComment": 60,
+          "widthDataType": 65,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "userId_instas": {
+        "id": "userId_instas",
+        "tableId": "instas",
+        "name": "userId",
+        "comment": "",
+        "dataType": "VARCHAR(36)",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 2,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "username_instas": {
+        "id": "username_instas",
+        "tableId": "instas",
+        "name": "username",
+        "comment": "",
+        "dataType": "VARCHAR(100)",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "tweetId": {
+        "id": "tweetId",
+        "tableId": "tweets",
+        "name": "tweetId",
+        "comment": "",
+        "dataType": "VARCHAR(36)",
+        "default": "",
+        "options": 10,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 75,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "tweet": {
+        "id": "tweet",
+        "tableId": "tweets",
+        "name": "tweet",
+        "comment": "",
+        "dataType": "VARCHAR(1000)",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 87,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "photo_tweet": {
+        "id": "photo_tweet",
+        "tableId": "tweets",
+        "name": "photo",
+        "comment": "",
+        "dataType": "VARCHAR(255)",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "createdAt_tweet": {
+        "id": "createdAt_tweet",
+        "tableId": "tweets",
+        "name": "createdAt",
+        "comment": "",
+        "dataType": "TIMESTAMP",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "modifiedAt_tweet": {
+        "id": "modifiedAt_tweet",
+        "tableId": "tweets",
+        "name": "modifiedAt",
+        "comment": "",
+        "dataType": "TIMESTAMP",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "userId_tweet": {
+        "id": "userId_tweet",
+        "tableId": "tweets",
+        "name": "userId",
+        "comment": "",
+        "dataType": "VARCHAR(36)",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 2,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "username_tweet": {
+        "id": "username_tweet",
+        "tableId": "tweets",
+        "name": "username",
+        "comment": "",
+        "dataType": "VARCHAR(100)",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "locationId": {
+        "id": "locationId",
+        "tableId": "locations",
+        "name": "locationId",
+        "comment": "",
+        "dataType": "VARCHAR(36)",
+        "default": "",
+        "options": 10,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 75,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "city": {
+        "id": "city",
+        "tableId": "locations",
+        "name": "city",
+        "comment": "",
+        "dataType": "VARCHAR(100)",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 81,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "latitude": {
+        "id": "latitude",
+        "tableId": "locations",
+        "name": "latitude",
+        "comment": "",
+        "dataType": "DECIMAL(9,6)",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 74,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "longitude": {
+        "id": "longitude",
+        "tableId": "locations",
+        "name": "longitude",
+        "comment": "",
+        "dataType": "DECIMAL(9,6)",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 74,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "createdAt_loc": {
+        "id": "createdAt_loc",
+        "tableId": "locations",
+        "name": "createdAt",
+        "comment": "",
+        "dataType": "TIMESTAMP",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "shopId": {
+        "id": "shopId",
+        "tableId": "shops",
+        "name": "shopId",
+        "comment": "",
+        "dataType": "VARCHAR(36)",
+        "default": "",
+        "options": 10,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 75,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "itemTitle": {
+        "id": "itemTitle",
+        "tableId": "shops",
+        "name": "itemTitle",
+        "comment": "",
+        "dataType": "VARCHAR(255)",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 81,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "itemDetail": {
+        "id": "itemDetail",
+        "tableId": "shops",
+        "name": "itemDetail",
+        "comment": "",
+        "dataType": "VARCHAR(1000)",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 87,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "itemPrice": {
+        "id": "itemPrice",
+        "tableId": "shops",
+        "name": "itemPrice",
+        "comment": "",
+        "dataType": "INT",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "photo_shop": {
+        "id": "photo_shop",
+        "tableId": "shops",
+        "name": "photo",
+        "comment": "",
+        "dataType": "VARCHAR(255)",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "createdAt_shop": {
+        "id": "createdAt_shop",
+        "tableId": "shops",
+        "name": "createdAt",
+        "comment": "",
+        "dataType": "TIMESTAMP",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "userId_shop": {
+        "id": "userId_shop",
+        "tableId": "shops",
+        "name": "userId",
+        "comment": "",
+        "dataType": "VARCHAR(36)",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 2,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "username_shop": {
+        "id": "username_shop",
+        "tableId": "shops",
+        "name": "username",
+        "comment": "",
+        "dataType": "VARCHAR(100)",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "saleId": {
+        "id": "saleId",
+        "tableId": "sales",
+        "name": "saleId",
+        "comment": "",
+        "dataType": "VARCHAR(36)",
+        "default": "",
+        "options": 10,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 75,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "itemId_sale": {
+        "id": "itemId_sale",
+        "tableId": "sales",
+        "name": "itemId",
+        "comment": "",
+        "dataType": "VARCHAR(36)",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 2,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "itemTitle_sale": {
+        "id": "itemTitle_sale",
+        "tableId": "sales",
+        "name": "itemTitle",
+        "comment": "",
+        "dataType": "VARCHAR(255)",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "itemPrice_sale": {
+        "id": "itemPrice_sale",
+        "tableId": "sales",
+        "name": "itemPrice",
+        "comment": "",
+        "dataType": "INT",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "createdAt_sale": {
+        "id": "createdAt_sale",
+        "tableId": "sales",
+        "name": "createdAt",
+        "comment": "",
+        "dataType": "TIMESTAMP",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "userId_sale": {
+        "id": "userId_sale",
+        "tableId": "sales",
+        "name": "userId",
+        "comment": "",
+        "dataType": "VARCHAR(36)",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 2,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "moneyId": {
+        "id": "moneyId",
+        "tableId": "money",
+        "name": "moneyId",
+        "comment": "",
+        "dataType": "VARCHAR(36)",
+        "default": "",
+        "options": 10,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 75,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "moneyVal": {
+        "id": "moneyVal",
+        "tableId": "money",
+        "name": "money",
+        "comment": "",
+        "dataType": "INT",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "spend": {
+        "id": "spend",
+        "tableId": "money",
+        "name": "spend",
+        "comment": "",
+        "dataType": "INT",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "createdAt_money": {
+        "id": "createdAt_money",
+        "tableId": "money",
+        "name": "createdAt",
+        "comment": "",
+        "dataType": "TIMESTAMP",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "modifiedAt_money": {
+        "id": "modifiedAt_money",
+        "tableId": "money",
+        "name": "modifiedAt",
+        "comment": "",
+        "dataType": "TIMESTAMP",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "userEmail_money": {
+        "id": "userEmail_money",
+        "tableId": "money",
+        "name": "userEmail",
+        "comment": "",
+        "dataType": "VARCHAR(255)",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "username_money": {
+        "id": "username_money",
+        "tableId": "money",
+        "name": "username",
+        "comment": "",
+        "dataType": "VARCHAR(100)",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 2,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "hwTGZaBUh1t346ntkJUkM": {
+        "id": "hwTGZaBUh1t346ntkJUkM",
+        "tableId": "shops",
+        "name": "",
+        "comment": "",
+        "dataType": "",
+        "default": "",
+        "options": 0,
+        "ui": {
+          "keys": 0,
+          "widthName": 60,
+          "widthComment": 60,
+          "widthDataType": 60,
+          "widthDefault": 60
+        },
+        "meta": {
+          "updateAt": 1754482376645,
+          "createAt": 1754482376645
+        }
+      }
+    },
+    "relationshipEntities": {
+      "r1": {
+        "id": "r1",
+        "identification": false,
+        "relationshipType": 4,
+        "startRelationshipType": 2,
+        "start": {
+          "tableId": "users",
+          "columnIds": [
+            "userId"
+          ],
+          "x": 486,
+          "y": 206.66666666666666,
+          "direction": 2
+        },
+        "end": {
+          "tableId": "instas",
+          "columnIds": [
+            "userId_instas"
+          ],
+          "x": 715.1905,
+          "y": 715.9687,
+          "direction": 1
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "r2": {
+        "id": "r2",
+        "identification": false,
+        "relationshipType": 4,
+        "startRelationshipType": 2,
+        "start": {
+          "tableId": "users",
+          "columnIds": [
+            "userId"
+          ],
+          "x": 486,
+          "y": 164,
+          "direction": 2
+        },
+        "end": {
+          "tableId": "tweets",
+          "columnIds": [
+            "userId_tweet"
+          ],
+          "x": 706.7892,
+          "y": 469.2351,
+          "direction": 1
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "r3": {
+        "id": "r3",
+        "identification": false,
+        "relationshipType": 4,
+        "startRelationshipType": 2,
+        "start": {
+          "tableId": "users",
+          "columnIds": [
+            "userId"
+          ],
+          "x": 196.5,
+          "y": 228,
+          "direction": 8
+        },
+        "end": {
+          "tableId": "shops",
+          "columnIds": [
+            "userId_shop"
+          ],
+          "x": 241.4819,
+          "y": 550.1062,
+          "direction": 4
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "r4": {
+        "id": "r4",
+        "identification": false,
+        "relationshipType": 4,
+        "startRelationshipType": 2,
+        "start": {
+          "tableId": "shops",
+          "columnIds": [
+            "shopId"
+          ],
+          "x": 241.4819,
+          "y": 798.1062,
+          "direction": 8
+        },
+        "end": {
+          "tableId": "sales",
+          "columnIds": [
+            "itemId_sale"
+          ],
+          "x": 273.1799,
+          "y": 931.4593,
+          "direction": 1
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "r5": {
+        "id": "r5",
+        "identification": false,
+        "relationshipType": 4,
+        "startRelationshipType": 2,
+        "start": {
+          "tableId": "users",
+          "columnIds": [
+            "userId"
+          ],
+          "x": 389.5,
+          "y": 228,
+          "direction": 8
+        },
+        "end": {
+          "tableId": "sales",
+          "columnIds": [
+            "userId_sale"
+          ],
+          "x": 466.1799,
+          "y": 831.4593,
+          "direction": 4
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      },
+      "r6": {
+        "id": "r6",
+        "identification": false,
+        "relationshipType": 4,
+        "startRelationshipType": 2,
+        "start": {
+          "tableId": "users",
+          "columnIds": [
+            "userId"
+          ],
+          "x": 486,
+          "y": 121.33333333333334,
+          "direction": 2
+        },
+        "end": {
+          "tableId": "money",
+          "columnIds": [
+            "username_money"
+          ],
+          "x": 711.8361,
+          "y": 219.0469,
+          "direction": 1
+        },
+        "meta": {
+          "updateAt": 1754479989019,
+          "createAt": 1754479989019
+        }
+      }
+    },
+    "indexEntities": {},
+    "indexColumnEntities": {},
+    "memoEntities": {}
+  }
+}
