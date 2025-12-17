@@ -70,7 +70,7 @@ yarn-error.log
 # testing
 /coverage
 
-# Firebase / 민감 파일
+# Firebase
 android/app/google-services.json
 ios/**/GoogleService-Info.plist
 
@@ -83,5 +83,5 @@ ios/**/GoogleService-Info.plist
 # Logs
 *.log
 
-# IDE 설정
+# IDE
 .vscode/
