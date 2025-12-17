@@ -33,7 +33,6 @@ local.properties
 *.keystore
 *.jks
 key.properties
-!debug.keystore
 
 # Android Build Artifacts
 /android/app/build/
