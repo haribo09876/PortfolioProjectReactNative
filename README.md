@@ -158,7 +158,7 @@
 
 ---
 
-## 🖼 Screen Shots
+## 🖼 Screenshots
 
 ![Screen Shots](src/docs/screenShots.png)
 
